@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Lib_Negocio_Autos.modelo
 {
-    internal class Contratos
+    public class Contratos
     {
     }
 }
