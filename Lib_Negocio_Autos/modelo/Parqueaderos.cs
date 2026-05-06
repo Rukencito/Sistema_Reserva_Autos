@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Lib_Negocio_Autos.modelo
 {
-    public class Personas
+    public class Parqueaderos
     {
     }
 }
