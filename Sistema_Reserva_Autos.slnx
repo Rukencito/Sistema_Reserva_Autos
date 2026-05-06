@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/1.Presentaciones/" />
+  <Folder Name="/2. Servicios/">
+    <Project Path="Lib_Negocio_Autos/Lib_Negocio_Autos.csproj" />
+  </Folder>
+  <Folder Name="/3. Unitarias/" />
+</Solution>
