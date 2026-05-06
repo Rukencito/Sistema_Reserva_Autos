@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Lib_Negocio_Autos.modelo
@@ -12,8 +13,8 @@ namespace Lib_Negocio_Autos.modelo
 		public string? Cobertura { get; set; }
 		public string? Aseguradora { get; set; }
 
-		public int AutoId { get; set; }
-		public Autos? Auto { get; set; }
+		public int Auto { get; set; }
+        [ForeignKey("Auto")] public Autos? _Auto { get; set; }
         
     }
 }

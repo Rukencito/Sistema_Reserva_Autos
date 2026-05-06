@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Lib_Negocio_Autos.modelo
@@ -11,6 +12,8 @@ namespace Lib_Negocio_Autos.modelo
 		public string? Ubicacion { get; set; }
 		public double? ValorTotal { get; set; }
 		public DateTime FechaActualizacion { get; set; }
-     
+
+        [NotMapped] public List<Autos>? Autos { get; set; }
+
     }
 }

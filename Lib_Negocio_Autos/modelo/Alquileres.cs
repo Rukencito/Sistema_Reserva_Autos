@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Lib_Negocio_Autos.modelo
@@ -13,13 +14,15 @@ namespace Lib_Negocio_Autos.modelo
 
 		public bool EstadoAlquiler { get; set; }
 
-		public int AutoId { get; set; }
-		public int ClienteId { get; set; }
-		public int EmpleadoId { get; set; }
-		public Autos? Auto { get; set; }
-		public Clientes? Cliente { get; set; }
+		public int Auto { get; set; }
+		public int Cliente { get; set; }
+		public int Empleado { get; set; }
+        [ForeignKey("Auto")] public Autos? _Auto { get; set; }
+        [ForeignKey("Cliente")] public Clientes? _Cliente { get; set; }
 
-		public Empleados? Empleado { get; set; }
-       
+        [ForeignKey("Empleado")] public Empleados? _Empleado { get; set; }
+
+        [NotMapped] public List<Contratos>? Contrato { get; set; }
+
     }
 }

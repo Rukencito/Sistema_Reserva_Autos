@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Lib_Negocio_Autos.modelo
@@ -11,8 +12,8 @@ namespace Lib_Negocio_Autos.modelo
 		public double? Descuento { get; set; }
 		public DateTime FechaInicio	{ get; set; }
 		public DateTime FechaFin { get; set; }
-		public int VentaId { get; set; }
-		public Ventas? Venta { get; set; }
+		public int Venta { get; set; }
+        [ForeignKey("Venta")] public Ventas? _Venta { get; set; }
 
        
     }

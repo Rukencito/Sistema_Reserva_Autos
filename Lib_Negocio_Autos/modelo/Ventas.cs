@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Lib_Negocio_Autos.modelo
@@ -12,11 +13,14 @@ namespace Lib_Negocio_Autos.modelo
 		public string? TipoPago { get; set; }
 		public bool EstadoPago  { get; set; }
 
-		public int ClienteId { get; set; }
-		public int EmpleadoId { get; set; }
+		public int Cliente { get; set; }
+		public int Empleado { get; set; }
 
-		public Clientes? Cliente { get; set; }
-		public Empleados? Empleado { get; set; }
+        [ForeignKey("Cliente")] public Clientes? _Cliente { get; set; }
+        [ForeignKey("Empleado")] public Empleados? _Empleado { get; set; }
+
+        [NotMapped] public List<Autos>? Auto { get; set; }
+        [NotMapped] public List<Promociones>? Promocion { get; set; }
 
     }
 }

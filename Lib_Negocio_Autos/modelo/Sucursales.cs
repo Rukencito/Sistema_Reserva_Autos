@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Lib_Negocio_Autos.modelo
@@ -11,6 +12,8 @@ namespace Lib_Negocio_Autos.modelo
 		public string? Ciudad { get; set; }
 		public string? Direccion { get; set; }
 		public string? Telefono { get; set; }
-      
+
+        [NotMapped] public List<Autos>? Auto { get; set; }
+
     }
 }

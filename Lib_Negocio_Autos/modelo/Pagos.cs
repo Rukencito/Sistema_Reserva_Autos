@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Lib_Negocio_Autos.modelo
@@ -12,8 +13,8 @@ namespace Lib_Negocio_Autos.modelo
 		public string? MetodoPago { get; set; }
 		public DateTime FechaPago { get; set; }
 
-		public int FacturaId { get; set; }
-		public Facturas? Factura { get; set; }
+		public int Factura { get; set; }
+        [ForeignKey("Factura")] public Facturas? _Factura { get; set; }
 
     }
 }
