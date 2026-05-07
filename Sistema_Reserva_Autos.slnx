@@ -3,5 +3,7 @@
   <Folder Name="/2. Servicios/">
     <Project Path="Lib_Negocio_Autos/Lib_Negocio_Autos.csproj" />
   </Folder>
-  <Folder Name="/3. Unitarias/" />
+  <Folder Name="/3. Unitarias/">
+    <Project Path="Lib_Unitarias_Autos/Lib_Unitarias_Autos.csproj" Id="b13fbc33-48fb-4632-80e6-5b3cbf0cd2b8" />
+  </Folder>
 </Solution>
