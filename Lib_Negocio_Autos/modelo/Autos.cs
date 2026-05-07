@@ -1,25 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Lib_Negocio_Autos.modelo
 {
     public class Autos
     {
-		public int Id { get; set; }
-		public string? Placa { get; set; }
-		public string? Marca { get; set; }
-		public int Año { get; set; }
-		public string? Modelo { get; set; }
-		public bool Estado { get; set; }
-		public string? Color { get; set; }
+        public int Id { get; set; }
+        public string? Placa { get; set; }
+        public string? Marca { get; set; }
+        public int Año { get; set; }
+        public string? Modelo { get; set; }
+        public bool Estado { get; set; }
+        public string? Color { get; set; }
 
-		public int Parqueadero { get; set; }
-		public int Dueno { get; set; }
-		public int Sucursal { get; set; }
-		public int Inventario { get; set; }
-		public int Venta { get; set; }
+        public int Parqueadero { get; set; }
+        public int Dueno { get; set; }
+        public int Sucursal { get; set; }
+        public int Inventario { get; set; }
+        public int Venta { get; set; }
 
         [ForeignKey("Parqueadero")] public Parqueaderos? _Parqueadero { get; set; }
         [ForeignKey("Dueno")] public Duenos? _Dueno { get; set; }

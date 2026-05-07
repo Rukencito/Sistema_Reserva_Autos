@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Lib_Negocio_Autos.modelo
 {
     public class Clientes
     {
-		public int Id { get; set; }
-		public bool EstadoPago { get; set; }
-		public bool LicenciaConduccion { get; set; }
-		public int PuntosFidelidad { get; set; }
-	    public int Persona { get; set; }
+        public int Id { get; set; }
+        public bool EstadoPago { get; set; }
+        public bool LicenciaConduccion { get; set; }
+        public int PuntosFidelidad { get; set; }
+        public int Persona { get; set; }
         [ForeignKey("Persona")] public Personas? _Persona { get; set; }
 
         [NotMapped] public List<Alquileres>? Alquiler { get; set; }

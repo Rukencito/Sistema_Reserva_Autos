@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Lib_Negocio_Autos.modelo
 {
@@ -12,6 +9,6 @@ namespace Lib_Negocio_Autos.modelo
         public DateTime FechaFin { get; set; }
         public int Auto { get; set; }
         [ForeignKey("Auto")] public Autos? _Auto { get; set; }
-   
+
     }
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Lib_Negocio_Autos.modelo
 {
@@ -14,6 +11,6 @@ namespace Lib_Negocio_Autos.modelo
         [ForeignKey("Persona")] public Personas? _Persona { get; set; }
 
         [NotMapped] public List<Autos>? Autos { get; set; }
-      
+
     }
 }
