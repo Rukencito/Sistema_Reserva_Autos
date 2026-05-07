@@ -8,7 +8,7 @@ namespace Lib_Negocio_Autos.nucleo
     {
         public static string obtener(string clave)
         {
-            return "server=localhost;database=db_Arboles;Integrated Security=True;TrustServerCertificate=true;";
+            return "server=localhost;database=db_SistemaAutos;Integrated Security=True;TrustServerCertificate=true;";
         }
     }
 }
