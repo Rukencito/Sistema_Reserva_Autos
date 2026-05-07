@@ -1,4 +1,5 @@
 ﻿using Lib_Negocio_Autos.Interfaces;
+using Lib_Negocio_Autos.modelo;
 using Microsoft.EntityFrameworkCore;
 
 namespace Lib_Negocio_Autos.Implementaciones
@@ -14,5 +15,9 @@ namespace Lib_Negocio_Autos.Implementaciones
         }
 
         // Faltan los Dbset de las clases 
+        public DbSet<Personas>? Persona { get; set; }
+        public DbSet<Auditorias>? Auditoria { get; set; }
+
+
     }
 }

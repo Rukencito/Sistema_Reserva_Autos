@@ -1,0 +1,6 @@
+@ASP_ServiciosAuto_HostAddress = http://localhost:5108
+
+GET {{ASP_ServiciosAuto_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
