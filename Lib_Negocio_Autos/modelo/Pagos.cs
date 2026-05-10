@@ -10,8 +10,7 @@ namespace Lib_Negocio_Autos.modelo
         public string? MetodoPago { get; set; }
         public DateTime FechaPago { get; set; }
 
-        public int Factura { get; set; }
-        [ForeignKey("Factura")] public Facturas? _Factura { get; set; }
+        [ForeignKey("Facturas")] public Facturas? _Facturas { get; set; }
 
     }
 }

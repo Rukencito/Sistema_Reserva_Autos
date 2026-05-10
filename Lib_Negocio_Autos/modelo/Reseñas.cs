@@ -9,8 +9,8 @@ namespace Lib_Negocio_Autos.modelo
         public int Calificacion { get; set; }
         public string? Comentario { get; set; }
         public string? TipoServicio { get; set; }
-        public int Cliente { get; set; }
-        [ForeignKey("Cliente")] public Clientes? _Cliente { get; set; }
+        
+        [ForeignKey("Clientes")] public Clientes? _Clientes { get; set; }
 
 
     }

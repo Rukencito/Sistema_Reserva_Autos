@@ -8,8 +8,8 @@ namespace Lib_Negocio_Autos.modelo
         public double? Subtotal { get; set; }
         public string? Descripcion { get; set; }
         public string? TipoFactura { get; set; }
-        public int Factura { get; set; }
-        [ForeignKey("Factura")] public Facturas? _Factura { get; set; }
+
+        [ForeignKey("Facturas")] public Facturas? _Facturas { get; set; }
 
     }
 }

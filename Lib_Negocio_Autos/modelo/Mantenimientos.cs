@@ -9,10 +9,9 @@ namespace Lib_Negocio_Autos.modelo
         public string? Tipo { get; set; }
         public string? Descripcion { get; set; }
         public double Costo { get; set; }
-        public int Auto { get; set; }
-        public int Taller { get; set; }
-        [ForeignKey("Auto")] public Autos? _Auto { get; set; }
-        [ForeignKey("Taller")] public Talleres? _Taller { get; set; }
+
+        [ForeignKey("Autos")] public Autos? _Autos { get; set; }
+        [ForeignKey("Talleres")] public Talleres? _Talleres { get; set; }
 
     }
 }

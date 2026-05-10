@@ -10,11 +10,8 @@ namespace Lib_Negocio_Autos.modelo
         public string? TipoPago { get; set; }
         public bool EstadoPago { get; set; }
 
-        public int Cliente { get; set; }
-        public int Empleado { get; set; }
-
-        [ForeignKey("Cliente")] public Clientes? _Cliente { get; set; }
-        [ForeignKey("Empleado")] public Empleados? _Empleado { get; set; }
+        [ForeignKey("Clientes")] public Clientes? _Clientes { get; set; }
+        [ForeignKey("Empleados")] public Empleados? _Empleados { get; set; }
 
         [NotMapped] public List<Autos>? Auto { get; set; }
         [NotMapped] public List<Promociones>? Promocion { get; set; }

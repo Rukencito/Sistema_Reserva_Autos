@@ -10,8 +10,7 @@ namespace Lib_Negocio_Autos.modelo
         public string? Cobertura { get; set; }
         public string? Aseguradora { get; set; }
 
-        public int Auto { get; set; }
-        [ForeignKey("Auto")] public Autos? _Auto { get; set; }
+        [ForeignKey("Autos")] public Autos? _Autos { get; set; }
 
     }
 }

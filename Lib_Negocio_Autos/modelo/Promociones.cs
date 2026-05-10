@@ -9,8 +9,8 @@ namespace Lib_Negocio_Autos.modelo
         public double? Descuento { get; set; }
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFin { get; set; }
-        public int Venta { get; set; }
-        [ForeignKey("Venta")] public Ventas? _Venta { get; set; }
+        
+        [ForeignKey("Ventas")] public Ventas? _Ventas { get; set; }
 
 
     }

@@ -8,16 +8,11 @@ namespace Lib_Negocio_Autos.modelo
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFin { get; set; }
         public double PrecioAlquiler { get; set; }
-
         public bool EstadoAlquiler { get; set; }
 
-        public int Auto { get; set; }
-        public int Cliente { get; set; }
-        public int Empleado { get; set; }
-        [ForeignKey("Auto")] public Autos? _Auto { get; set; }
-        [ForeignKey("Cliente")] public Clientes? _Cliente { get; set; }
-
-        [ForeignKey("Empleado")] public Empleados? _Empleado { get; set; }
+        [ForeignKey("Autos")] public Autos? _Autos { get; set; }
+        [ForeignKey("Clientes")] public Clientes? _Clientes { get; set; }
+        [ForeignKey("Empleados")] public Empleados? _Empleados { get; set; }
 
         [NotMapped] public List<Contratos>? Contrato { get; set; }
 

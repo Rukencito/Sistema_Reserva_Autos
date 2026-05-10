@@ -10,11 +10,8 @@ namespace Lib_Negocio_Autos.modelo
         public double? Anticipo { get; set; }
         public DateTime FechaVencimiento { get; set; }
 
-        public int Auto { get; set; }
-        public int Cliente { get; set; }
-
-        [ForeignKey("Auto")] public Autos? _Auto { get; set; }
-        [ForeignKey("Cliente")] public Clientes? _Cliente { get; set; }
+        [ForeignKey("Autos")] public Autos? _Autos { get; set; }
+        [ForeignKey("Clientes")] public Clientes? _Clientes { get; set; }
 
     }
 }

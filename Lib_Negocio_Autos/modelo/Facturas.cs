@@ -10,8 +10,7 @@ namespace Lib_Negocio_Autos.modelo
         public double? IVA { get; set; }
         public bool Estado { get; set; }
 
-        public int Cliente { get; set; }
-        [ForeignKey("Cliente")] public Clientes? _Cliente { get; set; }
+        [ForeignKey("Clientes")] public Clientes? _Clientes { get; set; }
 
         [NotMapped] public List<DetallesFactura>? DetalleFactura { get; set; }
         [NotMapped] public List<Pagos>? Pago { get; set; }

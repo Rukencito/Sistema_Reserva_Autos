@@ -2,7 +2,7 @@
 
 namespace Lib_Negocio_Autos.modelo
 {
-    internal class Permisos
+    public class Permisos
     {
         public int Id { get; set; }
         public string? Nombre { get; set; }

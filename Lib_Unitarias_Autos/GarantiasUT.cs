@@ -1,10 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Lib_Negocio_Autos.Implementaciones;
+using Lib_Negocio_Autos.Interfaces;
 
 namespace Lib_Unitarias_Autos
 {
-    internal class GarantiasUT
+    [TestClass]
+    public sealed class GarantiasUT
     {
+        [TestMethod]
+        public void TestMethod1()
+        {
+
+            IConexion conexion = new Conexion();
+            conexion.string_conexion = "server=localhost;Integrated Security=True;TrustServerCertificate=true;database=db_SistemaAutos;";
+            var lista = conexion.Garantias!.ToList();
+
+        }
+
     }
 }
