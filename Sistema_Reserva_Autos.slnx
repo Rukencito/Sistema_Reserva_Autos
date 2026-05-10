@@ -1,7 +1,9 @@
 <Solution>
   <Folder Name="/1.Presentaciones/" />
   <Folder Name="/2. Servicios/">
-    <Project Path="ASP_ServiciosAuto/ASP_ServiciosAuto.csproj" Id="59e03436-18c1-4b45-a77c-bee7bd3dd47d" />
+    <Project Path="ASP_ServiciosAuto/ASP_ServiciosAuto.csproj" Id="59e03436-18c1-4b45-a77c-bee7bd3dd47d">
+      <Build Solution="Debug|*" Project="false" />
+    </Project>
     <Project Path="Lib_Negocio_Autos/Lib_Negocio_Autos.csproj" />
   </Folder>
   <Folder Name="/3. Unitarias/">

@@ -9,8 +9,14 @@ namespace Lib_Unitarias_Autos
         [TestMethod]
         public void TestMethod1()
         {
-           
+         
+            IConexion conexion = new Conexion();
+            conexion.string_conexion= "server=localhost;Integrated Security=True;TrustServerCertificate=true;database=db_SistemaAutos;";
+            var lista = conexion.Personas!.ToList();
+            
         }
+
     }
 }
+
 

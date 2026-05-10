@@ -3,6 +3,10 @@ GO
 USE db_SistemaAutos;
 GO
 
+-- ============================================================
+-- TABLAS BASE (sin dependencias)
+-- ============================================================
+
 CREATE TABLE [Personas] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
 	[Nombre] NVARCHAR(100) NOT NULL,
@@ -45,13 +49,28 @@ CREATE TABLE [Inventarios] (
 	[FechaActualizacion] DATETIME
 );
 
+CREATE TABLE [Roles] (
+	[Id] INT PRIMARY KEY IDENTITY(1,1),
+	[Nombre] NVARCHAR(50) NOT NULL,
+	[Estado] BIT NOT NULL
+);
+
+CREATE TABLE [Auditorias] (
+	[Id] INT PRIMARY KEY IDENTITY(1,1),
+	[Descripcion] NVARCHAR(255) NOT NULL,
+	[FechaHora] DATETIME NOT NULL DEFAULT GETDATE()
+);
+
+-- ============================================================
+-- TABLAS QUE DEPENDEN DE PERSONAS
+-- ============================================================
 
 CREATE TABLE [Clientes] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
 	[EstadoPago] BIT,
 	[LicenciaConduccion] BIT,
 	[PuntosFidelidad] INT,
-	FOREIGN KEY (Id) REFERENCES Personas(Id)
+	[Personas] INT NULL REFERENCES [Personas](Id)
 );
 
 CREATE TABLE [Empleados] (
@@ -60,16 +79,20 @@ CREATE TABLE [Empleados] (
 	[Horario] NVARCHAR(50),
 	[Salario] DECIMAL(18, 2) NOT NULL,
 	[Bonificaciones] DECIMAL(18, 2),
-	FOREIGN KEY (Id) REFERENCES Personas(Id),
-	FOREIGN KEY (Id) REFERENCES Sucursales(Id)
+	[Personas] INT NULL REFERENCES [Personas](Id),
+	[Sucursales] INT NULL REFERENCES [Sucursales](Id)
 );
 
 CREATE TABLE [Duenos] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
 	[CantidadAutos] INT,
 	[Estado] BIT,
-	FOREIGN KEY (Id) REFERENCES Personas(Id)
+	[Personas] INT NULL REFERENCES [Personas](Id)
 );
+
+-- ============================================================
+-- TABLAS QUE DEPENDEN DE CLIENTES Y EMPLEADOS
+-- ============================================================
 
 CREATE TABLE [Ventas] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
@@ -77,9 +100,13 @@ CREATE TABLE [Ventas] (
 	[PrecioVenta] DECIMAL(18, 2) NOT NULL,
 	[TipoPago] NVARCHAR(50),
 	[EstadoPago] BIT,
-	FOREIGN KEY (Id) REFERENCES Clientes(Id),
-	FOREIGN KEY (Id) REFERENCES Empleados(Id)
+	[Clientes] INT NULL REFERENCES [Clientes](Id),
+	[Empleados] INT NULL REFERENCES [Empleados](Id)
 );
+
+-- ============================================================
+-- TABLAS QUE DEPENDEN DE PARQUEADEROS, DUENOS, SUCURSALES, INVENTARIOS, VENTAS
+-- ============================================================
 
 CREATE TABLE [Autos] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
@@ -89,12 +116,16 @@ CREATE TABLE [Autos] (
 	[Modelo] NVARCHAR(50),
 	[Estado] BIT,
 	[Color] NVARCHAR(20),
-	FOREIGN KEY (Id) REFERENCES Parqueaderos(Id),
-	FOREIGN KEY (Id) REFERENCES Duenos(Id),
-	FOREIGN KEY (Id) REFERENCES Sucursales(Id),
-	FOREIGN KEY (Id) REFERENCES Inventarios(Id),
-	FOREIGN KEY (Id) REFERENCES Ventas(Id)
+	[Parqueaderos] INT NULL REFERENCES [Parqueaderos](Id),
+	[Duenos] INT NULL REFERENCES [Duenos](Id),
+	[Sucursales] INT NULL REFERENCES [Sucursales](Id),
+	[Inventarios] INT NULL REFERENCES [Inventarios](Id),
+	[Ventas] INT NULL REFERENCES [Ventas](Id)
 );
+
+-- ============================================================
+-- TABLAS QUE DEPENDEN DE AUTOS
+-- ============================================================
 
 CREATE TABLE [Alquileres] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
@@ -102,26 +133,17 @@ CREATE TABLE [Alquileres] (
 	[FechaFin] DATETIME NOT NULL,
 	[PrecioAlquiler] DECIMAL(18, 2) NOT NULL,
 	[EstadoAlquiler] BIT,
-	FOREIGN KEY (Id) REFERENCES Autos(Id),
-	FOREIGN KEY (Id) REFERENCES Clientes(Id),
-	FOREIGN KEY (Id) REFERENCES Empleados(Id)
-);
-
-CREATE TABLE [Devoluciones] (
-	[Id] INT PRIMARY KEY IDENTITY(1,1),
-	[FechaEntrega] DATETIME NOT NULL,
-	[NivelCombustible] INT,
-	[Kilometraje] INT,
-	[Observaciones] NVARCHAR(255),
-	FOREIGN KEY (Id) REFERENCES Alquileres(Id)
+	[Autos] INT NULL REFERENCES [Autos](Id),
+	[Clientes] INT NULL REFERENCES [Clientes](Id),
+	[Empleados] INT NULL REFERENCES [Empleados](Id)
 );
 
 CREATE TABLE [Garantias] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
 	[FechaInicio] DATETIME NOT NULL,
 	[FechaFin] DATETIME NOT NULL,
-	FOREIGN KEY (Id) REFERENCES Autos(Id)
-)
+	[Autos] INT NULL REFERENCES [Autos](Id)
+);
 
 CREATE TABLE [Seguros] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
@@ -129,7 +151,7 @@ CREATE TABLE [Seguros] (
 	[Tipo] NVARCHAR(50),
 	[Cobertura] NVARCHAR(100),
 	[Aseguradora] NVARCHAR(100),
-	FOREIGN KEY (Id) REFERENCES Autos(Id)
+	[Autos] INT NULL REFERENCES [Autos](Id)
 );
 
 CREATE TABLE [Mantenimientos] (
@@ -138,8 +160,8 @@ CREATE TABLE [Mantenimientos] (
 	[Tipo] NVARCHAR(50),
 	[Descripcion] NVARCHAR(255) NOT NULL,
 	[Costo] DECIMAL(18, 2) NOT NULL,
-	FOREIGN KEY (Id) REFERENCES Autos(Id),
-	FOREIGN KEY (Id) REFERENCES Talleres(Id)
+	[Autos] INT NULL REFERENCES [Autos](Id),
+	[Talleres] INT NULL REFERENCES [Talleres](Id)
 );
 
 CREATE TABLE [Reservas] (
@@ -148,17 +170,21 @@ CREATE TABLE [Reservas] (
 	[EstadoReserva] NVARCHAR(50),
 	[Anticipo] DECIMAL(18, 2),
 	[FechaVencimiento] DATETIME,
-	FOREIGN KEY (Id) REFERENCES Autos(Id),
-	FOREIGN KEY (Id) REFERENCES Clientes(Id)
+	[Autos] INT NULL REFERENCES [Autos](Id),
+	[Clientes] INT NULL REFERENCES [Clientes](Id)
 );
 
-CREATE TABLE [Promociones] (
+-- ============================================================
+-- TABLAS QUE DEPENDEN DE ALQUILERES
+-- ============================================================
+
+CREATE TABLE [Devoluciones] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
-	[Descripcion] NVARCHAR(255),
-	[Descuento] DECIMAL(18, 2) NOT NULL,
-	[FechaInicio] DATETIME,
-	[FechaFin] DATETIME,
-	FOREIGN KEY (Id) REFERENCES Ventas(Id)
+	[FechaEntrega] DATETIME NOT NULL,
+	[NivelCombustible] INT,
+	[Kilometraje] INT,
+	[Observaciones] NVARCHAR(255),
+	[Alquileres] INT NULL REFERENCES [Alquileres](Id)
 );
 
 CREATE TABLE [Contratos] (
@@ -167,8 +193,25 @@ CREATE TABLE [Contratos] (
 	[FechaInicio] DATETIME NOT NULL,
 	[FechaFin] DATETIME NOT NULL,
 	[Descripcion] NVARCHAR(255) NOT NULL,
-	FOREIGN KEY (Id) REFERENCES Alquileres(Id)
+	[Alquileres] INT NULL REFERENCES [Alquileres](Id)
 );
+
+-- ============================================================
+-- TABLAS QUE DEPENDEN DE VENTAS
+-- ============================================================
+
+CREATE TABLE [Promociones] (
+	[Id] INT PRIMARY KEY IDENTITY(1,1),
+	[Descripcion] NVARCHAR(255),
+	[Descuento] DECIMAL(18, 2) NOT NULL,
+	[FechaInicio] DATETIME,
+	[FechaFin] DATETIME,
+	[Ventas] INT NULL REFERENCES [Ventas](Id)
+);
+
+-- ============================================================
+-- TABLAS QUE DEPENDEN DE CLIENTES
+-- ============================================================
 
 CREATE TABLE [Facturas] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
@@ -176,24 +219,7 @@ CREATE TABLE [Facturas] (
 	[FechaEmision] DATETIME,
 	[IVA] DECIMAL(18, 2),
 	[Estado] BIT,
-	FOREIGN KEY (Id) REFERENCES Clientes(Id)
-);
-
-CREATE TABLE [DetallesFactura] (
-	[Id] INT PRIMARY KEY IDENTITY(1,1),
-	[Subtotal] DECIMAL(18, 2) NOT NULL,
-	[Descripcion] NVARCHAR(255),
-	[TipoFactura] NVARCHAR(50) NOT NULL,
-	FOREIGN KEY (Id) REFERENCES Facturas(Id)
-);
-
-CREATE TABLE [Pagos] (
-	[Id] INT PRIMARY KEY IDENTITY(1,1),
-	[Monto] DECIMAL(18, 2) NOT NULL,
-	[EstadoPago] BIT,
-	[MetodoPago] NVARCHAR(50),
-	[FechaPago] DATETIME NOT NULL,
-	FOREIGN KEY (Id) REFERENCES Facturas(Id)
+	[Clientes] INT NULL REFERENCES [Clientes](Id)
 );
 
 CREATE TABLE [Reseñas] (
@@ -202,20 +228,33 @@ CREATE TABLE [Reseñas] (
 	[Calificacion] INT NOT NULL,
 	[Comentario] NVARCHAR(255),
 	[TipoServicio] NVARCHAR(50),
-	FOREIGN KEY (Id) REFERENCES Clientes(Id)
+	[Clientes] INT NULL REFERENCES [Clientes](Id)
 );
 
-CREATE TABLE [Auditorias] (
+-- ============================================================
+-- TABLAS QUE DEPENDEN DE FACTURAS
+-- ============================================================
+
+CREATE TABLE [DetallesFactura] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
-	[Descripcion] NVARCHAR(255) NOT NULL,
-	[FechaHora] DATETIME NOT NULL DEFAULT GETDATE()
+	[Subtotal] DECIMAL(18, 2) NOT NULL,
+	[Descripcion] NVARCHAR(255),
+	[TipoFactura] NVARCHAR(50) NOT NULL,
+	[Facturas] INT NULL REFERENCES [Facturas](Id)
 );
 
-CREATE TABLE [Roles] (
+CREATE TABLE [Pagos] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
-	[Nombre] NVARCHAR(50) NOT NULL,
-	[Estado] BIT NOT NULL
+	[Monto] DECIMAL(18, 2) NOT NULL,
+	[EstadoPago] BIT,
+	[MetodoPago] NVARCHAR(50),
+	[FechaPago] DATETIME NOT NULL,
+	[Facturas] INT NULL REFERENCES [Facturas](Id)
 );
+
+-- ============================================================
+-- TABLAS QUE DEPENDEN DE ROLES
+-- ============================================================
 
 CREATE TABLE [Usuarios] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
@@ -224,12 +263,12 @@ CREATE TABLE [Usuarios] (
 	[Correo] NVARCHAR(100) NOT NULL UNIQUE,
 	[Contraseña] NVARCHAR(255) NOT NULL,
 	[Telefono] NVARCHAR(20),
-	FOREIGN KEY (Id) REFERENCES Roles(Id)
+	[Roles] INT NULL REFERENCES [Roles](Id)
 );
 
 CREATE TABLE [Permisos] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
 	[Nombre] NVARCHAR(50) NOT NULL,
 	[Descripcion] NVARCHAR(255),
-	FOREIGN KEY (Id) REFERENCES Roles(Id)
+	[Roles] INT NULL REFERENCES [Roles](Id)
 );

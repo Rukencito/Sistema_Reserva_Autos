@@ -15,9 +15,14 @@ namespace Lib_Negocio_Autos.Implementaciones
         }
 
         // Faltan los Dbset de las clases 
-        public DbSet<Personas>? Persona { get; set; }
-        public DbSet<Auditorias>? Auditoria { get; set; }
-
+        public DbSet<Personas>? Personas { get; set; }
+        public DbSet<Auditorias>? Auditorias { get; set; }
+        public DbSet<Sucursales>? Sucursales { get; set; }
+        public DbSet<Parqueaderos>? Parqueaderos { get; set; }
+        public DbSet<Talleres>? Talleres { get; set; }
+        public DbSet<Inventarios>? Inventarios { get; set; } 
+        public DbSet<Clientes>? Clientes { get; set; }
+        public DbSet<Empleados>? Empleados { get; set; }
 
     }
 }

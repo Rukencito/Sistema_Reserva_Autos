@@ -16,12 +16,12 @@ namespace Lib_Negocio_Autos.Implementaciones
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
 
-            var lista = iConexion.Persona!.ToList();
+            var lista = iConexion.Personas!.ToList();
 
             var list = new Auditorias();
             list.Descripcion = "Se realizo una consulta en Personas";
             list.FechaHora = DateTime.Now;
-            this.iConexion.Auditoria!.Add(list);
+            this.iConexion.Auditorias!.Add(list);
             iConexion.SaveChanges();
 
             return lista;
@@ -33,13 +33,13 @@ namespace Lib_Negocio_Autos.Implementaciones
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
 
-            iConexion.Persona!.Add(entidad!);
+            iConexion.Personas!.Add(entidad!);
             iConexion.SaveChanges();
 
             var list = new Auditorias();
             list.Descripcion = "Se realizo un guardado en Personas";
             list.FechaHora = DateTime.Now;
-            this.iConexion.Auditoria!.Add(list);
+            this.iConexion.Auditorias!.Add(list);
             iConexion.SaveChanges();
             return entidad;
         }

@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Lib_Negocio_Autos.Implementaciones;
+using Lib_Negocio_Autos.Interfaces;
 
 namespace Lib_Unitarias_Autos
 {
-    internal class AlquileresUT
+    [TestClass]
+    public sealed class AlquileresUT
     {
+       
+
     }
 }
