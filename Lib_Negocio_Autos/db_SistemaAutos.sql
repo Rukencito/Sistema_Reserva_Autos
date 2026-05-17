@@ -58,7 +58,9 @@ CREATE TABLE [Roles] (
 CREATE TABLE [Auditorias] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
 	[Descripcion] NVARCHAR(255) NOT NULL,
-	[FechaHora] DATETIME NOT NULL DEFAULT GETDATE()
+	[FechaHora] DATETIME NOT NULL DEFAULT GETDATE(),
+	[Usuario] NVARCHAR(100) NOT NULL,
+	[Accion] NVARCHAR(50) NOT NULL
 );
 
 -- ============================================================
