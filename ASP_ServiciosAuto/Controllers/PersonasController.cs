@@ -7,7 +7,7 @@ namespace ASP_ServiciosAuto.Controllers
 {
     [ApiController]
     [Route("[controller]/[action]")]
-    public class PersonasController
+    public class PersonasController : ControllerBase
     {
         private IPersonasNegocio? IPersonasNegocio;
 
@@ -30,6 +30,22 @@ namespace ASP_ServiciosAuto.Controllers
             if (this.IPersonasNegocio == null)
                 throw new Exception("No implementado");
             return this.IPersonasNegocio!.Guardar(entidad);
+        }
+        [HttpPut]
+        public Personas Modificar(Personas id)
+        {
+            if (this.IPersonasNegocio == null)
+                throw new Exception("No implementado");
+            return this.IPersonasNegocio!.Modificar(id);
+        }
+
+        [HttpDelete]
+
+        public Personas Eliminar(Personas id)
+        {
+            if (this.IPersonasNegocio == null)
+                throw new Exception("No implementado");
+            return this.IPersonasNegocio!.Eliminar(id);
         }
     }
 }
