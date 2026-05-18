@@ -1,10 +1,6 @@
 ﻿using Lib_Negocio_Autos.Interfaces;
 using Lib_Negocio_Autos.modelo;
 using Lib_Negocio_Autos.nucleo;
-using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Lib_Negocio_Autos.Implementaciones
 {

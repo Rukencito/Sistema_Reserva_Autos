@@ -1,21 +1,25 @@
 ﻿using Lib_Negocio_Autos.Interfaces;
 using Lib_Negocio_Autos.modelo;
 using Lib_Negocio_Autos.nucleo;
+using Microsoft.Win32;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Lib_Negocio_Autos.Implementaciones
 {
-    public class EmpleadosNegocio : IEmpleadosNegocio
+    public class VentasNegocio : IVentasNegocio
     {
         private IConexion? iConexion;
-        public List<Empleados> Consultar()
+        public List<Ventas> Consultar()
         {
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
 
-            var lista = iConexion.Empleados!.ToList();
+            var lista = iConexion.Ventas!.ToList();
 
             var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo una consulta en Empleados";
+            Auditorias.Descripcion = "Se realizo una consulta en Ventas";
             Auditorias.FechaHora = DateTime.Now;
             Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
             Auditorias.Accion = "Consulta";
@@ -25,17 +29,17 @@ namespace Lib_Negocio_Autos.Implementaciones
             return lista;
         }
 
-        public Empleados Guardar(Empleados entidad)
+        public Ventas Guardar(Ventas entidad)
         {
 
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
 
-            iConexion.Empleados!.Add(entidad!);
+            iConexion.Ventas!.Add(entidad!);
             iConexion.SaveChanges();
 
             var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo un guardado en Empleados";
+            Auditorias.Descripcion = "Se realizo un guardado en Ventas";
             Auditorias.FechaHora = DateTime.Now;
             Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
             Auditorias.Accion = "Guardado";
@@ -44,16 +48,16 @@ namespace Lib_Negocio_Autos.Implementaciones
             return entidad;
         }
 
-        public Empleados Eliminar(Empleados entidad)
+        public Ventas Eliminar(Ventas entidad)
         {
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
 
-            iConexion.Empleados!.Remove(entidad!);
+            iConexion.Ventas!.Remove(entidad!);
             iConexion.SaveChanges();
 
             var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se elimino un registro en Empleados";
+            Auditorias.Descripcion = "Se elimino un registro en Ventas";
             Auditorias.FechaHora = DateTime.Now;
             Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
             Auditorias.Accion = "Eliminacion";
@@ -62,16 +66,16 @@ namespace Lib_Negocio_Autos.Implementaciones
             return entidad;
         }
 
-        public Empleados Modificar(Empleados entidad)
+        public Ventas Modificar(Ventas entidad)
         {
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
 
-            iConexion.Empleados!.Update(entidad!);
+            iConexion.Ventas!.Update(entidad!);
             iConexion.SaveChanges();
 
             var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se modifico un registro en Empleados";
+            Auditorias.Descripcion = "Se modifico un registro en Ventas";
             Auditorias.FechaHora = DateTime.Now;
             Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
             Auditorias.Accion = "Modificacion";

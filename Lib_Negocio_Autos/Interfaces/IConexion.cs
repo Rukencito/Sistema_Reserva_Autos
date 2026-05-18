@@ -9,7 +9,7 @@ namespace Lib_Negocio_Autos.Interfaces
         string? string_conexion { get; set; }
         // Falta agregar los Dbset 
         DbSet<Personas>? Personas { get; set; }
-        DbSet<Sucursales>? Sucursales { get; set; } 
+        DbSet<Sucursales>? Sucursales { get; set; }
         DbSet<Parqueaderos>? Parqueaderos { get; set; }
         DbSet<Talleres>? Talleres { get; set; }
         DbSet<Inventarios>? Inventarios { get; set; }
