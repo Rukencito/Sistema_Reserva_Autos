@@ -1,7 +1,4 @@
 ﻿using Lib_Negocio_Autos.modelo;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Lib_Negocio_Autos.Interfaces
 {
@@ -9,5 +6,7 @@ namespace Lib_Negocio_Autos.Interfaces
     {
         List<Personas> Consultar();
         Personas Guardar(Personas entidad);
+        Personas Eliminar(Personas entidad);
+        Personas Modificar(Personas entidad);
     }
 }
