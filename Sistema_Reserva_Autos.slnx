@@ -1,7 +1,11 @@
 <Solution>
   <Folder Name="/1.Presentaciones/">
-    <Project Path="Asp_PresentacionesAuto/Asp_PresentacionesAuto.csproj" Id="d85640e4-5843-409f-98ec-65abdb09ec15" />
-    <Project Path="Lib_Presentacion_Autos/Lib_Presentacion_Autos.csproj" Id="c3c34d2d-4bce-4905-8814-59eba041267d" />
+    <Project Path="Asp_PresentacionesAuto/Asp_PresentacionesAuto.csproj" Id="d85640e4-5843-409f-98ec-65abdb09ec15">
+      <Build Solution="Debug|*" Project="false" />
+    </Project>
+    <Project Path="Lib_Presentacion_Autos/Lib_Presentacion_Autos.csproj" Id="c3c34d2d-4bce-4905-8814-59eba041267d">
+      <Build Solution="Debug|*" Project="false" />
+    </Project>
   </Folder>
   <Folder Name="/2. Servicios/">
     <Project Path="ASP_ServiciosAuto/ASP_ServiciosAuto.csproj" Id="59e03436-18c1-4b45-a77c-bee7bd3dd47d">
