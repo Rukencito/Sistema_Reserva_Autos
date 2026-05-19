@@ -1,10 +1,15 @@
-﻿using System;
+﻿using Lib_Negocio_Autos.modelo;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Lib_Presentacion_Autos.Interfaces
 {
-    internal interface IDevolucionesPresentacion
+    public interface IDevolucionesPresentacion
     {
+        List<Devoluciones> Consultar();
+        Devoluciones Guardar(Devoluciones entidad);
+        Devoluciones Modificar(Devoluciones entidad);
+        Devoluciones Eliminar(Devoluciones entidad);
     }
 }

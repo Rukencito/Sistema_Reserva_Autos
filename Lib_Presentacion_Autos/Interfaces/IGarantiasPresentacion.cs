@@ -1,10 +1,15 @@
-﻿using System;
+﻿using Lib_Negocio_Autos.modelo;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Lib_Presentacion_Autos.Interfaces
 {
-    internal interface IGarantiasPresentacion
+    public interface IGarantiasPresentacion
     {
+        List<Garantias> Consultar();
+        Garantias Guardar(Garantias entidad);
+        Garantias Modificar(Garantias entidad);
+        Garantias Eliminar(Garantias entidad);
     }
 }

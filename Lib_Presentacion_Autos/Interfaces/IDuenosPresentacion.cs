@@ -1,10 +1,15 @@
-﻿using System;
+﻿using Lib_Negocio_Autos.modelo;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Lib_Presentacion_Autos.Interfaces
 {
-    internal interface IDuenosPresentacion
+    public interface IDuenosPresentacion
     {
+        List<Duenos> Consultar();
+        Duenos Guardar(Duenos entidad);
+        Duenos Modificar(Duenos entidad);
+        Duenos Eliminar(Duenos entidad);
     }
 }

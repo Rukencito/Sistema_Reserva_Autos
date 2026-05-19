@@ -1,10 +1,15 @@
-﻿using System;
+﻿using Lib_Negocio_Autos.modelo;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Lib_Presentacion_Autos.Interfaces
 {
-    internal interface IMantenimientosPresentacion
+    public interface IMantenimientosPresentacion
     {
+        List<Mantenimientos> Consultar();
+        Mantenimientos Guardar(Mantenimientos entidad);
+        Mantenimientos Modificar(Mantenimientos entidad);
+        Mantenimientos Eliminar(Mantenimientos entidad);
     }
 }
