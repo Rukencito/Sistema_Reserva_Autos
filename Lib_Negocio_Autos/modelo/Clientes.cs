@@ -5,7 +5,6 @@ namespace Lib_Negocio_Autos.modelo
     public class Clientes : Personas
     {
         // public int Id { get; set; }
-        public bool EstadoPago { get; set; }
         public bool LicenciaConduccion { get; set; }
         public int PuntosFidelidad { get; set; }
         

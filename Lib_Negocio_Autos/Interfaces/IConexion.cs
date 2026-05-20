@@ -7,8 +7,6 @@ namespace Lib_Negocio_Autos.Interfaces
     public interface IConexion
     {
         string? string_conexion { get; set; }
-        // Falta agregar los Dbset 
-        DbSet<Personas>? Personas { get; set; }
         DbSet<Sucursales>? Sucursales { get; set; }
         DbSet<Parqueaderos>? Parqueaderos { get; set; }
         DbSet<Talleres>? Talleres { get; set; }

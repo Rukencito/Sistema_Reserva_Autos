@@ -80,21 +80,32 @@ namespace Lib_Negocio_Autos.Implementaciones
             return entidad;
         }
 
-        public void Validaciones(Clientes entidad)
+        public void ValidarDatos(Clientes entidad)
         {
             if (string.IsNullOrEmpty(entidad.Nombre))
             {
                 throw new Exception("El nombre del cliente es obligatorio.");
             }
+            if (string.IsNullOrEmpty(entidad.Apellido))
+            {
+                throw new Exception("El apellido del cliente es obligatorio.");
+            }
+            if (string.IsNullOrEmpty(entidad.Cedula)) 
+            {
+                throw new Exception("La cédula del cliente es obligatoria.");
+            }
+            if (entidad.Edad > 18)
+            {
+                throw new Exception("El cliente debe ser mayor de edad.");
+            }
             if (string.IsNullOrEmpty(entidad.Correo))
             {
                 throw new Exception("El correo del cliente es obligatorio.");
             }
-            if (string.IsNullOrEmpty(entidad.Telefono))
+            if (string.IsNullOrEmpty(entidad.LicenciaConduccion.ToString()))
             {
-                throw new Exception("El teléfono del cliente es obligatorio.");
+                throw new Exception("La licencia de conducción del cliente es obligatoria.");
             }
-
         }
     }
 }

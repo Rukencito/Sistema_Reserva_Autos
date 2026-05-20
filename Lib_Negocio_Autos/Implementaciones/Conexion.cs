@@ -14,8 +14,6 @@ namespace Lib_Negocio_Autos.Implementaciones
             optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         }
 
-        // Faltan los Dbset de las clases 
-        public DbSet<Personas>? Personas { get; set; }
         public DbSet<Sucursales>? Sucursales { get; set; }
         public DbSet<Parqueaderos>? Parqueaderos { get; set; }
         public DbSet<Talleres>? Talleres { get; set; }

@@ -247,7 +247,7 @@ namespace Lib_Negocio_Autos.Implementaciones
                     throw new Exception("La marca del auto es obligatoria");
                 }
     
-                if (entidad.Año <= 0)
+                if (entidad.Año >= 0)
                 {
                     throw new Exception("El año del auto debe ser un número positivo");
                 }
