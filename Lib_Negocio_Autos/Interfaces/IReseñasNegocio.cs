@@ -4,9 +4,9 @@ namespace Lib_Negocio_Autos.Interfaces
 {
     public interface IReseñasNegocio
     {
-        List<Reseñas> Consultar();
-        Reseñas Guardar(Reseñas entidad);
-        Reseñas Eliminar(Reseñas entidad);
-        Reseñas Modificar(Reseñas entidad);
+        List<Resenas> Consultar();
+        Resenas Guardar(Resenas entidad);
+        Resenas Eliminar(Resenas entidad);
+        Resenas Modificar(Resenas entidad);
     }
 }

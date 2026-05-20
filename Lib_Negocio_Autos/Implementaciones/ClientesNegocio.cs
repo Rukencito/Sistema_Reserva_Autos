@@ -79,5 +79,22 @@ namespace Lib_Negocio_Autos.Implementaciones
             iConexion.SaveChanges();
             return entidad;
         }
+
+        public void Validaciones(Clientes entidad)
+        {
+            if (string.IsNullOrEmpty(entidad.Nombre))
+            {
+                throw new Exception("El nombre del cliente es obligatorio.");
+            }
+            if (string.IsNullOrEmpty(entidad.Correo))
+            {
+                throw new Exception("El correo del cliente es obligatorio.");
+            }
+            if (string.IsNullOrEmpty(entidad.Telefono))
+            {
+                throw new Exception("El teléfono del cliente es obligatorio.");
+            }
+
+        }
     }
 }

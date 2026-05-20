@@ -7,17 +7,17 @@ namespace ASP_ServiciosAuto.Controllers
 {
     [ApiController]
     [Route("[controller]/[action]")]
-    public class ReseñasController : ControllerBase
+    public class ResenasController : ControllerBase
     {
         private IReseñasNegocio? IReseñasNegocio;
 
-        public ReseñasController()
+        public ResenasController()
         {
             this.IReseñasNegocio = new ReseñasNegocio();
         }
 
         [HttpGet]
-        public List<Reseñas> Consultar()
+        public List<Resenas> Consultar()
         {
             if (this.IReseñasNegocio == null)
                 throw new Exception("No implementado");
@@ -25,14 +25,14 @@ namespace ASP_ServiciosAuto.Controllers
         }
 
         [HttpPost]
-        public Reseñas Guardar(Reseñas entidad)
+        public Resenas Guardar(Resenas entidad)
         {
             if (this.IReseñasNegocio == null)
                 throw new Exception("No implementado");
             return this.IReseñasNegocio!.Guardar(entidad);
         }
         [HttpPut]
-        public Reseñas Modificar(Reseñas id)
+        public Resenas Modificar(Resenas id)
         {
             if (this.IReseñasNegocio == null)
                 throw new Exception("No implementado");
@@ -41,7 +41,7 @@ namespace ASP_ServiciosAuto.Controllers
 
         [HttpDelete]
 
-        public Reseñas Eliminar(Reseñas id)
+        public Resenas Eliminar(Resenas id)
         {
             if (this.IReseñasNegocio == null)
                 throw new Exception("No implementado");

@@ -4,18 +4,8 @@ USE db_SistemaAutos;
 GO
 
 -- ============================================================
--- TABLAS BASE (sin dependencias)
+-- Tablas sin dependencias
 -- ============================================================
-
-CREATE TABLE [Personas] (
-	[Id] INT PRIMARY KEY IDENTITY(1,1),
-	[Nombre] NVARCHAR(100) NOT NULL,
-	[Apellido] NVARCHAR(100),
-	[Edad] INT,
-	[Genero] NVARCHAR(10) NOT NULL,
-	[Correo] NVARCHAR(100) NOT NULL UNIQUE,
-	[Telefono] NVARCHAR(20)
-);
 
 CREATE TABLE [Sucursales] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
@@ -62,38 +52,52 @@ CREATE TABLE [Auditorias] (
 	[Usuario] NVARCHAR(100) NOT NULL,
 	[Accion] NVARCHAR(50) NOT NULL
 );
-
--- ============================================================
--- TABLAS QUE DEPENDEN DE PERSONAS
--- ============================================================
+-- ===========================================================
+-- Tablas con herencia
+-- ===========================================================
 
 CREATE TABLE [Clientes] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
+	[Nombre] NVARCHAR(100) NOT NULL,
+	[Apellido] NVARCHAR(100),
+	[Edad] INT,
+	[Genero] NVARCHAR(10) NOT NULL,
+	[Correo] NVARCHAR(100) NOT NULL UNIQUE,
+	[Telefono] NVARCHAR(20),
 	[EstadoPago] BIT,
 	[LicenciaConduccion] BIT,
 	[PuntosFidelidad] INT,
-	[Personas] INT NULL REFERENCES [Personas](Id)
 );
 
 CREATE TABLE [Empleados] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
+	[Nombre] NVARCHAR(100) NOT NULL,
+	[Apellido] NVARCHAR(100),
+	[Edad] INT,
+	[Genero] NVARCHAR(10) NOT NULL,
+	[Correo] NVARCHAR(100) NOT NULL UNIQUE,
+	[Telefono] NVARCHAR(20),
 	[Cargo] NVARCHAR(50) NOT NULL,
 	[Horario] NVARCHAR(50),
 	[Salario] DECIMAL(18, 2) NOT NULL,
 	[Bonificaciones] DECIMAL(18, 2),
-	[Personas] INT NULL REFERENCES [Personas](Id),
 	[Sucursales] INT NULL REFERENCES [Sucursales](Id)
 );
 
 CREATE TABLE [Duenos] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
+	[Nombre] NVARCHAR(100) NOT NULL,
+	[Apellido] NVARCHAR(100),
+	[Edad] INT,
+	[Genero] NVARCHAR(10) NOT NULL,
+	[Correo] NVARCHAR(100) NOT NULL UNIQUE,
+	[Telefono] NVARCHAR(20),
 	[CantidadAutos] INT,
 	[Estado] BIT,
-	[Personas] INT NULL REFERENCES [Personas](Id)
 );
 
 -- ============================================================
--- TABLAS QUE DEPENDEN DE CLIENTES Y EMPLEADOS
+-- Tablas que dependen de clientes y empleados
 -- ============================================================
 
 CREATE TABLE [Ventas] (
@@ -107,7 +111,7 @@ CREATE TABLE [Ventas] (
 );
 
 -- ============================================================
--- TABLAS QUE DEPENDEN DE PARQUEADEROS, DUENOS, SUCURSALES, INVENTARIOS, VENTAS
+-- Tabla principal que depende de varias tablas (Autos)
 -- ============================================================
 
 CREATE TABLE [Autos] (
@@ -126,7 +130,7 @@ CREATE TABLE [Autos] (
 );
 
 -- ============================================================
--- TABLAS QUE DEPENDEN DE AUTOS
+-- Tablas que dependen de Autos
 -- ============================================================
 
 CREATE TABLE [Alquileres] (
@@ -177,7 +181,7 @@ CREATE TABLE [Reservas] (
 );
 
 -- ============================================================
--- TABLAS QUE DEPENDEN DE ALQUILERES
+-- Tablas que dependen de Alquileres
 -- ============================================================
 
 CREATE TABLE [Devoluciones] (
@@ -199,7 +203,7 @@ CREATE TABLE [Contratos] (
 );
 
 -- ============================================================
--- TABLAS QUE DEPENDEN DE VENTAS
+-- Tablas que dependen de Ventas
 -- ============================================================
 
 CREATE TABLE [Promociones] (
@@ -212,7 +216,7 @@ CREATE TABLE [Promociones] (
 );
 
 -- ============================================================
--- TABLAS QUE DEPENDEN DE CLIENTES
+-- Tablas que dependen de Clientes
 -- ============================================================
 
 CREATE TABLE [Facturas] (
@@ -224,7 +228,7 @@ CREATE TABLE [Facturas] (
 	[Clientes] INT NULL REFERENCES [Clientes](Id)
 );
 
-CREATE TABLE [Reseñas] (
+CREATE TABLE [Resenas] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
 	[Fecha] DATETIME NOT NULL,
 	[Calificacion] INT NOT NULL,
@@ -234,7 +238,7 @@ CREATE TABLE [Reseñas] (
 );
 
 -- ============================================================
--- TABLAS QUE DEPENDEN DE FACTURAS
+-- Tablas que dependen de Facturas
 -- ============================================================
 
 CREATE TABLE [DetallesFactura] (
@@ -255,7 +259,7 @@ CREATE TABLE [Pagos] (
 );
 
 -- ============================================================
--- TABLAS QUE DEPENDEN DE ROLES
+-- Tablas que dependen de Roles
 -- ============================================================
 
 CREATE TABLE [Usuarios] (

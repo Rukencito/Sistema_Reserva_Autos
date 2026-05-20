@@ -36,7 +36,7 @@ namespace Lib_Negocio_Autos.Implementaciones
         public DbSet<Contratos>? Contratos { get; set; }
         public DbSet<Promociones>? Promociones { get; set; }
         public DbSet<Facturas>? Facturas { get; set; }
-        public DbSet<Reseñas>? Reseñas { get; set; }
+        public DbSet<Resenas>? Reseñas { get; set; }
         public DbSet<DetallesFactura>? DetallesFactura { get; set; }
         public DbSet<Pagos>? Pagos { get; set; }
         public DbSet<Usuarios>? Usuarios { get; set; }

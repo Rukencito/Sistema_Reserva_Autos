@@ -7,9 +7,9 @@ namespace Lib_Presentacion_Autos.Interfaces
 {
     public interface IReseñasPresentacion
     {
-        List<Reseñas> Consultar();
-        Reseñas Guardar(Reseñas entidad);
-        Reseñas Modificar(Reseñas entidad);
-        Reseñas Eliminar(Reseñas entidad);
+        List<Resenas> Consultar();
+        Resenas Guardar(Resenas entidad);
+        Resenas Modificar(Resenas entidad);
+        Resenas Eliminar(Resenas entidad);
     }
 }

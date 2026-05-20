@@ -7,7 +7,7 @@ namespace Lib_Negocio_Autos.Implementaciones
     public class ReseñasNegocio : IReseñasNegocio
     {
         private IConexion? iConexion;
-        public List<Reseñas> Consultar()
+        public List<Resenas> Consultar()
         {
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
@@ -25,7 +25,7 @@ namespace Lib_Negocio_Autos.Implementaciones
             return lista;
         }
 
-        public Reseñas Guardar(Reseñas entidad)
+        public Resenas Guardar(Resenas entidad)
         {
 
             iConexion = new Conexion();
@@ -44,7 +44,7 @@ namespace Lib_Negocio_Autos.Implementaciones
             return entidad;
         }
 
-        public Reseñas Eliminar(Reseñas entidad)
+        public Resenas Eliminar(Resenas entidad)
         {
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
@@ -62,7 +62,7 @@ namespace Lib_Negocio_Autos.Implementaciones
             return entidad;
         }
 
-        public Reseñas Modificar(Reseñas entidad)
+        public Resenas Modificar(Resenas entidad)
         {
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");

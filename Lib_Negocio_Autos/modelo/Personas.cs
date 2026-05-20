@@ -12,9 +12,8 @@ namespace Lib_Negocio_Autos.modelo
         public string? Correo { get; set; }
         public string? Telefono { get; set; }
 
-        [NotMapped] public List<Clientes>? Cliente { get; set; }
-        [NotMapped] public List<Duenos>? Dueno { get; set; }
-
-        [NotMapped] public List<Empleados>? Empleado { get; set; }
+       // [NotMapped] public List<Clientes>? Cliente { get; set; }
+       // [NotMapped] public List<Duenos>? Dueno { get; set; }
+       // [NotMapped] public List<Empleados>? Empleado { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Lib_Negocio_Autos.modelo
 {
-    public class Reseñas
+    public class Resenas
     {
         public int Id { get; set; }
         public DateTime Fecha { get; set; }
