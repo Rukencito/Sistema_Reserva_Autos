@@ -53,6 +53,10 @@ namespace Lib_Negocio_Autos.Implementaciones
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
 
+            if (!ValidarId(entidad.Id))
+            {
+                throw new Exception("El registro no existe");
+            }
             iConexion.Ventas!.Remove(entidad!);
             iConexion.SaveChanges();
 
@@ -71,6 +75,10 @@ namespace Lib_Negocio_Autos.Implementaciones
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
 
+            if (!ValidarId(entidad.Id))
+            {
+                throw new Exception("El registro no existe");
+            }
             iConexion.Ventas!.Update(entidad!);
             iConexion.SaveChanges();
 
@@ -83,5 +91,28 @@ namespace Lib_Negocio_Autos.Implementaciones
             iConexion.SaveChanges();
             return entidad;
         }
+
+        public bool ValidarId(int id)
+        {
+            iConexion = new Conexion();
+            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            var Alquiler = iConexion.Alquileres!.FirstOrDefault(a => a.Id == id);
+            return Alquiler != null;
+        }
+
+        public void ConsultarporCliente(int idCliente)
+        {
+            iConexion = new Conexion();
+            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            var lista = iConexion.Ventas!.Where(v => v._Clientes!.Id == idCliente).ToList();
+            var Auditorias = new Auditorias();
+            Auditorias.Descripcion = "Se realizo una consulta en Ventas por Cliente";
+            Auditorias.FechaHora = DateTime.Now;
+            Auditorias.Usuario = "UsuarioActual"; 
+            Auditorias.Accion = "Consulta por Cliente";
+            this.iConexion.Auditorias!.Add(Auditorias);
+            iConexion.SaveChanges();
+        }
+
     }
 }
