@@ -31,6 +31,8 @@ namespace Lib_Negocio_Autos.Implementaciones
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
 
+            ValidarDatos(entidad);
+
             iConexion.Clientes!.Add(entidad!);
             iConexion.SaveChanges();
 
@@ -49,6 +51,11 @@ namespace Lib_Negocio_Autos.Implementaciones
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
 
+            if (ValidarCedula(entidad.Cedula!))
+            {
+                throw new Exception("El cliente con cedula: " + entidad.Cedula + " no existe en el sistema");
+            }
+
             iConexion.Clientes!.Remove(entidad!);
             iConexion.SaveChanges();
 
@@ -64,8 +71,15 @@ namespace Lib_Negocio_Autos.Implementaciones
 
         public Clientes Modificar(Clientes entidad)
         {
+           
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+
+            ValidarDatos(entidad);
+            if (!ValidarCedula(entidad.Cedula!))
+            {
+                throw new Exception("El cliente con cedula: " + entidad.Cedula + " no existe en el sistema");
+            }
 
             iConexion.Clientes!.Update(entidad!);
             iConexion.SaveChanges();
@@ -80,6 +94,32 @@ namespace Lib_Negocio_Autos.Implementaciones
             return entidad;
         }
 
+        public Clientes ConsultarPorCedula(string cedula)
+        {
+            iConexion = new Conexion();
+            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+
+            var auto = iConexion.Clientes!.FirstOrDefault(a => a.Cedula == cedula);
+            var Auditorias = new Auditorias();
+
+            Auditorias.Descripcion = "Se realizo una consulta en Clintes por cédula: " + cedula;
+            Auditorias.FechaHora = DateTime.Now;
+            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
+            Auditorias.Accion = "Consulta por Cédula";
+
+            this.iConexion.Auditorias!.Add(Auditorias);
+            iConexion.SaveChanges();
+            return auto!;
+
+        }
+
+        public bool ValidarCedula(string cedula)
+        {
+            iConexion = new Conexion();
+            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            var cliente = iConexion.Clientes!.FirstOrDefault(a => a.Cedula == cedula);
+            return cliente != null;
+        }
         public void ValidarDatos(Clientes entidad)
         {
             if (string.IsNullOrEmpty(entidad.Nombre))

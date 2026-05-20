@@ -27,15 +27,11 @@ namespace Lib_Negocio_Autos.Implementaciones
 
         public Autos Guardar(Autos entidad)
         {
-            ValidarDatos(entidad);
-
-            if (ValidarPlaca(entidad.Placa!))
-            {
-                throw new Exception("La placa del auto ya existe en el sistema");
-            }
 
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+
+            ValidarDatos(entidad);
 
             iConexion.Autos!.Add(entidad!);
             iConexion.SaveChanges();
@@ -52,13 +48,13 @@ namespace Lib_Negocio_Autos.Implementaciones
 
         public Autos Eliminar(Autos entidad)
         {
-            if(ValidarPlaca(entidad.Placa!))
+            iConexion = new Conexion();
+            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+
+            if (ValidarPlaca(entidad.Placa!))
             {
                 throw new Exception("El auto con la placa " + entidad.Placa + " no existe en el sistema");
             }
-
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
 
             iConexion.Autos!.Remove(entidad!);
             iConexion.SaveChanges();
@@ -75,14 +71,15 @@ namespace Lib_Negocio_Autos.Implementaciones
 
         public Autos Modificar(Autos entidad)
         {
+            iConexion = new Conexion();
+            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+
             ValidarDatos(entidad);
 
             if (!ValidarPlaca(entidad.Placa!))
             {
                 throw new Exception("El auto con la placa " + entidad.Placa + " no existe en el sistema");
             }
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
 
             iConexion.Autos!.Update(entidad!);
             iConexion.SaveChanges();
