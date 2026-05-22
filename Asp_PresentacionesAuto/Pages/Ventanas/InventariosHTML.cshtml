@@ -1,0 +1,138 @@
+﻿@page
+@using Inventarios_Razor.Pages
+@model InventariosHTMLModel
+@{
+    ViewData["Title"] = "Inventarios";
+}
+<center>
+    <div>
+        <form method="POST"
+              enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+
+            <div align="left">
+                <h3>Inventarios</h3>
+            </div>
+            
+            <div>
+                <input type="submit"
+                       value="Refrescar"
+                       class="btn btn-secondary"
+                       asp-page-handler="BtRefrescar" />
+                <input type="submit"
+                       value="Nuevo"
+                       class="btn btn-secondary"
+                       asp-page-handler="BtNuevo"
+                       disabled="@(Model.Inventario != null)" />
+                <input type="submit"
+                       value="Guardar"
+                       class="btn btn-secondary"
+                       asp-page-handler="BtGuardar"
+                       disabled="@(Model.Inventario == null)" />
+            </div>
+
+            @if (Model.Inventario != null)
+            {
+                <input type="hidden"
+                       asp-for="@Model.Inventario!.Id" />
+
+                <div>
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <div class="col-6">
+                            <input id="inNombre"
+                                   class="cts_forms form-control"
+                                   asp-for="@Model.Inventario!.Cantidad" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Identificacion</label>
+                        <div class="col-6">
+                            <input id="inIdentificacion"
+                                   class="cts_forms form-control"
+                                   asp-for="@Model.Inventario!.Ubicacion" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Telefono</label>
+                        <div class="col-6">
+                            <input id="inTelefono"
+                                   class="cts_forms form-control"
+                                   asp-for="@Model.Inventario!.ValorTotal" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Telefono</label>
+                        <div class="col-6">
+                            <input id="inTelefono"
+                                   class="cts_forms form-control"
+                                   asp-for="@Model.Inventario!.FechaActualizacion" />
+                        </div>
+                    </div>
+                </div>
+            }
+            
+            @if (ViewData.ContainsKey("Mensaje"))
+            {
+                @await Html.PartialAsync("../Emergentes/Mensajes.cshtml")
+                ;
+            }
+
+            @if (Model.Inventario != null && Model.Borrando)
+            {
+                <div class='popup'>
+                    <div class='pp_ms_inner'>
+                        <div style='width:95%'>
+                            <h2 align="left">Mensaje</h2>
+                            <h6 align="left">Desea borrar el Inventario?</h6>
+                            <h6 align="left">@Model.Inventario!.Cantidad</h6>
+                            
+                            <input type="submit"
+                                   value="Cerrar"
+                                   asp-page-handler="BtCerrar"
+                                   class="btn btn-secondary" />
+                            <input type="submit"
+                                   value="Borrar"
+                                   asp-page-handler="BtBorrar"
+                                   class="btn btn-secondary" />
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (Model != null && Model.Lista != null && Model.Lista.Count > 0)
+            {
+                <table class="tb_data table table-striped table-bordered table-hover">
+                    <tr>
+                        <th>Cantidad</th>
+                        <th>Ubicacion</th>
+                        <th>Valor Total</th>
+                        <th>Fecha de Actualizacion</th>
+                    </tr>
+                
+                    @foreach (var elemento in Model.Lista)
+                    {
+                        <tr>
+                            <td>@elemento.Cantidad</td>
+                            <td>@elemento.Ubicacion</td>
+                            <td>@elemento.ValorTotal</td>
+                            <td>@elemento.FechaActualizacion</td>
+                            <td>
+                                <input type="submit"
+                                       value="Modificar"
+                                       asp-page-handler="BtModificar"
+                                       class="btn btn-secondary"
+                                       asp-route-data="@elemento.Id" />
+                                <input type="submit"
+                                       value="Borrar"
+                                       asp-page-handler="BtBorrarVal"
+                                       class="btn btn-secondary"
+                                       asp-route-data="@elemento.Id" />
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+        </form>
+    </div>
+</center>

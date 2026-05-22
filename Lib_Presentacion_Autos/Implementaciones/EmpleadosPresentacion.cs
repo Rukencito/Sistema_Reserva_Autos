@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Lib_Presentacion_Autos.Implementaciones
 {
-    public class EmpleadosPresentacion
+    public class EmpleadosPresentacion : IEmpleadosPresentacion
     {
         private IComunicaciones? iComunicaciones;
 
