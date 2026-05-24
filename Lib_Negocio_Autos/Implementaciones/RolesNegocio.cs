@@ -7,77 +7,160 @@ namespace Lib_Negocio_Autos.Implementaciones
     public class RolesNegocio : IRolesNegocio
     {
         private IConexion? iConexion;
-        public List<Roles> Consultar()
+        private void AbrirConexion()
         {
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+        }
 
-            var lista = iConexion.Roles!.ToList();
-
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo una consulta en Roles";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Consulta";
-            this.iConexion.Auditorias!.Add(Auditorias);
+        private void RegistrarAuditoria(string descripcion, string accion)
+        {
+            iConexion!.Auditorias!.Add(new Auditorias
+            {
+                Descripcion = descripcion,
+                FechaHora = DateTime.Now,
+                Usuario = "UsuarioActual", // Reemplaza con el usuario de sesión
+                Accion = accion
+            });
             iConexion.SaveChanges();
+        }
 
+        public List<Roles> Consultar()
+        {
+            AbrirConexion();
+            var lista = iConexion!.Roles!.ToList();
+            RegistrarAuditoria("Se realizó una consulta en Roles", "Consulta");
             return lista;
         }
 
         public Roles Guardar(Roles entidad)
         {
+            AbrirConexion();
+            ValidarDatos(entidad);
 
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            if (NombreExiste(entidad.Nombre!))
+            {
+                throw new Exception("Ya existe un rol con el nombre '" + entidad.Nombre + "'");
+            }
 
-            iConexion.Roles!.Add(entidad!);
+            iConexion!.Roles!.Add(entidad);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo un guardado en Roles";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Guardado";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria(
+                "Se guardó el rol '" + entidad.Nombre + "'",
+                "Guardado");
+
             return entidad;
         }
 
         public Roles Eliminar(Roles entidad)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            AbrirConexion();
 
-            iConexion.Roles!.Remove(entidad!);
+            if (!ValidarId(entidad.Id))
+            {
+                throw new Exception("El rol con ID " + entidad.Id + " no existe en el sistema");
+            }
+
+            int usuariosConRol = iConexion!.Usuarios!
+                .Count(u => u.Rol!= null && u.Rol.Id == entidad.Id);
+
+            if (usuariosConRol > 0)
+            {
+                throw new Exception(
+                    "No se puede eliminar el rol '" + entidad.Nombre + "' — " +
+                    "tiene " + usuariosConRol + " usuario(s) asignado(s). " +
+                    "Reasigne los usuarios antes de eliminar el rol");
+            }
+
+            int permisosDelRol = iConexion.Permisos!
+                .Count(p => p.Rol!= null && p.Rol.Id == entidad.Id);
+
+            if (permisosDelRol > 0)
+            {
+                throw new Exception(
+                    "No se puede eliminar el rol '" + entidad.Nombre + "' — " +
+                    "tiene " + permisosDelRol + " permiso(s) asociado(s). " +
+                    "Elimine los permisos antes de eliminar el rol");
+            }
+
+            iConexion.Roles!.Remove(entidad);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se elimino un registro en Roles";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Eliminacion";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria(
+                "Se eliminó el rol '" + entidad.Nombre + "' con ID " + entidad.Id,
+                "Eliminacion");
+
             return entidad;
         }
 
         public Roles Modificar(Roles entidad)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            AbrirConexion();
+            ValidarDatos(entidad);
 
-            iConexion.Roles!.Update(entidad!);
+            if (!ValidarId(entidad.Id))
+            {
+                throw new Exception("El rol con ID " + entidad.Id + " no existe en el sistema");
+            }
+
+            bool nombreDuplicado = iConexion!.Roles!.Any(r =>
+                r.Nombre == entidad.Nombre && r.Id != entidad.Id);
+
+            if (nombreDuplicado)
+            {
+                throw new Exception("Ya existe otro rol con el nombre '" + entidad.Nombre + "'");
+            }
+
+            iConexion.Roles!.Update(entidad);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se modifico un registro en Roles";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Modificacion";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria(
+                "Se modificó el rol con ID " + entidad.Id,
+                "Modificacion");
+
             return entidad;
+        }
+
+        public bool ValidarId(int id)
+        {
+            if (iConexion == null) AbrirConexion();
+            return iConexion!.Roles!.Any(r => r.Id == id);
+        }
+
+        public bool NombreExiste(string nombre)
+        {
+            if (iConexion == null) AbrirConexion();
+            return iConexion!.Roles!.Any(r => r.Nombre == nombre);
+        }
+
+        public Roles ConsultarPorId(int id)
+        {
+            AbrirConexion();
+
+            var rol = iConexion!.Roles!.FirstOrDefault(r => r.Id == id);
+            if (rol == null)
+            {
+                throw new Exception("No se encontró ningún rol con ID " + id);
+            }
+
+            RegistrarAuditoria(
+                "Se consultó el rol con ID: " + id,
+                "Consulta por ID");
+
+            return rol;
+        }
+
+        public void ValidarDatos(Roles entidad)
+        {
+            if (entidad == null)
+                throw new Exception("La información del rol es obligatoria");
+
+            if (string.IsNullOrEmpty(entidad.Nombre))
+                throw new Exception("El nombre del rol es obligatorio");
+
+            if (entidad.Nombre.Length < 3)
+                throw new Exception("El nombre del rol debe tener al menos 3 caracteres");
         }
     }
 }

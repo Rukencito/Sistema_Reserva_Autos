@@ -8,7 +8,8 @@ namespace Lib_Negocio_Autos.modelo
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFin { get; set; }
 
-        [ForeignKey("Autos")] public Autos? _Autos { get; set; }
+        public int Autos { get; set; }
+        [ForeignKey("Autos")] public Autos? Auto { get; set; }
 
     }
 }

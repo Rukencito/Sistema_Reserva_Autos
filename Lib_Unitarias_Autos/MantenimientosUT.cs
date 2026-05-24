@@ -1,20 +1,117 @@
 ﻿using Lib_Negocio_Autos.Implementaciones;
-using Lib_Negocio_Autos.Interfaces;
+using Lib_Negocio_Autos.modelo;
 
 namespace Lib_Unitarias_Autos
 {
     [TestClass]
-    public sealed class MantenimientosUT
+    public class MantenimientosUT
     {
+        private MantenimientosNegocio? negocio;
+        private Mantenimientos? entidad;
+
         [TestMethod]
-        public void TestMethod1()
+        public void Ejecutar()
         {
-
-            IConexion conexion = new Conexion();
-            conexion.string_conexion = "server=localhost;Integrated Security=True;TrustServerCertificate=true;database=db_SistemaAutos;";
-            var lista = conexion.Mantenimientos!.ToList();
-
+            Consultar();
+            ConsultarPorId();
+            ConsultarPorAuto();
+            ConsultarPorTaller();
+            ConsultarPorTipo();
+            ValidarId();
+            FinalizarMantenimiento();
         }
 
+        private void Consultar()
+        {
+            negocio = new MantenimientosNegocio();
+
+            var lista = negocio.Consultar();
+
+            if (lista.Count > 0)
+            {
+                entidad = lista.First();
+                return;
+            }
+
+            throw new Exception("No existen mantenimientos registrados");
+        }
+
+        private void ConsultarPorId()
+        {
+            negocio = new MantenimientosNegocio();
+
+            var mantenimiento = negocio.ConsultarPorId(entidad!.Id);
+
+            if (mantenimiento != null)
+                return;
+
+            throw new Exception("No se pudo consultar el mantenimiento por ID");
+        }
+
+        private void ConsultarPorAuto()
+        {
+            negocio = new MantenimientosNegocio();
+
+            if (entidad!.Autos == null)
+                throw new Exception("El mantenimiento no tiene auto asociado");
+
+            var lista = negocio.ConsultarPorAuto(entidad.Auto!.Id);
+
+            if (lista.Count > 0)
+                return;
+
+            throw new Exception("No se encontraron mantenimientos para el auto");
+        }
+
+        private void ConsultarPorTaller()
+        {
+            negocio = new MantenimientosNegocio();
+
+            if (entidad!.Talleres == null)
+                throw new Exception("El mantenimiento no tiene taller asociado");
+
+            var lista = negocio.ConsultarPorTaller(entidad.Taller!.Id);
+
+            if (lista.Count > 0)
+                return;
+
+            throw new Exception("No se encontraron mantenimientos para el taller");
+        }
+
+        private void ConsultarPorTipo()
+        {
+            negocio = new MantenimientosNegocio();
+
+            var lista = negocio.ConsultarPorTipo(entidad!.Tipo!);
+
+            if (lista.Count > 0)
+                return;
+
+            throw new Exception("No se encontraron mantenimientos por tipo");
+        }
+
+        private void ValidarId()
+        {
+            negocio = new MantenimientosNegocio();
+
+            bool existe = negocio.ValidarId(entidad!.Id);
+
+            if (existe)
+                return;
+
+            throw new Exception("El ID del mantenimiento no es válido");
+        }
+
+        private void FinalizarMantenimiento()
+        {
+            negocio = new MantenimientosNegocio();
+
+            var mantenimiento = negocio.FinalizarMantenimiento(entidad!.Id);
+
+            if (mantenimiento != null)
+                return;
+
+            throw new Exception("No se pudo finalizar el mantenimiento");
+        }
     }
 }

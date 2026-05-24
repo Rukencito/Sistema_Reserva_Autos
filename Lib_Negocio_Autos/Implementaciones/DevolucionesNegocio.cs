@@ -1,83 +1,193 @@
 ﻿using Lib_Negocio_Autos.Interfaces;
 using Lib_Negocio_Autos.modelo;
 using Lib_Negocio_Autos.nucleo;
+using Microsoft.EntityFrameworkCore;
 
 namespace Lib_Negocio_Autos.Implementaciones
 {
     public class DevolucionesNegocio : IDevolucionesNegocio
     {
         private IConexion? iConexion;
-        public List<Devoluciones> Consultar()
+
+        private void AbrirConexion()
         {
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+        }
 
-            var lista = iConexion.Devoluciones!.ToList();
-
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo una consulta en Devoluciones";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Consulta";
-            this.iConexion.Auditorias!.Add(Auditorias);
+        private void RegistrarAuditoria(string descripcion, string accion)
+        {
+            iConexion!.Auditorias!.Add(new Auditorias
+            {
+                Descripcion = descripcion,
+                FechaHora = DateTime.Now,
+                Usuario = "UsuarioActual", // Reemplaza con el usuario de sesión
+                Accion = accion
+            });
             iConexion.SaveChanges();
+        }
 
+        public List<Devoluciones> Consultar()
+        {
+            AbrirConexion();
+            var lista = iConexion!.Devoluciones!.ToList();
+            RegistrarAuditoria("Se realizó una consulta en Devoluciones", "Consulta");
             return lista;
         }
 
         public Devoluciones Guardar(Devoluciones entidad)
         {
+            AbrirConexion();
+            ValidarDatos(entidad);
 
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            if (ExisteDevolucionParaAlquiler(entidad.Alquiler!.Id))
+            {
+                throw new Exception("Ya existe una devolución registrada para ese alquiler");
+            }
 
-            iConexion.Devoluciones!.Add(entidad!);
+            iConexion!.Devoluciones!.Add(entidad);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo un guardado en Devoluciones";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Guardado";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            CerrarAlquiler(entidad.Alquiler.Id);
+
+            RegistrarAuditoria(
+                "Se registró la devolución del alquiler ID " + entidad.Alquiler.Id,
+                "Guardado");
+
             return entidad;
         }
 
         public Devoluciones Eliminar(Devoluciones entidad)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            AbrirConexion();
 
-            iConexion.Devoluciones!.Remove(entidad!);
+            if (!ValidarId(entidad.Id))
+            {
+                throw new Exception("La devolución con ID " + entidad.Id + " no existe en el sistema");
+            }
+
+            iConexion!.Devoluciones!.Remove(entidad);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se elimino un registro en Devoluciones";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Eliminacion";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria(
+                "Se eliminó la devolución con ID " + entidad.Id,
+                "Eliminacion");
+
             return entidad;
         }
 
         public Devoluciones Modificar(Devoluciones entidad)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            AbrirConexion();
 
-            iConexion.Devoluciones!.Update(entidad!);
+            ValidarDatos(entidad);
+
+            if (!ValidarId(entidad.Id))
+            {
+                throw new Exception("La devolución con ID " + entidad.Id + " no existe en el sistema");
+            }
+
+            iConexion!.Devoluciones!.Update(entidad);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se modifico un registro en Devoluciones";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Modificacion";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria(
+                "Se modificó la devolución con ID " + entidad.Id,
+                "Modificacion");
+
             return entidad;
+        }
+
+        public bool ValidarId(int id)
+        {
+            if (iConexion == null) AbrirConexion();
+            return iConexion!.Devoluciones!.Any(d => d.Id == id);
+        }
+
+        public bool ExisteDevolucionParaAlquiler(int alquilerId)
+        {
+            if (iConexion == null)
+            {
+                AbrirConexion();
+            }
+
+            return iConexion!.Devoluciones!
+                .Any(d => d.Alquiler!= null && d.Alquiler.Id == alquilerId);
+        }
+
+        public Devoluciones ConsultarPorAlquiler(int alquilerId)
+        {
+            AbrirConexion();
+
+            var devolucion = iConexion!.Devoluciones!
+                .FirstOrDefault(d => d.Alquiler != null && d.Alquiler.Id == alquilerId);
+
+            if (devolucion == null)
+            {
+                throw new Exception("No se encontró devolución para el alquiler con ID " + alquilerId);
+            }
+
+            RegistrarAuditoria(
+                "Se consultó la devolución del alquiler con ID: " + alquilerId,
+                "Consulta por Alquiler");
+
+            return devolucion;
+        }
+
+        public Devoluciones ConsultarPorId(int id)
+        {
+            AbrirConexion();
+
+            var devolucion = iConexion!.Devoluciones!
+                .Include(d => d.Alquiler) 
+                .FirstOrDefault(d => d.Id == id);
+            if (devolucion == null)
+            {
+                throw new Exception("No se encontró ninguna devolución con ID " + id);
+            }
+
+            RegistrarAuditoria(
+                "Se consultó la devolución con ID: " + id,
+                "Consulta por ID");
+
+            return devolucion;
+        }
+
+        private void CerrarAlquiler(int alquilerId)
+        {
+            var alquiler = iConexion!.Alquileres!.FirstOrDefault(a => a.Id == alquilerId);
+            if (alquiler != null)
+            {
+                alquiler.EstadoAlquiler = false;
+                iConexion.Alquileres!.Update(alquiler);
+                iConexion.SaveChanges();
+
+                RegistrarAuditoria(
+                    "Se cerró el alquiler con ID " + alquilerId + " por devolución registrada",
+                    "Cierre de Alquiler");
+            }
+        }
+
+     
+        public void ValidarDatos(Devoluciones entidad)
+        {
+            if (entidad == null)
+                throw new Exception("La información de la devolución es obligatoria");
+
+            if (entidad.Alquiler == null)
+                throw new Exception("La devolución debe estar asociada a un alquiler");
+
+            if (entidad.FechaEntrega == DateTime.MinValue)
+                throw new Exception("La fecha de entrega es obligatoria");
+
+            if (entidad.Alquiler.FechaInicio != DateTime.MinValue &&
+                entidad.FechaEntrega < entidad.Alquiler.FechaInicio)
+                throw new Exception("La fecha de entrega no puede ser anterior a la fecha de inicio del alquiler");
+
+            if (entidad.NivelCombustible < 0 || entidad.NivelCombustible > 100)
+                throw new Exception("El nivel de combustible debe estar entre 0 y 100");
+
+            if (entidad.Kilometraje < 0)
+                throw new Exception("El kilometraje no puede ser un valor negativo");
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Lib_Negocio_Autos.Interfaces
         DbSet<Contratos>? Contratos { get; set; }
         DbSet<Promociones>? Promociones { get; set; }
         DbSet<Facturas>? Facturas { get; set; }
-        DbSet<Resenas>? Reseñas { get; set; }
+        DbSet<Resenas>? Resenas { get; set; }
         DbSet<DetallesFactura>? DetallesFactura { get; set; }
         DbSet<Pagos>? Pagos { get; set; }
         DbSet<Usuarios>? Usuarios { get; set; }

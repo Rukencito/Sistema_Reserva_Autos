@@ -7,129 +7,171 @@ namespace Lib_Negocio_Autos.Implementaciones
     public class ReservasNegocio : IReservasNegocio
     {
         private IConexion? iConexion;
-        public List<Reservas> Consultar()
+
+        private void AbrirConexion()
         {
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+        }
 
-            var lista = iConexion.Reservas!.ToList();
-
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo una consulta en Reservas";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Consulta";
-            this.iConexion.Auditorias!.Add(Auditorias);
+        private void RegistrarAuditoria(string descripcion, string accion)
+        {
+            iConexion!.Auditorias!.Add(new Auditorias
+            {
+                Descripcion = descripcion,
+                FechaHora = DateTime.Now,
+                Usuario = "UsuarioActual", // Reemplaza con el usuario de sesión
+                Accion = accion
+            });
             iConexion.SaveChanges();
+        }
 
+        public List<Reservas> Consultar()
+        {
+            AbrirConexion();
+            var lista = iConexion!.Reservas!.ToList();
+            RegistrarAuditoria("Se realizó una consulta en Reservas", "Consulta");
             return lista;
         }
 
         public Reservas Guardar(Reservas entidad)
         {
-
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            AbrirConexion();
 
             ValidarDatos(entidad);
-            iConexion.Reservas!.Add(entidad!);
+
+            if (ValidarReservaDuplicada(entidad.Auto!.Id, entidad.Cliente!.Id, entidad.FechaVencimiento))
+            {
+                throw new Exception("Ya existe una reserva activa para ese auto y cliente");
+            }
+
+            iConexion!.Reservas!.Add(entidad);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo un guardado en Reservas";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Guardado";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria(
+                "Se guardó una reserva para el auto ID " + entidad.Auto.Id +" y cliente ID " + entidad.Cliente.Id,
+                "Guardado");
+
             return entidad;
         }
 
         public Reservas Eliminar(Reservas entidad)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            AbrirConexion();
 
             if (!ValidarId(entidad.Id))
-            {
-                throw new Exception("El registro no existe");
-            }
-            iConexion.Reservas!.Remove(entidad!);
+                throw new Exception("La reserva con ID " + entidad.Id + " no existe en el sistema");
+
+            iConexion!.Reservas!.Remove(entidad);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se elimino un registro en Reservas";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Eliminacion";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria("Se eliminó la reserva con ID " + entidad.Id, "Eliminacion");
             return entidad;
         }
 
         public Reservas Modificar(Reservas entidad)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            AbrirConexion();
+
+            ValidarDatos(entidad);
 
             if (!ValidarId(entidad.Id))
-            {
-                throw new Exception("El registro no existe");
-            }
-            iConexion.Reservas!.Update(entidad!);
+                throw new Exception("La reserva con ID " + entidad.Id + " no existe en el sistema");
+
+            iConexion!.Reservas!.Update(entidad);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se modifico un registro en Reservas";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Modificacion";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria("Se modificó la reserva con ID " + entidad.Id, "Modificacion");
             return entidad;
         }
+
+      
         public bool ValidarId(int id)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
-            var Empleado = iConexion.Empleados!.FirstOrDefault(e => e.Id == id);
-            return Empleado != null;
+            if (iConexion == null) AbrirConexion();
+            return iConexion!.Reservas!.Any(r => r.Id == id);
         }
 
         public bool ValidarReservaDuplicada(int autoId, int clienteId, DateTime fechaVencimiento)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            AbrirConexion();
 
-          
-            var existeDuplicado = iConexion.Reservas!.Any(r =>
-                r._Autos != null && r._Autos.Id == autoId &&
-                r._Clientes != null && r._Clientes.Id == clienteId &&
-                r.FechaVencimiento == fechaVencimiento);
+            var existeDuplicado = iConexion!.Reservas!.Any(r =>
+                r.Autos != null && r.Auto.Id == autoId &&
+                r.Clientes != null && r.Cliente.Id == clienteId &&
+                r.FechaVencimiento >= DateTime.Now &&
+                (r.EstadoReserva == "Pendiente" || r.EstadoReserva == "Confirmada"));
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se verifico reserva duplicada para el auto ID: " + autoId +
-                                     " y cliente ID: " + clienteId;
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual";
-            Auditorias.Accion = "Validacion de Reserva Duplicada";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria(
+                "Se verificó reserva duplicada — auto ID: " + autoId + ", cliente ID: " + clienteId,
+                "Validacion de Reserva Duplicada");
 
             return existeDuplicado;
         }
 
-        public void ValidarDatos(Reservas entidad)
+        public Reservas CambiarEstado(int reservaId, string nuevoEstado)
         {
-            if (entidad._Autos == null || entidad._Clientes == null)
-            {
-                throw new Exception("El auto y el cliente son obligatorios para una reserva.");
-            }
-            if (entidad.FechaVencimiento <= DateTime.Now)
-            {
-                throw new Exception("La fecha de vencimiento debe ser futura.");
-            }
+            AbrirConexion();
+
+            var estadosValidos = new[] { "Pendiente", "Confirmada", "Cancelada" };
+            if (!estadosValidos.Contains(nuevoEstado))
+                throw new Exception("Estado inválido. Los estados permitidos son: " + string.Join(", ", estadosValidos));
+
+            var reserva = iConexion!.Reservas!.FirstOrDefault(r => r.Id == reservaId);
+            if (reserva == null)
+                throw new Exception("No se encontró la reserva con ID " + reservaId);
+
+            // No permitir reactivar una reserva ya cancelada
+            if (reserva.EstadoReserva == "Cancelada" && nuevoEstado != "Cancelada")
+                throw new Exception("No se puede reactivar una reserva cancelada");
+
+            reserva.EstadoReserva = nuevoEstado;
+            iConexion.Reservas!.Update(reserva);
+
+            RegistrarAuditoria(
+                "Se cambió el estado de la reserva ID " + reservaId + " a " + nuevoEstado,
+                "Cambio de Estado");
+
+            return reserva;
         }
 
+        public List<Reservas> ConsultarPorCliente(int clienteId)
+        {
+            AbrirConexion();
+
+            var reservas = iConexion!.Reservas!
+                .Where(r => r.Cliente!= null && r.Cliente.Id == clienteId)
+                .ToList();
+
+            RegistrarAuditoria(
+                "Se consultaron reservas del cliente con ID: " + clienteId,
+                "Consulta por Cliente");
+
+            return reservas;
+        }
+
+        public void ValidarDatos(Reservas entidad)
+        {
+            if (entidad == null)
+                throw new Exception("La información de la reserva es obligatoria");
+
+            if (entidad.Auto == null)
+                throw new Exception("El auto es obligatorio para una reserva");
+
+            if (entidad.Cliente == null)
+                throw new Exception("El cliente es obligatorio para una reserva");
+
+            if (entidad.FechaVencimiento <= DateTime.Now)
+                throw new Exception("La fecha de vencimiento debe ser una fecha futura");
+
+            if (entidad.Anticipo < 0)
+                throw new Exception("El anticipo no puede ser un valor negativo");
+
+            if (string.IsNullOrEmpty(entidad.EstadoReserva))
+                throw new Exception("El estado de la reserva es obligatorio");
+
+            if (entidad.FechaReserva == DateTime.MinValue)
+                throw new Exception("La fecha de la reserva es obligatoria");
+        }
     }
 }

@@ -4,7 +4,7 @@ using Lib_Negocio_Autos.nucleo;
 
 namespace Lib_Negocio_Autos.Implementaciones
 {
-    public class ReseñasNegocio : IReseñasNegocio
+    public class ResenasNegocio : IResenasNegocio
     {
         private IConexion? iConexion;
         public List<Resenas> Consultar()
@@ -12,7 +12,7 @@ namespace Lib_Negocio_Autos.Implementaciones
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
 
-            var lista = iConexion.Reseñas!.ToList();
+            var lista = iConexion.Resenas!.ToList();
 
             var Auditorias = new Auditorias();
             Auditorias.Descripcion = "Se realizo una consulta en Reseñas";
@@ -31,7 +31,7 @@ namespace Lib_Negocio_Autos.Implementaciones
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
 
-            iConexion.Reseñas!.Add(entidad!);
+            iConexion.Resenas!.Add(entidad!);
             iConexion.SaveChanges();
 
             var Auditorias = new Auditorias();
@@ -49,7 +49,7 @@ namespace Lib_Negocio_Autos.Implementaciones
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
 
-            iConexion.Reseñas!.Remove(entidad!);
+            iConexion.Resenas!.Remove(entidad!);
             iConexion.SaveChanges();
 
             var Auditorias = new Auditorias();
@@ -67,7 +67,7 @@ namespace Lib_Negocio_Autos.Implementaciones
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
 
-            iConexion.Reseñas!.Update(entidad!);
+            iConexion.Resenas!.Update(entidad!);
             iConexion.SaveChanges();
 
             var Auditorias = new Auditorias();

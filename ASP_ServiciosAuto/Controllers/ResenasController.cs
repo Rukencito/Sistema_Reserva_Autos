@@ -13,7 +13,7 @@ namespace ASP_ServiciosAuto.Controllers
 
         public ResenasController()
         {
-            this.IReseñasNegocio = new ReseñasNegocio();
+            this.IReseñasNegocio = new ResenasNegocio();
         }
 
         [HttpGet]

@@ -1,149 +1,182 @@
 ﻿using Lib_Negocio_Autos.Interfaces;
 using Lib_Negocio_Autos.modelo;
 using Lib_Negocio_Autos.nucleo;
+using Microsoft.EntityFrameworkCore;
 
 namespace Lib_Negocio_Autos.Implementaciones
 {
     public class DetallesFacturaNegocio : IDetallesFacturaNegocio
     {
         private IConexion? iConexion;
-        public List<DetallesFactura> Consultar()
+        private void AbrirConexion()
         {
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+        }
 
-            var lista = iConexion.DetallesFactura!.ToList();
-
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo una consulta en DetallesFactura";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Consulta";
-            this.iConexion.Auditorias!.Add(Auditorias);
+        private void RegistrarAuditoria(string descripcion, string accion)
+        {
+            iConexion!.Auditorias!.Add(new Auditorias
+            {
+                Descripcion = descripcion,
+                FechaHora = DateTime.Now,
+                Usuario = "UsuarioActual", // Reemplaza con el usuario de sesión
+                Accion = accion
+            });
             iConexion.SaveChanges();
+        }
 
+        public List<DetallesFactura> Consultar()
+        {
+            AbrirConexion();
+            var lista = iConexion!.DetallesFactura!.ToList();
+            RegistrarAuditoria("Se realizó una consulta en DetallesFactura", "Consulta");
             return lista;
         }
 
         public DetallesFactura Guardar(DetallesFactura entidad)
         {
-
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
-
+            AbrirConexion();
             ValidarDatos(entidad);
 
-            iConexion.DetallesFactura!.Add(entidad!);
+            iConexion!.DetallesFactura!.Add(entidad);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo un guardado en DetallesFactura";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Guardado";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria(
+                "Se guardó un detalle de factura tipo" + entidad.TipoFactura,
+                "Guardado");
+
             return entidad;
         }
 
         public DetallesFactura Eliminar(DetallesFactura entidad)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            AbrirConexion();
 
-            if (ValidarId(entidad.Id))
+            if (!ValidarId(entidad.Id))
             {
-                throw new Exception("El ID del detalle de factura no existe en el sistema");
+                throw new Exception("El detalle de factura con ID " + entidad.Id + " no existe en el sistema");
             }
 
-            iConexion.DetallesFactura!.Remove(entidad!);
+            iConexion!.DetallesFactura!.Remove(entidad);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se elimino un registro en DetallesFactura";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Eliminacion";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria(
+                "Se eliminó el detalle de factura con ID " + entidad.Id,
+                "Eliminacion");
+
             return entidad;
         }
 
         public DetallesFactura Modificar(DetallesFactura entidad)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            AbrirConexion();
+            ValidarDatos(entidad);
 
             if (!ValidarId(entidad.Id))
             {
-                throw new Exception("El ID del detalle de factura no existe en el sistema");
+                throw new Exception($"El detalle de factura con ID " + entidad.Id + " no existe en el sistema");
             }
 
-            iConexion.DetallesFactura!.Update(entidad!);
+            iConexion!.DetallesFactura!.Update(entidad);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se modifico un registro en DetallesFactura";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Modificacion";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria(
+                "Se modificó el detalle de factura con ID " + entidad.Id,
+                "Modificacion");
+
             return entidad;
         }
 
         public bool ValidarId(int id)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
-            return iConexion.DetallesFactura!.Any(e => e.Id == id);
+            if (iConexion == null) AbrirConexion();
+            return iConexion!.DetallesFactura!.Any(e => e.Id == id);
         }
 
         public List<DetallesFactura> ConsultarPorTipoFactura(string tipoFactura)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            AbrirConexion();
 
-            var lista = iConexion.DetallesFactura!.Where(e => e.TipoFactura == tipoFactura).ToList();
-            var Auditorias = new Auditorias();
+            var lista = iConexion!.DetallesFactura!
+                .Where(e => e.TipoFactura!.ToLower().Contains(tipoFactura.ToLower()))
+                .ToList();
 
-            Auditorias.Descripcion = "Se realizo una consulta por TipoFactura en DetallesFactura con TipoFactura: {tipoFactura}";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Consulta por TipoFactura";
+            RegistrarAuditoria(
+                "Se consultaron detalles de factura por tipo: " + tipoFactura,
+                "Consulta por TipoFactura");
 
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
             return lista;
         }
 
         public DetallesFactura ConsultarPorId(int id)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            AbrirConexion();
 
-            var entidad = iConexion.DetallesFactura!.FirstOrDefault(e => e.Id == id);
-            var Auditorias = new Auditorias();
+            var entidad = iConexion!.DetallesFactura!
+                .Include(e => e.Factura) 
+                .FirstOrDefault(e => e.Id == id);
 
-            Auditorias.Descripcion = $"Se realizo una consulta por ID en DetallesFactura con ID: {id}";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Consulta por ID";
+            if (entidad == null)
+            {
+                throw new Exception("No se encontró ningún detalle de factura con ID " + id);
+            }
 
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
-            return entidad!;
+            RegistrarAuditoria(
+                "Se consultó el detalle de factura con ID: " + id,
+                "Consulta por ID");
+
+            return entidad;
         }
+
+        public List<DetallesFactura> ConsultarPorFactura(int facturaId)
+        {
+            AbrirConexion();
+
+            var lista = iConexion!.DetallesFactura!
+                .Where(e => e.Factura!= null && e.Factura.Id == facturaId)
+                .ToList();
+
+            RegistrarAuditoria(
+                "Se consultaron detalles de la factura con ID: " + facturaId,
+                "Consulta por Factura");
+
+            return lista;
+        }
+
+        public decimal CalcularSubtotalPorFactura(int facturaId)
+        {
+            AbrirConexion();
+
+            var detalles = iConexion!.DetallesFactura!
+                .Where(e => e.Factura!= null && e.Factura.Id == facturaId)
+                .ToList();
+
+            if (!detalles.Any())
+                throw new Exception("No se encontraron detalles para la factura con ID " + facturaId);
+
+            decimal subtotal = detalles.Sum(e => e.Subtotal ?? 0);
+
+            RegistrarAuditoria(
+                "Se calculó el subtotal de la factura con ID: " + facturaId,
+                "Calculo Subtotal");
+
+            return subtotal;
+        }
+
         public void ValidarDatos(DetallesFactura entidad)
         {
+            if (entidad == null)
+                throw new ArgumentException("La información del detalle de factura es obligatoria");
+
             if (entidad.Subtotal == null || entidad.Subtotal <= 0)
-            {
-                throw new ArgumentException("El subtotal debe ser un valor positivo.");
-            }
+                throw new ArgumentException("El subtotal debe ser un valor positivo");
+
             if (string.IsNullOrEmpty(entidad.TipoFactura))
-            {
-                throw new ArgumentException("El tipo de factura no puede estar vacío.");
-            }
+                throw new ArgumentException("El tipo de factura no puede estar vacío");
+
+            if (entidad.Factura == null)
+                throw new ArgumentException("El detalle debe estar asociado a una factura");
         }
     }
 }

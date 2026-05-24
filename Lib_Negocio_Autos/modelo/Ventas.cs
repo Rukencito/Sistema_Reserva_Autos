@@ -6,12 +6,15 @@ namespace Lib_Negocio_Autos.modelo
     {
         public int Id { get; set; }
         public DateTime FechaVenta { get; set; }
-        public double PrecioVenta { get; set; }
+        public decimal PrecioVenta { get; set; }
         public string? TipoPago { get; set; }
         public bool EstadoPago { get; set; }
 
-        [ForeignKey("Clientes")] public Clientes? _Clientes { get; set; }
-        [ForeignKey("Empleados")] public Empleados? _Empleados { get; set; }
+        public int? Clientes { get; set; }
+        public int? Empleados { get; set; }
+
+        [ForeignKey("Clientes")] public Clientes? Cliente { get; set; }
+        [ForeignKey("Empleados")] public Empleados? Empleado { get; set; }
 
         [NotMapped] public List<Autos>? Auto { get; set; }
         [NotMapped] public List<Promociones>? Promocion { get; set; }

@@ -1,4 +1,4 @@
-﻿using Lib_Negocio_Autos.Interfaces;
+﻿/*using Lib_Negocio_Autos.Interfaces;
 using Lib_Negocio_Autos.modelo;
 using Lib_Negocio_Autos.nucleo;
 
@@ -80,4 +80,4 @@ namespace Lib_Negocio_Autos.Implementaciones
             return entidad;
         }
     }
-}
+}*/

@@ -8,7 +8,9 @@ namespace Lib_Negocio_Autos.modelo
         public string? Nombre { get; set; }
         public string? Descripcion { get; set; }
 
-        [NotMapped] public List<Roles>? Rol { get; set; }
+        public int Roles { get; set; }
+
+        [ForeignKey("Roles")] public Roles? Rol { get; set; }
 
     }
 }

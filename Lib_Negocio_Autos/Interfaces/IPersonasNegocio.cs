@@ -1,4 +1,4 @@
-﻿using Lib_Negocio_Autos.modelo;
+﻿/*using Lib_Negocio_Autos.modelo;
 
 namespace Lib_Negocio_Autos.Interfaces
 {
@@ -9,4 +9,4 @@ namespace Lib_Negocio_Autos.Interfaces
         Personas Eliminar(Personas entidad);
         Personas Modificar(Personas entidad);
     }
-}
+}*/

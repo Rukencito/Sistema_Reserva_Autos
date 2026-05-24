@@ -12,11 +12,15 @@ namespace Lib_Negocio_Autos.modelo
         public bool Estado { get; set; }
         public string? Color { get; set; }
 
-        [ForeignKey("Parqueaderos")] public Parqueaderos? _Parqueaderos { get; set; }
-        [ForeignKey("Duenos")] public Duenos? _Duenos { get; set; }
-        [ForeignKey("Sucursales")] public Sucursales? _Sucursales { get; set; }
-        [ForeignKey("Inventarios")] public Inventarios? _Inventarios { get; set; }
-        [ForeignKey("Ventas")] public Ventas? _Ventas { get; set; }
+        public int? Parqueaderos { get; set; }
+        public int? Duenos { get; set; }
+        public int? Sucursales { get; set; }
+        public int? Inventarios { get; set; }
+
+        [ForeignKey("Parqueaderos")] public Parqueaderos? Parqueadero { get; set; }
+        [ForeignKey("Duenos")] public Duenos? Dueno { get; set; }
+        [ForeignKey("Sucursales")] public Sucursales? Sucursal { get; set; }
+        [ForeignKey("Inventarios")] public Inventarios? Inventario { get; set; }
         [NotMapped] public List<Alquileres>? Alquiler { get; set; }
         [NotMapped] public List<Garantias>? Garantia { get; set; }
         [NotMapped] public List<Mantenimientos>? Mantenimiento { get; set; }

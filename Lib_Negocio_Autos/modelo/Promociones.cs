@@ -6,11 +6,13 @@ namespace Lib_Negocio_Autos.modelo
     {
         public int Id { get; set; }
         public string? Descripcion { get; set; }
-        public double? Descuento { get; set; }
+        public decimal? Descuento { get; set; }
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFin { get; set; }
-        
-        [ForeignKey("Ventas")] public Ventas? _Ventas { get; set; }
+
+        public int? Ventas { get; set; }
+
+        [ForeignKey("Ventas")] public Ventas? Venta { get; set; }
 
 
     }

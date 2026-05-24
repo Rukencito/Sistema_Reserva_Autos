@@ -1,152 +1,203 @@
 ﻿using Lib_Negocio_Autos.Interfaces;
 using Lib_Negocio_Autos.modelo;
 using Lib_Negocio_Autos.nucleo;
+using Microsoft.EntityFrameworkCore;
 
 namespace Lib_Negocio_Autos.Implementaciones
 {
     public class FacturasNegocio : IFacturasNegocio
     {
         private IConexion? iConexion;
-        public List<Facturas> Consultar()
+
+        private const decimal IVA = 0.19m;
+
+        private void AbrirConexion()
         {
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+        }
 
-            var lista = iConexion.Facturas!.ToList();
-
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo una consulta en Facturas";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Consulta";
-            this.iConexion.Auditorias!.Add(Auditorias);
+        private void RegistrarAuditoria(string descripcion, string accion)
+        {
+            iConexion!.Auditorias!.Add(new Auditorias
+            {
+                Descripcion = descripcion,
+                FechaHora = DateTime.Now,
+                Usuario = "UsuarioActual", // Reemplaza con el usuario de sesión
+                Accion = accion
+            });
             iConexion.SaveChanges();
+        }
 
+        public List<Facturas> Consultar()
+        {
+            AbrirConexion();
+            var lista = iConexion!.Facturas!.ToList();
+            RegistrarAuditoria("Se realizó una consulta en Facturas", "Consulta");
             return lista;
         }
 
         public Facturas Guardar(Facturas entidad)
         {
+            AbrirConexion();
 
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            ValidarDatos(entidad);
 
-            iConexion.Facturas!.Add(entidad!);
+            CalcularTotal(entidad);
+
+            iConexion!.Facturas!.Add(entidad);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo un guardado en Facturas";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Guardado";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria("Se guardó un registro en Facturas", "Guardado");
             return entidad;
         }
 
         public Facturas Eliminar(Facturas entidad)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
-
-            if (ValidarId(entidad.Id))
+            AbrirConexion();
+            if (!ValidarId(entidad.Id))
             {
-                throw new Exception("El ID de factura no existe en el sistema");
+                throw new Exception("La factura con ID " + entidad.Id + "no existe en el sistema");
             }
 
-            iConexion.Facturas!.Remove(entidad!);
+            iConexion!.Facturas!.Remove(entidad);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se elimino un registro en Facturas";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Eliminacion";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria("Se eliminó la factura con ID " + entidad.Id, "Eliminacion");
             return entidad;
         }
 
         public Facturas Modificar(Facturas entidad)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            AbrirConexion();
+
+            ValidarDatos(entidad);
 
             if (!ValidarId(entidad.Id))
             {
-                throw new Exception("El ID de factura no existe en el sistema");
+                throw new Exception("La factura con ID " + entidad.Id + " no existe en el sistema");
             }
 
-            iConexion.Facturas!.Update(entidad!);
+            CalcularTotal(entidad);
+
+            iConexion!.Facturas!.Update(entidad);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se modifico un registro en Facturas";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Modificacion";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria("Se modificó la factura con ID " + entidad.Id, "Modificacion");
             return entidad;
         }
 
         public bool ValidarId(int id)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
-            var factura = iConexion.Facturas!.FirstOrDefault(f => f.Id == id);
-            return factura != null;
+            if (iConexion == null) AbrirConexion();
+            return iConexion!.Facturas!.Any(f => f.Id == id);
         }
-        public double CalcularTotal(Facturas factura)
-        {
-            double subtotal = 0;
 
-            if (factura.DetalleFactura != null)
+        public decimal CalcularTotal(Facturas factura)
+        {
+            decimal subtotal = 0;
+
+            if (factura.DetalleFactura != null && factura.DetalleFactura.Any())
             {
                 subtotal = factura.DetalleFactura.Sum(x => x.Subtotal ?? 0);
             }
 
-            double iva = subtotal * 0.19;
+            decimal iva = subtotal * (decimal)IVA;
+            decimal total = subtotal + iva;
 
-            factura.IVA = iva;
-            factura.Total = subtotal + iva;
+            factura.Total = total;
+
+            if (iConexion != null && factura.Id > 0)
+            {
+                iConexion.Facturas!.Update(factura);
+                iConexion.SaveChanges();
+            }
 
             return factura.Total;
         }
 
         public List<Facturas> ConsultarPorCliente(int clienteId)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            AbrirConexion();
 
-            var facturas = iConexion.Facturas!.Where(f => f._Clientes != null && f._Clientes.Id == clienteId).ToList();
-            var Auditorias = new Auditorias();
+            var facturas = iConexion!.Facturas!
+                .Where(f => f.Cliente!= null && f.Cliente.Id == clienteId)
+                .ToList();
 
-            Auditorias.Descripcion = $"Se realizo una consulta por Cliente en Facturas para el Cliente ID: {clienteId}";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Consulta por Cliente";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria(
+                "Se consultaron facturas del cliente con ID: " + clienteId,
+                "Consulta por Cliente");
+
             return facturas;
         }
 
         public Facturas ConsultarPorId(int id)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
-            var factura = iConexion.Facturas!.FirstOrDefault(f => f.Id == id);
-            var Auditorias = new Auditorias();
+            AbrirConexion();
 
-            Auditorias.Descripcion = $"Se realizo una consulta por ID en Facturas para el ID: {id}";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Consulta por ID";
+            var factura = iConexion!.Facturas!
+                .Include(f => f.Cliente)
+                .FirstOrDefault(f => f.Id == id);
 
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
-            return factura!;
+            if (factura == null)
+            {
+                throw new Exception("No se encontró ninguna factura con ID {id}");
+            }
+
+            RegistrarAuditoria(
+                "Se consultó la factura con ID: " + id,
+                "Consulta por ID");
+
+            return factura;
         }
 
+        public List<Facturas> ConsultarPendientes()
+        {
+            AbrirConexion();
+
+            var pendientes = iConexion!.Facturas!
+                .Where(f => f.Estado == false)
+                .ToList();
+
+            RegistrarAuditoria("Se consultaron facturas pendientes de pago", "Consulta Pendientes");
+            return pendientes;
+        }
+
+        public Facturas MarcarComoPagada(int facturaId)
+        {
+            AbrirConexion();
+
+            var factura = iConexion!.Facturas!.FirstOrDefault(f => f.Id == facturaId);
+            if (factura == null)
+            {
+                throw new Exception("No se encontró ninguna factura con ID " + facturaId);
+            }
+
+            if (factura.Estado == true)
+            {
+                throw new Exception("La factura con ID " + facturaId + " ya está marcada como pagada");
+            }
+
+            factura.Estado = true;
+            iConexion.Facturas!.Update(factura);
+
+            RegistrarAuditoria("Se marcó como pagada la factura con ID " + facturaId, "Pago de Factura");
+            return factura;
+        }
+
+        public void ValidarDatos(Facturas entidad)
+        {
+            if (entidad == null)
+                throw new Exception("La información de la factura es obligatoria");
+
+            if (entidad.Cliente == null)
+                throw new Exception("La factura debe estar asociada a un cliente");
+
+            if (entidad.Total < 0)
+                throw new Exception("El total de la factura no puede ser negativo");
+
+            if (entidad.FechaEmision == DateTime.MinValue)
+                throw new Exception("La fecha de emisión de la factura es obligatoria");
+        }
     }
 }

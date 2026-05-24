@@ -2,7 +2,7 @@
 
 namespace Lib_Negocio_Autos.Interfaces
 {
-    public interface IReseñasNegocio
+    public interface IResenasNegocio
     {
         List<Resenas> Consultar();
         Resenas Guardar(Resenas entidad);

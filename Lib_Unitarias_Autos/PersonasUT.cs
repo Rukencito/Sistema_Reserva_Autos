@@ -1,4 +1,4 @@
-﻿using Lib_Negocio_Autos.Implementaciones;
+﻿/*using Lib_Negocio_Autos.Implementaciones;
 using Lib_Negocio_Autos.Interfaces;
 
 namespace Lib_Unitarias_Autos 
@@ -17,6 +17,6 @@ namespace Lib_Unitarias_Autos
         }
 
     }
-}
+}*/
 
 

@@ -10,7 +10,9 @@ namespace Lib_Negocio_Autos.modelo
         public DateTime FechaFin { get; set; }
         public string? Descripcion { get; set; }
 
-        [ForeignKey("Alquileres")] public Alquileres? _Alquileres { get; set; }
+        public int Alquileres { get; set; }
+
+        [ForeignKey("Alquileres")] public Alquileres? Alquiler { get; set; }
 
 
     }

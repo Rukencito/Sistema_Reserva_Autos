@@ -7,165 +7,223 @@ namespace Lib_Negocio_Autos.Implementaciones
     public class DuenosNegocio : IDuenosNegocio
     {
         private IConexion? iConexion;
-        public List<Duenos> Consultar()
+
+        private void AbrirConexion()
         {
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+        }
 
-            var lista = iConexion.Duenos!.ToList();
-
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo una consulta en Duenos";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Consulta";
-            this.iConexion.Auditorias!.Add(Auditorias);
+        private void RegistrarAuditoria(string descripcion, string accion)
+        {
+            iConexion!.Auditorias!.Add(new Auditorias
+            {
+                Descripcion = descripcion,
+                FechaHora = DateTime.Now,
+                Usuario = "UsuarioActual", // Reemplaza con el usuario de sesión
+                Accion = accion
+            });
             iConexion.SaveChanges();
+        }
 
+        public List<Duenos> Consultar()
+        {
+            AbrirConexion();
+            var lista = iConexion!.Duenos!.ToList();
+            RegistrarAuditoria("Se realizó una consulta en Duenos", "Consulta");
             return lista;
         }
 
         public Duenos Guardar(Duenos entidad)
         {
+            AbrirConexion();
+            ValidarDatos(entidad);
 
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            if (ValidarCedula(entidad.Cedula!))
+            {
+                throw new Exception("Ya existe un dueño registrado con la cédula " + entidad.Cedula);
+            }
 
-            ValidarDatos(entidad!);
-            iConexion.Duenos!.Add(entidad!);
+            iConexion!.Duenos!.Add(entidad);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo un guardado en Duenos";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Guardado";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria("Se guardó el dueño con cédula " + entidad.Cedula, "Guardado");
             return entidad;
         }
 
         public Duenos Eliminar(Duenos entidad)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            AbrirConexion();
 
-            iConexion.Duenos!.Remove(entidad!);
             if (!ValidarId(entidad.Id))
             {
-                throw new Exception("El registro no existe");
+                throw new Exception("El dueño con ID " + entidad.Id + " no existe en el sistema");
             }
+
+            iConexion!.Duenos!.Remove(entidad);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se elimino un registro en Duenos";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Eliminacion";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria("Se eliminó el dueño con ID " + entidad.Id, "Eliminacion");
             return entidad;
         }
 
         public Duenos Modificar(Duenos entidad)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            AbrirConexion();
+            ValidarDatos(entidad);
 
-            ValidarDatos(entidad!);
             if (!ValidarId(entidad.Id))
             {
-                throw new Exception("El registro no existe");
+                throw new Exception("El dueño con ID " + entidad.Id + " no existe en el sistema");
             }
-            iConexion.Duenos!.Update(entidad!);
+
+            iConexion!.Duenos!.Update(entidad);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se modifico un registro en Duenos";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Modificacion";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria("Se modificó el dueño con ID " + entidad.Id, "Modificacion");
             return entidad;
         }
+
         public bool ValidarId(int id)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
-            var Dueno = iConexion.Duenos!.FirstOrDefault(d => d.Id == id);
-            return Dueno!= null;
+            if (iConexion == null) AbrirConexion();
+            return iConexion!.Duenos!.Any(d => d.Id == id);
+        }
+
+        public bool ValidarCedula(string cedula)
+        {
+            if (iConexion == null) AbrirConexion();
+            return iConexion!.Duenos!.Any(d => d.Cedula == cedula);
+        }
+
+        public Duenos ConsultarPorCedula(string cedula)
+        {
+            AbrirConexion();
+
+            var dueno = iConexion!.Duenos!.FirstOrDefault(d => d.Cedula == cedula);
+
+            if (dueno == null)
+            {
+                throw new Exception("No se encontró ningún dueño con la cédula " + cedula);
+            }
+
+            RegistrarAuditoria("Se consultó dueño por cédula: " + cedula, "Consulta por Cédula");
+            return dueno;
+        }
+
+        public bool VerificarEstadoDueno(int duenoId)
+        {
+            AbrirConexion();
+
+            var dueno = iConexion!.Duenos!.FirstOrDefault(d => d.Id == duenoId);
+            if (dueno == null)
+            {
+                throw new Exception("No se encontró ningún dueño con ID " + duenoId);
+            }
+
+            if (dueno.Estado == false)
+            {
+                throw new Exception("El dueño con ID " + duenoId + " no se encuentra activo");
+            }
+
+            RegistrarAuditoria(
+                "Se verificó el estado del dueño con ID " + duenoId,
+                "Verificacion Estado");
+
+            return true;
+        }
+
+        public List<Duenos> ConsultarActivos()
+        {
+            AbrirConexion();
+
+            var activos = iConexion!.Duenos!
+                .Where(d => d.Estado == true)
+                .ToList();
+
+            RegistrarAuditoria("Se consultaron dueños activos", "Consulta Activos");
+            return activos;
+        }
+
+        public Duenos AgregarAuto(int duenoId)
+        {
+            AbrirConexion();
+
+            var dueno = iConexion!.Duenos!.FirstOrDefault(d => d.Id == duenoId);
+            if (dueno == null)
+            {
+                throw new Exception("No se encontró ningún dueño con ID " + duenoId);
+            }
+
+            if (dueno.Estado == false)
+            {
+                throw new Exception("No se puede agregar un auto a un dueño inactivo");
+            }
+
+            dueno.CantidadAutos = (dueno.CantidadAutos ?? 0) + 1;
+            iConexion.Duenos!.Update(dueno);
+            iConexion.SaveChanges();
+
+            RegistrarAuditoria(
+                "Se incrementó la cantidad de autos del dueño ID " + duenoId,
+                "Agregar Auto");
+
+            return dueno;
+        }
+
+        public Duenos QuitarAuto(int duenoId)
+        {
+            AbrirConexion();
+
+            var dueno = iConexion!.Duenos!.FirstOrDefault(d => d.Id == duenoId);
+            if (dueno == null)
+            {
+                throw new Exception("No se encontró ningún dueño con ID " + duenoId);
+            }
+
+            if ((dueno.CantidadAutos ?? 0) <= 0)
+            {
+                throw new Exception("El dueño con ID " + duenoId + " no tiene autos registrados");
+            }
+
+            dueno.CantidadAutos -= 1;
+            iConexion.Duenos!.Update(dueno);
+            iConexion.SaveChanges();
+
+            RegistrarAuditoria(
+                "Se decrementó la cantidad de autos del dueño ID " + duenoId,
+                "Quitar Auto");
+
+            return dueno;
         }
         public void ValidarDatos(Duenos entidad)
         {
             if (entidad == null)
-            {
-                throw new Exception("La información del Dueño es obligatoria");
-            }
+                throw new Exception("La información del dueño es obligatoria");
 
             if (string.IsNullOrEmpty(entidad.Nombre))
-            {
-                throw new Exception("El nombre del Dueño es obligatorio");
-            }
+                throw new Exception("El nombre del dueño es obligatorio");
 
             if (string.IsNullOrEmpty(entidad.Apellido))
-            {
-                throw new Exception("El apellido del Dueño es obligatorio");
-            }
+                throw new Exception("El apellido del dueño es obligatorio");
 
             if (string.IsNullOrEmpty(entidad.Cedula))
-            {
-                throw new Exception("La cédula del Dueño es obligatoria");
-            }
+                throw new Exception("La cédula del dueño es obligatoria");
 
-            if (entidad.Edad > 18)
-            {
-                throw new Exception("La edad del Dueño debe ser mayor de edad");
-            }
+            if (entidad.Edad < 18)
+                throw new Exception("El dueño debe ser mayor de edad");
 
             if (string.IsNullOrEmpty(entidad.Correo))
-            {
-                throw new Exception("El correo del Dueño es obligatorio");
-            }
+                throw new Exception("El correo del dueño es obligatorio");
+
+            if (!entidad.Correo.Contains("@") || !entidad.Correo.Contains("."))
+                throw new Exception("El correo del dueño no tiene un formato válido");
 
             if (string.IsNullOrEmpty(entidad.Telefono))
-            {
-                throw new Exception("El teléfono del Dueño es obligatorio");
-            }
+                throw new Exception("El teléfono del dueño es obligatorio");
 
-            if (entidad.CantidadAutos >= 0)
-            {
-                throw new Exception("Cantidad de autos debe ser positivo");
-            }
-        }
-
-        public Duenos ConsultarPorCedula(string Cedula)
-        {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
-
-            var Dueno = iConexion.Duenos!.FirstOrDefault(d => d.Cedula == Cedula);
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo una consulta en Duenos por cédula";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual";
-            Auditorias.Accion = "Consulta por cédula";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
-            return Dueno!;
-        }
-
-        public void verificarEstadoDueno(Duenos dueno)
-        {
-            if (dueno.Estado == false)
-            {
-                throw new Exception("El dueño no se encuentra activo");
-            }
-            else 
-            {
-                throw new Exception("El dueño se encuentra activo");
-
-            }
+            if (entidad.CantidadAutos < 0)
+                throw new Exception("La cantidad de autos no puede ser negativa");
         }
     }
 }

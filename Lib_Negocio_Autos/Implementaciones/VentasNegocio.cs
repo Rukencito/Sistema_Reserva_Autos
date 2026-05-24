@@ -104,7 +104,7 @@ namespace Lib_Negocio_Autos.Implementaciones
         {
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
-            var lista = iConexion.Ventas!.Where(v => v._Clientes!.Id == idCliente).ToList();
+            var lista = iConexion.Ventas!.Where(v => v.Cliente!.Id == idCliente).ToList();
             var Auditorias = new Auditorias();
             Auditorias.Descripcion = "Se realizo una consulta en Ventas por Cliente";
             Auditorias.FechaHora = DateTime.Now;

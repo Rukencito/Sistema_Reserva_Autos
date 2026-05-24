@@ -7,185 +7,161 @@ namespace Lib_Negocio_Autos.Implementaciones
     public class AlquileresNegocio : IAlquileresNegocio
     {
         private IConexion? iConexion;
-        public List<Alquileres> Consultar()
+
+        private void AbrirConexion()
         {
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+        }
 
-            var lista = iConexion.Alquileres!.ToList();
-
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo una consulta en Alquileres";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Consulta";
-            this.iConexion.Auditorias!.Add(Auditorias);
+        private void RegistrarAuditoria(string descripcion, string accion)
+        {
+            iConexion!.Auditorias!.Add(new Auditorias
+            {
+                Descripcion = descripcion,
+                FechaHora = DateTime.Now,
+                Usuario = "UsuarioActual", // Reemplaza con el usuario de sesión
+                Accion = accion
+            });
             iConexion.SaveChanges();
+        }
 
+        public List<Alquileres> Consultar()
+        {
+            AbrirConexion();
+            var lista = iConexion!.Alquileres!.ToList();
+            RegistrarAuditoria("Se realizó una consulta en Alquileres", "Consulta");
             return lista;
         }
 
         public Alquileres Guardar(Alquileres entidad)
         {
+            AbrirConexion();
+            ValidarDatos(entidad);
 
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            if (entidad.Auto != null && ExisteCruceDeFechas(entidad.Auto.Id, entidad.FechaInicio, entidad.FechaFin))
+                throw new Exception("El auto ya tiene un alquiler activo en ese rango de fechas");
 
-            iConexion.Alquileres!.Add(entidad!);
+            iConexion!.Alquileres!.Add(entidad);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo un guardado en Alquileres";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Guardado";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria("Se guardó un registro en Alquileres", "Guardado");
             return entidad;
         }
 
         public Alquileres Eliminar(Alquileres entidad)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            AbrirConexion();
 
-            ValidarDatos(entidad);
             if (!ValidarId(entidad.Id))
             {
-                throw new Exception("El registro no existe");
+                throw new Exception("El alquiler con ID " + entidad.Id + " no existe en el sistema");
             }
-            iConexion.Alquileres!.Remove(entidad!);
+
+            iConexion!.Alquileres!.Remove(entidad);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se elimino un registro en Alquileres";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Eliminacion";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria("Se eliminó el alquiler con ID " + entidad.Id, "Eliminacion");
             return entidad;
         }
 
         public Alquileres Modificar(Alquileres entidad)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            AbrirConexion();
 
             ValidarDatos(entidad);
+
             if (!ValidarId(entidad.Id))
             {
-                throw new Exception("El registro no existe");
+                throw new Exception("El alquiler con ID " + entidad.Id + " no existe en el sistema");
             }
-            iConexion.Alquileres!.Update(entidad!);
+
+            iConexion!.Alquileres!.Update(entidad);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se modifico un registro en Alquileres";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Modificacion";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria("Se modificó el alquiler con ID " + entidad.Id, "Modificacion");
             return entidad;
         }
 
         public bool ValidarId(int id)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
-            var Alquiler = iConexion.Alquileres!.FirstOrDefault(a => a.Id == id);
-            return Alquiler != null;
+            if (iConexion == null) AbrirConexion();
+            return iConexion!.Alquileres!.Any(a => a.Id == id);
+        }
+
+        public List<Alquileres> ConsultarEstadoAlquiler(bool estadoAlquiler)
+        {
+            AbrirConexion();
+            var alquileres = iConexion!.Alquileres!
+                .Where(a => a.EstadoAlquiler == estadoAlquiler)
+                .ToList();
+
+            RegistrarAuditoria(
+                "Se consultaron alquileres por estado: " + estadoAlquiler,
+                "Consulta por Estado");
+
+            return alquileres;
+        }
+
+        public List<Alquileres> ConsultarAlquileresPorCliente(int clienteId)
+        {
+            AbrirConexion();
+
+            var alquileres = iConexion!.Alquileres!
+                .Where(a => a.Cliente != null && a.Cliente.Id == clienteId)
+                .ToList();
+
+            RegistrarAuditoria(
+                "Se consultaron alquileres del cliente con ID: " + clienteId,
+                "Consulta por Cliente");
+
+            return alquileres;
+        }
+
+        public bool ExisteCruceDeFechas(int autoId, DateTime fechaInicio, DateTime fechaFin)
+        {
+            AbrirConexion();
+
+            var existeCruce = iConexion!.Alquileres!.Any(a =>
+                a.Auto != null &&
+                a.Auto.Id == autoId &&
+                a.EstadoAlquiler == true &&
+                ((fechaInicio >= a.FechaInicio && fechaInicio < a.FechaFin) ||
+                 (fechaFin > a.FechaInicio && fechaFin <= a.FechaFin) ||
+                 (fechaInicio <= a.FechaInicio && fechaFin >= a.FechaFin)));
+
+            RegistrarAuditoria(
+                "Se verificó cruce de fechas para el auto con ID: " + autoId,
+                "Verificacion de Cruce de Fechas");
+
+            return existeCruce;
+        }
+
+        public decimal CalcularTotalPrecio(decimal precioAlquiler, DateTime fechaInicio, DateTime fechaFin)
+        {
+            int dias = (fechaFin - fechaInicio).Days;
+
+            if (dias <= 0) dias = 1;
+
+            return dias * precioAlquiler;
         }
 
         public void ValidarDatos(Alquileres entidad)
         {
             if (entidad == null)
-            {
-                throw new Exception("La información del auto es obligatoria");
-            }
+                throw new Exception("La información del alquiler es obligatoria");
 
             if (entidad.FechaInicio == DateTime.MinValue)
-            {
                 throw new Exception("La fecha de inicio del alquiler es obligatoria");
-            }
 
             if (entidad.FechaFin == DateTime.MinValue)
-            {
                 throw new Exception("La fecha de fin del alquiler es obligatoria");
-            }
 
-            if (entidad.PrecioAlquiler >= 0)
-            {
-                throw new Exception("El precio del alquiler es obligatorio");
-            }
+            if (entidad.FechaFin <= entidad.FechaInicio)
+                throw new Exception("La fecha de fin debe ser posterior a la fecha de inicio");
+
+            if (entidad.PrecioAlquiler <= 0)
+                throw new Exception("El precio del alquiler debe ser mayor a cero");
         }
-
-        public Alquileres ConsultarEstadoAlquiler(bool EstadoAlquiler)
-        {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
-
-            var Alquiler = iConexion.Alquileres!.FirstOrDefault(a => a.EstadoAlquiler == EstadoAlquiler);
-            var Auditorias = new Auditorias();
-
-            Auditorias.Descripcion = "Se realizo una consulta de estado del Alquiler" + EstadoAlquiler;
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual";
-            Auditorias.Accion = "Consulta por Estado";
-
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
-            return Alquiler!;
-        }
-
-        public List<Alquileres> ConsultarAlquileresPorCliente(int clienteId)
-        {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
-
-            var alquileres = iConexion.Alquileres!.Where(a => a._Clientes != null && a._Clientes.Id == clienteId).ToList();
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo una consulta de alquileres por cliente con ID: " + clienteId;
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual";
-            Auditorias.Accion = "Consulta por Cliente";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
-            return alquileres;
-        }
-
-        public bool ExisteCrucedeFechas(int autoId, DateTime FechaInicio, DateTime FechaFin )
-        {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
-            var existeCruce = iConexion.Alquileres!.Any(a => a._Autos != null && a._Autos.Id == autoId &&
-                ((FechaInicio >= a.FechaInicio && FechaInicio <= a.FechaFin) ||
-                 (FechaFin >= a.FechaInicio && FechaFin <= a.FechaFin) ||
-                 (FechaInicio <= a.FechaInicio && FechaFin >= a.FechaFin)));
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se verifico el cruce de fechas para el auto con ID: " + autoId;
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual";
-            Auditorias.Accion = "Verificacion de Cruce de Fechas";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
-            return existeCruce;
-
-        }
-
-        public decimal CalcularTotalPrecio (decimal PrecioAlquiler, DateTime FechaInicio, DateTime FechaFin)
-        {
-            int dias = (FechaFin - FechaInicio).Days;
-
-            if(dias <= 0)
-            {
-                dias = 1;
-            }
-
-            return dias * PrecioAlquiler;
-        }
-     
-
     }
 }

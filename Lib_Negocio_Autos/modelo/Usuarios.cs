@@ -11,7 +11,9 @@ namespace Lib_Negocio_Autos.modelo
         public string? Contraseña { get; set; }
         public string? Telefono { get; set; }
 
-        [ForeignKey("Roles")] public Roles? _Roles { get; set; }
+        public int? Roles { get; set; }
+
+        [ForeignKey("Roles")] public Roles? Rol { get; set; }
 
     }
 }

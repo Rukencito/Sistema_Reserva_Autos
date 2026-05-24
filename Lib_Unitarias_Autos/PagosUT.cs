@@ -1,20 +1,103 @@
 ﻿using Lib_Negocio_Autos.Implementaciones;
-using Lib_Negocio_Autos.Interfaces;
+using Lib_Negocio_Autos.modelo;
 
 namespace Lib_Unitarias_Autos
 {
     [TestClass]
-    public sealed class PagosUT
+    public class PagosUT
     {
+        private PagosNegocio? negocio;
+        private Pagos? entidad;
+
         [TestMethod]
-        public void TestMethod1()
+        public void Ejecutar()
         {
-
-            IConexion conexion = new Conexion();
-            conexion.string_conexion = "server=localhost;Integrated Security=True;TrustServerCertificate=true;database=db_SistemaAutos;";
-            var lista = conexion.Pagos!.ToList();
-
+            Consultar();
+            ConsultarPorId();
+            ConsultarPorFactura();
+            ConsultarPorMetodoPago();
+            ConsultarPendientes();
+            ValidarId();
         }
 
+        private void Consultar()
+        {
+            negocio = new PagosNegocio();
+
+            var lista = negocio.Consultar();
+
+            if (lista.Count > 0)
+            {
+                entidad = lista.First();
+                return;
+            }
+
+            throw new Exception("No existen pagos registrados");
+        }
+
+        private void ConsultarPorId()
+        {
+            negocio = new PagosNegocio();
+
+            var pago = negocio.ConsultarPorId(entidad!.Id);
+
+            if (pago != null)
+                return;
+
+            throw new Exception("No se pudo consultar el pago por ID");
+        }
+
+        private void ConsultarPorFactura()
+        {
+            negocio = new PagosNegocio();
+
+            if (entidad!.Facturas == null)
+            {
+                throw new Exception("El pago no tiene factura asociada");
+            }
+
+            var lista = negocio.ConsultarPorFactura(entidad.Factura!.Id);
+
+            if (lista.Count > 0)
+                return;
+
+            throw new Exception("No se encontraron pagos para la factura");
+        }
+
+        private void ConsultarPorMetodoPago()
+        {
+            negocio = new PagosNegocio();
+
+            var lista = negocio.ConsultarPorMetodoPago(entidad!.MetodoPago!);
+
+            if (lista.Count > 0)
+                return;
+
+            throw new Exception("No se encontraron pagos con ese método de pago");
+        }
+
+        private void ConsultarPendientes()
+        {
+            negocio = new PagosNegocio();
+
+            var lista = negocio.ConsultarPendientes();
+
+            if (lista != null)
+                return;
+
+            throw new Exception("No se pudo consultar los pagos pendientes");
+        }
+
+        private void ValidarId()
+        {
+            negocio = new PagosNegocio();
+
+            bool existe = negocio.ValidarId(entidad!.Id);
+
+            if (existe)
+                return;
+
+            throw new Exception("El ID del pago no es válido");
+        }
     }
 }
