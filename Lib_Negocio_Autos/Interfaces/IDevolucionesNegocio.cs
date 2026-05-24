@@ -8,5 +8,10 @@ namespace Lib_Negocio_Autos.Interfaces
         Devoluciones Guardar(Devoluciones entidad);
         Devoluciones Eliminar(Devoluciones entidad);
         Devoluciones Modificar(Devoluciones entidad);
+        bool ValidarId(int id);
+        bool ExisteDevolucionParaAlquiler(int alquilerId);
+        Devoluciones ConsultarPorAlquiler(int alquilerId);
+        Devoluciones ConsultarPorId(int id);
+        void ValidarDatos(Devoluciones entidad);
     }
 }

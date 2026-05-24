@@ -32,20 +32,53 @@ namespace ASP_ServiciosAuto.Controllers
             return this.IGarantiasNegocio!.Guardar(entidad);
         }
         [HttpPut]
-        public Garantias Modificar(Garantias id)
+        public Garantias Modificar(Garantias entidad)
         {
             if (this.IGarantiasNegocio == null)
                 throw new Exception("No implementado");
-            return this.IGarantiasNegocio!.Modificar(id);
+            return this.IGarantiasNegocio!.Modificar(entidad);
         }
 
         [HttpDelete]
 
-        public Garantias Eliminar(Garantias id)
+        public Garantias Eliminar(Garantias entidad)
         {
             if (this.IGarantiasNegocio == null)
                 throw new Exception("No implementado");
-            return this.IGarantiasNegocio!.Eliminar(id);
+            return this.IGarantiasNegocio!.Eliminar(entidad);
         }
+
+        [HttpGet]
+        public bool ValidarId(int id)
+        {
+            if (this.IGarantiasNegocio == null)
+                throw new Exception("No implementado");
+            return this.IGarantiasNegocio!.ValidarId(id);
+        }
+
+        [HttpGet]
+        public Garantias ConsultarPorId(int id)
+        {
+            if (this.IGarantiasNegocio == null)
+                throw new Exception("No implementado");
+            return this.IGarantiasNegocio!.ConsultarPorId(id);
+        }
+
+        [HttpGet]
+        public List<Garantias> ConsultarPorAuto(int autoId)
+        {
+            if (this.IGarantiasNegocio == null)
+                throw new Exception("No implementado");
+            return this.IGarantiasNegocio!.ConsultarPorAuto(autoId);
+        }
+
+        [HttpGet]
+        public bool TieneGarantiaVigente(int autoId)
+        {
+            if (this.IGarantiasNegocio == null)
+                throw new Exception("No implementado");
+            return this.IGarantiasNegocio!.TieneGarantiaVigente(autoId);
+        }
+
     }
 }

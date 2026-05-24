@@ -130,32 +130,6 @@ namespace Lib_Negocio_Autos.Implementaciones
 
             return pagos;
         }
-        public List<Pagos> ConsultarPorMetodoPago(string metodoPago)
-        {
-            AbrirConexion();
-
-            var pagos = iConexion!.Pagos!
-                .Where(p => p.MetodoPago!.ToLower().Contains(metodoPago.ToLower()))
-                .OrderByDescending(p => p.FechaPago)
-                .ToList();
-
-            RegistrarAuditoria(
-                "Se consultaron pagos por método: " + metodoPago,
-                "Consulta por Metodo Pago");
-
-            return pagos;
-        }
-        public List<Pagos> ConsultarPendientes()
-        {
-            AbrirConexion();
-
-            var pendientes = iConexion!.Pagos!
-                .Where(p => p.EstadoPago == false)
-                .ToList();
-
-            RegistrarAuditoria("Se consultaron pagos pendientes", "Consulta Pendientes");
-            return pendientes;
-        }
         private void ActualizarEstadoFactura(int facturaId)
         {
             var factura = iConexion!.Facturas!.FirstOrDefault(f => f.Id == facturaId);

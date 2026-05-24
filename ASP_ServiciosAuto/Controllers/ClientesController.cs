@@ -47,5 +47,38 @@ namespace ASP_ServiciosAuto.Controllers
                 throw new Exception("No implementado");
             return this.IClientesNegocio!.Eliminar(id);
         }
+
+
+        [HttpGet]
+        public bool ValidarCedula(string cedula)
+        {
+            if (this.IClientesNegocio == null)
+                throw new Exception("No implementado");
+            return this.IClientesNegocio!.ValidarCedula(cedula);
+        }
+
+        [HttpGet]
+        public Clientes ConsultarPorCedula(string cedula)
+        {
+            if (this.IClientesNegocio == null)
+                throw new Exception("No implementado");
+            return this.IClientesNegocio!.ConsultarPorCedula(cedula);
+        }
+
+        [HttpPut]
+        public Clientes AgregarPuntosFidelidad(int clienteId, int puntos)
+        {
+            if (this.IClientesNegocio == null)
+                throw new Exception("No implementado");
+            return this.IClientesNegocio!.AgregarPuntosFidelidad(clienteId, puntos);
+        }
+
+        [HttpGet]
+        public bool TieneLicencia(int clienteId)
+        {
+            if (this.IClientesNegocio == null)
+                throw new Exception("No implementado");
+            return this.IClientesNegocio!.TieneLicencia(clienteId);
+        }
     }
 }

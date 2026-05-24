@@ -32,20 +32,62 @@ namespace ASP_ServiciosAuto.Controllers
             return this.IMantenimientosNegocio!.Guardar(entidad);
         }
         [HttpPut]
-        public Mantenimientos Modificar(Mantenimientos id)
+        public Mantenimientos Modificar(Mantenimientos entidad)
         {
             if (this.IMantenimientosNegocio == null)
                 throw new Exception("No implementado");
-            return this.IMantenimientosNegocio!.Modificar(id);
+            return this.IMantenimientosNegocio!.Modificar(entidad);
         }
 
         [HttpDelete]
 
-        public Mantenimientos Eliminar(Mantenimientos id)
+        public Mantenimientos Eliminar(Mantenimientos entidad)
         {
             if (this.IMantenimientosNegocio == null)
                 throw new Exception("No implementado");
-            return this.IMantenimientosNegocio!.Eliminar(id);
+            return this.IMantenimientosNegocio!.Eliminar(entidad);
         }
+
+        [HttpGet]
+        public bool ValidarId(int id)
+        {
+            if (this.IMantenimientosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IMantenimientosNegocio!.ValidarId(id);
+        }
+
+        [HttpGet]
+        public Mantenimientos ConsultarPorId(int id)
+        {
+            if (this.IMantenimientosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IMantenimientosNegocio!.ConsultarPorId(id);
+        }
+
+        [HttpGet]
+        public List<Mantenimientos> ConsultarPorAuto(int autoId)
+        {
+            if (this.IMantenimientosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IMantenimientosNegocio!.ConsultarPorAuto(autoId);
+        }
+
+        [HttpGet]
+        public List<Mantenimientos> ConsultarPorTaller(int tallerId)
+        {
+            if (this.IMantenimientosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IMantenimientosNegocio!.ConsultarPorTaller(tallerId);
+        }
+
+        [HttpPut]
+        public Mantenimientos FinalizarMantenimiento(int mantenimientoId)
+        {
+            if (this.IMantenimientosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IMantenimientosNegocio!.FinalizarMantenimiento(mantenimientoId);
+        }
+
+
     }
 }

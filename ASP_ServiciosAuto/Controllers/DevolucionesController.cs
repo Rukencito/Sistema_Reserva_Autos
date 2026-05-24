@@ -32,20 +32,52 @@ namespace ASP_ServiciosAuto.Controllers
             return this.IDevolucionesNegocio!.Guardar(entidad);
         }
         [HttpPut]
-        public Devoluciones Modificar(Devoluciones id)
+        public Devoluciones Modificar(Devoluciones entidad)
         {
             if (this.IDevolucionesNegocio == null)
                 throw new Exception("No implementado");
-            return this.IDevolucionesNegocio!.Modificar(id);
+            return this.IDevolucionesNegocio!.Modificar(entidad);
         }
 
         [HttpDelete]
 
-        public Devoluciones Eliminar(Devoluciones id)
+        public Devoluciones Eliminar(Devoluciones entidad)
         {
             if (this.IDevolucionesNegocio == null)
                 throw new Exception("No implementado");
-            return this.IDevolucionesNegocio!.Eliminar(id);
+            return this.IDevolucionesNegocio!.Eliminar(entidad);
+        }
+
+        [HttpGet]
+        public bool ValidarId(int id)
+        {
+            if (this.IDevolucionesNegocio == null)
+                throw new Exception("No implementado");
+            return this.IDevolucionesNegocio!.ValidarId(id);
+        }
+
+        [HttpGet]
+        public bool ExisteDevolucionParaAlquiler(int idAlquiler)
+        {
+            if (this.IDevolucionesNegocio == null)
+                throw new Exception("No implementado");
+            return this.IDevolucionesNegocio!.ExisteDevolucionParaAlquiler(idAlquiler);
+        }
+
+        [HttpGet]
+        public Devoluciones ConsultarPorAlquiler(int idAlquiler)
+        {
+            if (this.IDevolucionesNegocio == null)
+                throw new Exception("No implementado");
+            return this.IDevolucionesNegocio!.ConsultarPorAlquiler(idAlquiler);
+        }
+
+        [HttpGet]
+        public Devoluciones ConsultarPorId(int id)
+        {
+            if (this.IDevolucionesNegocio == null)
+                throw new Exception("No implementado");
+            return this.IDevolucionesNegocio!.ConsultarPorId(id);
         }
     }
 }

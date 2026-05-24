@@ -126,47 +126,6 @@ namespace Lib_Negocio_Autos.Implementaciones
 
             return lista;
         }
-
-        public List<Contratos> ConsultarPorTipo(string tipoContrato)
-        {
-            AbrirConexion();
-
-            var lista = iConexion!.Contratos!
-                .Where(c => c.TipoContrato!.ToLower().Contains(tipoContrato.ToLower()))
-                .ToList();
-
-            RegistrarAuditoria(
-                "Se consultaron contratos por tipo: " + tipoContrato,
-                "Consulta por Tipo");
-
-            return lista;
-        }
-
-        public List<Contratos> ConsultarVencidos()
-        {
-            AbrirConexion();
-
-            var vencidos = iConexion!.Contratos!
-                .Where(c => c.FechaFin < DateTime.Now)
-                .ToList();
-
-            RegistrarAuditoria("Se consultaron contratos vencidos", "Consulta Vencidos");
-            return vencidos;
-        }
-
-        public List<Contratos> ConsultarActivos()
-        {
-            AbrirConexion();
-
-            var ahora = DateTime.Now;
-            var activos = iConexion!.Contratos!
-                .Where(c => c.FechaInicio <= ahora && c.FechaFin >= ahora)
-                .ToList();
-
-            RegistrarAuditoria("Se consultaron contratos activos", "Consulta Activos");
-            return activos;
-        }
-
         public void ValidarDatos(Contratos entidad)
         {
             if (entidad == null)

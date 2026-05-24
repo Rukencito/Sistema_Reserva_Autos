@@ -94,21 +94,6 @@ namespace Lib_Negocio_Autos.Implementaciones
             return iConexion!.DetallesFactura!.Any(e => e.Id == id);
         }
 
-        public List<DetallesFactura> ConsultarPorTipoFactura(string tipoFactura)
-        {
-            AbrirConexion();
-
-            var lista = iConexion!.DetallesFactura!
-                .Where(e => e.TipoFactura!.ToLower().Contains(tipoFactura.ToLower()))
-                .ToList();
-
-            RegistrarAuditoria(
-                "Se consultaron detalles de factura por tipo: " + tipoFactura,
-                "Consulta por TipoFactura");
-
-            return lista;
-        }
-
         public DetallesFactura ConsultarPorId(int id)
         {
             AbrirConexion();

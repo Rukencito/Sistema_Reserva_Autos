@@ -32,20 +32,68 @@ namespace ASP_ServiciosAuto.Controllers
             return this.IEmpleadosNegocio!.Guardar(entidad);
         }
         [HttpPut]
-        public Empleados Modificar(Empleados id)
+        public Empleados Modificar(Empleados entidad)
         {
             if (this.IEmpleadosNegocio == null)
                 throw new Exception("No implementado");
-            return this.IEmpleadosNegocio!.Modificar(id);
+            return this.IEmpleadosNegocio!.Modificar(entidad);
         }
 
         [HttpDelete]
 
-        public Empleados Eliminar(Empleados id)
+        public Empleados Eliminar(Empleados entidad)
         {
             if (this.IEmpleadosNegocio == null)
                 throw new Exception("No implementado");
-            return this.IEmpleadosNegocio!.Eliminar(id);
+            return this.IEmpleadosNegocio!.Eliminar(entidad);
+        }
+
+        [HttpGet]
+        public bool ValidarId(int id)
+        {
+            if (this.IEmpleadosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IEmpleadosNegocio!.ValidarId(id);
+        }
+
+        [HttpGet]
+        public bool ValidarCedula(string cedula)
+        {
+            if (this.IEmpleadosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IEmpleadosNegocio!.ValidarCedula(cedula);
+        }
+
+        [HttpGet]
+        public Empleados ConsultarPorCedula(string cedula)
+        {
+            if (this.IEmpleadosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IEmpleadosNegocio!.ConsultarPorCedula(cedula);
+        }
+
+        [HttpGet]
+        public List<Empleados> ConsultarPorCargo(string cargo)
+        {
+            if (this.IEmpleadosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IEmpleadosNegocio!.ConsultarPorCargo(cargo);
+        }
+
+        [HttpGet]
+        public List<Empleados> ConsultarPorSucursal(int sucursalId)
+        {
+            if (this.IEmpleadosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IEmpleadosNegocio!.ConsultarPorSucursal(sucursalId);
+        }
+
+        [HttpGet]
+        public decimal CalcularSalarioTotal(int empleadoId)
+        {
+            if (this.IEmpleadosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IEmpleadosNegocio!.CalcularSalarioTotal(empleadoId);
         }
     }
 }

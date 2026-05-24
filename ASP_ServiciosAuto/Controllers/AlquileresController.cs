@@ -31,20 +31,60 @@ namespace ASP_ServiciosAuto.Controllers
             return this.IAlquileresNegocio!.Guardar(entidad);
         }
         [HttpPut]
-        public Alquileres Modificar(Alquileres id)
+        public Alquileres Modificar(Alquileres entidad)
         {
             if (this.IAlquileresNegocio == null)
                 throw new Exception("No implementado");
-            return this.IAlquileresNegocio!.Modificar(id);
+            return this.IAlquileresNegocio!.Modificar(entidad);
         }
 
         [HttpDelete]
 
-        public Alquileres Eliminar(Alquileres id)
+        public Alquileres Eliminar(Alquileres entidad)
         {
             if (this.IAlquileresNegocio == null)
                 throw new Exception("No implementado");
-            return this.IAlquileresNegocio!.Eliminar(id);
+            return this.IAlquileresNegocio!.Eliminar(entidad);
+        }
+
+        [HttpGet]
+        public bool ValidarId(int id)
+        {
+            if (this.IAlquileresNegocio == null)
+                throw new Exception("No implementado");
+            return this.IAlquileresNegocio.ValidarId(id);
+        }
+
+        [HttpGet]
+        public List<Alquileres> ConsultarEstadoAlquiler(bool estadoAlquiler)
+        {
+            if (this.IAlquileresNegocio == null)
+                throw new Exception("No implementado");
+            return this.IAlquileresNegocio.ConsultarEstadoAlquiler(estadoAlquiler);
+        }
+
+        [HttpGet]
+        public List<Alquileres> ConsultarAlquileresPorCliente(int clienteId)
+        {
+            if (this.IAlquileresNegocio == null)
+                throw new Exception("No implementado");
+            return this.IAlquileresNegocio.ConsultarAlquileresPorCliente(clienteId);
+        }
+
+        [HttpGet]
+        public bool ExisteCruceDeFechas(int autoId, DateTime fechaInicio, DateTime fechaFin)
+        {
+            if (this.IAlquileresNegocio == null)
+                throw new Exception("No implementado");
+            return this.IAlquileresNegocio.ExisteCruceDeFechas(autoId, fechaInicio, fechaFin);
+        }
+
+        [HttpGet]
+        public decimal CalcularTotalPrecio(decimal precioAlquiler, DateTime fechaInicio, DateTime fechaFin)
+        {
+            if (this.IAlquileresNegocio == null)
+                throw new Exception("No implementado");
+            return this.IAlquileresNegocio.CalcularTotalPrecio(precioAlquiler, fechaInicio, fechaFin);
         }
     }
 

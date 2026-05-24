@@ -32,20 +32,45 @@ namespace ASP_ServiciosAuto.Controllers
             return this.IContratosNegocio!.Guardar(entidad);
         }
         [HttpPut]
-        public Contratos Modificar(Contratos id)
+        public Contratos Modificar(Contratos entidad)
         {
             if (this.IContratosNegocio == null)
                 throw new Exception("No implementado");
-            return this.IContratosNegocio!.Modificar(id);
+            return this.IContratosNegocio!.Modificar(entidad);
         }
 
         [HttpDelete]
 
-        public Contratos Eliminar(Contratos id)
+        public Contratos Eliminar(Contratos entidad)
         {
             if (this.IContratosNegocio == null)
                 throw new Exception("No implementado");
-            return this.IContratosNegocio!.Eliminar(id);
+            return this.IContratosNegocio!.Eliminar(entidad);
+        }
+
+        [HttpGet]
+        public bool ValidarId(int id)
+        {
+            if (this.IContratosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IContratosNegocio!.ValidarId(id);
+        }
+
+        [HttpGet]
+
+        public Contratos ConsultarPorId(int id)
+        {
+            if (this.IContratosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IContratosNegocio!.ConsultarPorId(id);
+        }
+
+        [HttpGet]
+        public List<Contratos> ConsultarPorAlquiler(int alquilerId)
+        {
+            if (this.IContratosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IContratosNegocio!.ConsultarPorAlquiler(alquilerId);
         }
     }
 }

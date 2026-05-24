@@ -32,20 +32,68 @@ namespace ASP_ServiciosAuto.Controllers
             return this.IInventariosNegocio!.Guardar(entidad);
         }
         [HttpPut]
-        public Inventarios Modificar(Inventarios id)
+        public Inventarios Modificar(Inventarios entidad)
         {
             if (this.IInventariosNegocio == null)
                 throw new Exception("No implementado");
-            return this.IInventariosNegocio!.Modificar(id);
+            return this.IInventariosNegocio!.Modificar(entidad);
         }
 
         [HttpDelete]
 
-        public Inventarios Eliminar(Inventarios id)
+        public Inventarios Eliminar(Inventarios entidad)
         {
             if (this.IInventariosNegocio == null)
                 throw new Exception("No implementado");
-            return this.IInventariosNegocio!.Eliminar(id);
+            return this.IInventariosNegocio!.Eliminar(entidad);
+        }
+
+        [HttpGet]
+        public bool ValidarId(int id)
+        {
+            if (this.IInventariosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IInventariosNegocio!.ValidarId(id);
+        }
+
+        [HttpGet]
+        public Inventarios ConsultarPorId(int id)
+        {
+            if (this.IInventariosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IInventariosNegocio!.ConsultarPorId(id);
+        }
+
+        [HttpGet]
+        public List<Inventarios> ConsultarPorUbicacion(string ubicacion)
+        {
+            if (this.IInventariosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IInventariosNegocio!.ConsultarPorUbicacion(ubicacion);
+        }
+
+        [HttpPut]
+        public Inventarios AgregarStock(int inventarioId, int cantidad, decimal precioUnitario)
+        {
+            if (this.IInventariosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IInventariosNegocio!.AgregarStock(inventarioId, cantidad, precioUnitario);
+        }
+
+        [HttpPut]
+        public Inventarios ReducirStock(int inventarioId, int cantidad, decimal precioUnitario)
+        {
+            if (this.IInventariosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IInventariosNegocio!.ReducirStock(inventarioId, cantidad, precioUnitario);
+        }
+
+        [HttpPut]
+        public Inventarios RecalcularValorTotal(int inventarioId)
+        {
+            if (this.IInventariosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IInventariosNegocio!.RecalcularValorTotal(inventarioId);
         }
     }
 }

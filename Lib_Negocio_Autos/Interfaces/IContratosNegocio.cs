@@ -8,5 +8,9 @@ namespace Lib_Negocio_Autos.Interfaces
         Contratos Guardar(Contratos entidad);
         Contratos Eliminar(Contratos entidad);
         Contratos Modificar(Contratos entidad);
+        bool ValidarId(int id);
+        Contratos ConsultarPorId(int id);
+        List<Contratos> ConsultarPorAlquiler(int alquilerId);
+        void ValidarDatos(Contratos entidad);
     }
 }

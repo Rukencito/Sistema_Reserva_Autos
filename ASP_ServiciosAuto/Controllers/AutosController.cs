@@ -47,5 +47,61 @@ namespace ASP_ServiciosAuto.Controllers
                 throw new Exception("No implementado");
             return this.IAutosNegocio!.Eliminar(id);
         }
+
+        [HttpGet]
+        public bool ValidarPlaca(string placa)
+        {
+            if (this.IAutosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IAutosNegocio!.ValidarPlaca(placa);
+        }
+
+        [HttpGet]
+        public Autos ConsultarPorPlaca(string placa)
+        {
+            if (this.IAutosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IAutosNegocio!.ConsultarPorPlaca(placa);
+        }
+
+        [HttpGet]
+        public List<Autos> ConsultarPorMarca(string marca)
+        {
+            if (this.IAutosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IAutosNegocio!.ConsultarPorMarca(marca);
+        }
+
+        [HttpGet]
+        public List<Autos> ConsultarPorModelo(string modelo)
+        {
+            if (this.IAutosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IAutosNegocio!.ConsultarPorModelo(modelo);
+        }
+
+        [HttpGet]
+        public List<Autos> ConsultarDisponibles()
+        {
+            if (this.IAutosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IAutosNegocio!.ConsultarDisponibles();
+        }
+
+        [HttpGet]
+        public bool VerificarDisponibilidad(string placa)
+        {
+            if (this.IAutosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IAutosNegocio!.VerificarDisponibilidad(placa);
+        }
+
+        [HttpPut]
+        public bool CambiarEstado(string placa, bool nuevoEstado)
+        {
+            if (this.IAutosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IAutosNegocio!.CambiarEstado(placa, nuevoEstado);
+        }
     }
 }

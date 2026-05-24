@@ -32,20 +32,52 @@ namespace ASP_ServiciosAuto.Controllers
             return this.IDetallesFacturaNegocio!.Guardar(entidad);
         }
         [HttpPut]
-        public DetallesFactura Modificar(DetallesFactura id)
+        public DetallesFactura Modificar(DetallesFactura entidad)
         {
             if (this.IDetallesFacturaNegocio == null)
                 throw new Exception("No implementado");
-            return this.IDetallesFacturaNegocio!.Modificar(id);
+            return this.IDetallesFacturaNegocio!.Modificar(entidad);
         }
 
         [HttpDelete]
 
-        public DetallesFactura Eliminar(DetallesFactura id)
+        public DetallesFactura Eliminar(DetallesFactura entidad)
         {
             if (this.IDetallesFacturaNegocio == null)
                 throw new Exception("No implementado");
-            return this.IDetallesFacturaNegocio!.Eliminar(id);
+            return this.IDetallesFacturaNegocio!.Eliminar(entidad);
+        }
+
+        [HttpGet]
+        public bool ValidarId(int id)
+        {
+            if (this.IDetallesFacturaNegocio == null)
+                throw new Exception("No implementado");
+            return this.IDetallesFacturaNegocio!.ValidarId(id);
+        }
+
+        [HttpGet]
+        public DetallesFactura ConsultarPorId(int id)
+        {
+            if (this.IDetallesFacturaNegocio == null)
+                throw new Exception("No implementado");
+            return this.IDetallesFacturaNegocio!.ConsultarPorId(id);
+        }
+
+        [HttpGet]
+        public List<DetallesFactura> ConsultarPorFactura(int facturaId)
+        {
+            if (this.IDetallesFacturaNegocio == null)
+                throw new Exception("No implementado");
+            return this.IDetallesFacturaNegocio!.ConsultarPorFactura(facturaId);
+        }
+
+        [HttpGet]
+        public decimal CalcularSubtotalPorFactura(int facturaId)
+        {
+            if (this.IDetallesFacturaNegocio == null)
+                throw new Exception("No implementado");
+            return this.IDetallesFacturaNegocio!.CalcularSubtotalPorFactura(facturaId);
         }
     }
 }

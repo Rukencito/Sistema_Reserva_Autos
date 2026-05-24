@@ -32,20 +32,69 @@ namespace ASP_ServiciosAuto.Controllers
             return this.IDuenosNegocio!.Guardar(entidad);
         }
         [HttpPut]
-        public Duenos Modificar(Duenos id)
+        public Duenos Modificar(Duenos entidad)
         {
             if (this.IDuenosNegocio == null)
                 throw new Exception("No implementado");
-            return this.IDuenosNegocio!.Modificar(id);
+            return this.IDuenosNegocio!.Modificar(entidad);
         }
 
         [HttpDelete]
 
-        public Duenos Eliminar(Duenos id)
+        public Duenos Eliminar(Duenos entidad)
         {
             if (this.IDuenosNegocio == null)
                 throw new Exception("No implementado");
-            return this.IDuenosNegocio!.Eliminar(id);
+            return this.IDuenosNegocio!.Eliminar(entidad);
+        }
+
+        [HttpGet]
+        public bool ValidarId(int id)
+        {
+            if (this.IDuenosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IDuenosNegocio!.ValidarId(id);
+        }
+
+        [HttpGet]
+        public bool ValidarCedula(string cedula)
+        {
+            if (this.IDuenosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IDuenosNegocio!.ValidarCedula(cedula);
+        }
+
+        [HttpGet]
+        public Duenos ConsultarPorCedula(string cedula)
+        {
+            if (this.IDuenosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IDuenosNegocio!.ConsultarPorCedula(cedula);
+        }
+
+        [HttpGet]
+        public bool VerificarEstadoDueno(int duenoId)
+        {
+            if (this.IDuenosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IDuenosNegocio!.VerificarEstadoDueno(duenoId);
+        }
+
+        [HttpPut]
+        public Duenos AgregarAuto(int duenoId)
+        {
+            if (this.IDuenosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IDuenosNegocio!.AgregarAuto(duenoId);
+        }
+
+        [HttpPut]
+        public Duenos QuitarAuto(int duenoId)
+        {
+            if (this.IDuenosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IDuenosNegocio!.QuitarAuto(duenoId);
+
         }
     }
 }

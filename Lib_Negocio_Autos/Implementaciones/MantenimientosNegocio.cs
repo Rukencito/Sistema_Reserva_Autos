@@ -152,22 +152,6 @@ namespace Lib_Negocio_Autos.Implementaciones
             return lista;
         }
 
-        public List<Mantenimientos> ConsultarPorTipo(string tipo)
-        {
-            AbrirConexion();
-
-            var lista = iConexion!.Mantenimientos!
-                .Where(m => m.Tipo!.ToLower().Contains(tipo.ToLower()))
-                .OrderByDescending(m => m.Fecha)
-                .ToList();
-
-            RegistrarAuditoria(
-                "Se consultaron mantenimientos por tipo: " + tipo,
-                "Consulta por Tipo");
-
-            return lista;
-        }
-
         public Mantenimientos FinalizarMantenimiento(int mantenimientoId)
         {
             AbrirConexion();

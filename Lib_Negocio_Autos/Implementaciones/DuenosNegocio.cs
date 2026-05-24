@@ -133,18 +133,6 @@ namespace Lib_Negocio_Autos.Implementaciones
             return true;
         }
 
-        public List<Duenos> ConsultarActivos()
-        {
-            AbrirConexion();
-
-            var activos = iConexion!.Duenos!
-                .Where(d => d.Estado == true)
-                .ToList();
-
-            RegistrarAuditoria("Se consultaron dueños activos", "Consulta Activos");
-            return activos;
-        }
-
         public Duenos AgregarAuto(int duenoId)
         {
             AbrirConexion();

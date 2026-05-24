@@ -32,20 +32,44 @@ namespace ASP_ServiciosAuto.Controllers
             return this.IPagosNegocio!.Guardar(entidad);
         }
         [HttpPut]
-        public Pagos Modificar(Pagos id)
+        public Pagos Modificar(Pagos entidad)
         {
             if (this.IPagosNegocio == null)
                 throw new Exception("No implementado");
-            return this.IPagosNegocio!.Modificar(id);
+            return this.IPagosNegocio!.Modificar(entidad);
         }
 
         [HttpDelete]
 
-        public Pagos Eliminar(Pagos id)
+        public Pagos Eliminar(Pagos entidad)
         {
             if (this.IPagosNegocio == null)
                 throw new Exception("No implementado");
-            return this.IPagosNegocio!.Eliminar(id);
+            return this.IPagosNegocio!.Eliminar(entidad);
+        }
+
+        [HttpGet]
+        public bool ValidarId(int id)
+        {
+            if (this.IPagosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IPagosNegocio!.ValidarId(id);
+        }
+
+        [HttpGet]
+        public Pagos ConsultarPorId(int id)
+        {
+            if (this.IPagosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IPagosNegocio!.ConsultarPorId(id);
+        }
+
+        [HttpGet]
+        public List<Pagos> ConsultarPorFactura(int facturaId)
+        {
+            if (this.IPagosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IPagosNegocio!.ConsultarPorFactura(facturaId);
         }
     }
 }
