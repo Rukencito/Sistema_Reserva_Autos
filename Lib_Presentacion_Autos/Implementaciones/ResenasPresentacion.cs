@@ -4,14 +4,14 @@ using Newtonsoft.Json;
 
 namespace Lib_Presentacion_Autos.Implementaciones
 {
-    public class InventariosPresentacion : IInventariosPresentacion
+    public class ResenasPresentacion : IResenasPresentacion
     {
         private IComunicaciones? iComunicaciones;
 
-        public List<Inventarios> Consultar()
+        public List<Resenas> Consultar()
         {
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Inventarios/Consultar";
+            datos["Url"] = "http://localhost:5188/Resenas/Consultar";
 
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.Ejecutar(datos)!;
@@ -19,13 +19,13 @@ namespace Lib_Presentacion_Autos.Implementaciones
             var respuesta = task.Result;
 
             if (!respuesta.ContainsKey("Valor"))
-                return new List<Inventarios>();
+                return new List<Resenas>();
 
-            return JsonConvert.DeserializeObject<List<Inventarios>>(
+            return JsonConvert.DeserializeObject<List<Resenas>>(
                 respuesta["Valor"].ToString()!)!;
         }
 
-        public Inventarios Guardar(Inventarios entidad)
+        public Resenas Guardar(Resenas entidad)
         {
             if (entidad.Id != 0)
                 throw new Exception("Ya se guardo");
@@ -33,7 +33,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
             this.iComunicaciones = new Comunicaciones();
 
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Inventarios/Guardar";
+            datos["Url"] = "http://localhost:5188/Resenas/Guardar";
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPost(datos)!;
@@ -41,13 +41,13 @@ namespace Lib_Presentacion_Autos.Implementaciones
             var respuesta = task.Result;
 
             if (!respuesta.ContainsKey("Valor"))
-                return new Inventarios();
+                return new Resenas();
 
-            return JsonConvert.DeserializeObject<Inventarios>(
+            return JsonConvert.DeserializeObject<Resenas>(
                 respuesta["Valor"].ToString()!)!;
         }
 
-        public Inventarios Modificar(Inventarios entidad)
+        public Resenas Modificar(Resenas entidad)
         {
             if (entidad.Id == 0)
                 throw new Exception("No se ha guardado");
@@ -55,7 +55,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
             this.iComunicaciones = new Comunicaciones();
 
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Inventarios/Modificar";
+            datos["Url"] = "http://localhost:5188/Resenas/Modificar";
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPut(datos)!;
@@ -63,13 +63,13 @@ namespace Lib_Presentacion_Autos.Implementaciones
             var respuesta = task.Result;
 
             if (!respuesta.ContainsKey("Valor"))
-                return new Inventarios();
+                return new Resenas();
 
-            return JsonConvert.DeserializeObject<Inventarios>(
+            return JsonConvert.DeserializeObject<Resenas>(
                 respuesta["Valor"].ToString()!)!;
         }
 
-        public Inventarios Eliminar(Inventarios entidad)
+        public Resenas Eliminar(Resenas entidad)
         {
             if (entidad.Id == 0)
                 throw new Exception("No se ha guardado");
@@ -77,7 +77,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
             this.iComunicaciones = new Comunicaciones();
 
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Inventarios/Eliminar";
+            datos["Url"] = "http://localhost:5188/Resenas/Eliminar";
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarDelete(datos)!;
@@ -85,11 +85,12 @@ namespace Lib_Presentacion_Autos.Implementaciones
             var respuesta = task.Result;
 
             if (!respuesta.ContainsKey("Valor"))
-                return new Inventarios();
+                return new Resenas();
 
-            return JsonConvert.DeserializeObject<Inventarios>(
+            return JsonConvert.DeserializeObject<Resenas>(
                 respuesta["Valor"].ToString()!)!;
         }
     }
+
 }
 

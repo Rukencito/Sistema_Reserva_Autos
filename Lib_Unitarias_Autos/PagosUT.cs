@@ -15,7 +15,6 @@ namespace Lib_Unitarias_Autos
             Consultar();
             ConsultarPorId();
             ConsultarPorFactura();
-            ConsultarPendientes();
             ValidarId();
         }
 
@@ -61,18 +60,6 @@ namespace Lib_Unitarias_Autos
                 return;
 
             throw new Exception("No se encontraron pagos para la factura");
-        }
-
-        private void ConsultarPendientes()
-        {
-            negocio = new PagosNegocio();
-
-            var lista = negocio.ConsultarPendientes();
-
-            if (lista != null)
-                return;
-
-            throw new Exception("No se pudo consultar los pagos pendientes");
         }
 
         private void ValidarId()

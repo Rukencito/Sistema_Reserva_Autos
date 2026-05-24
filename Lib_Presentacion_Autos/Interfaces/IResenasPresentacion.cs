@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Lib_Presentacion_Autos.Interfaces
 {
-    public interface IReseñasPresentacion
+    public interface IResenasPresentacion
     {
         List<Resenas> Consultar();
         Resenas Guardar(Resenas entidad);
