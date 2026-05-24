@@ -7,77 +7,105 @@ namespace Lib_Negocio_Autos.Implementaciones
     public class SegurosNegocio : ISegurosNegocio
     {
         private IConexion? iConexion;
-        public List<Seguros> Consultar()
+        private void AbrirConexion()
         {
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+        }
 
-            var lista = iConexion.Seguros!.ToList();
-
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo una consulta en Seguros";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Consulta";
-            this.iConexion.Auditorias!.Add(Auditorias);
+        private void RegistrarAuditoria(string descripcion, string accion)
+        {
+            iConexion!.Auditorias!.Add(new Auditorias
+            {
+                Descripcion = descripcion,
+                FechaHora = DateTime.Now,
+                Usuario = "UsuarioActual",
+                Accion = accion
+            });
             iConexion.SaveChanges();
+        }
+
+        public List<Seguros> Consultar()
+        {
+            AbrirConexion();
+
+            var lista = iConexion!.Seguros!.ToList();
+            RegistrarAuditoria("Se consulto la lista de Seguros", "Consulta");
 
             return lista;
         }
 
         public Seguros Guardar(Seguros entidad)
         {
+            AbrirConexion();
+            ValidarDatos(entidad);
 
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
-
-            iConexion.Seguros!.Add(entidad!);
+            if (!ValidarId(entidad.Id))
+                throw new Exception("El Seguro con ID " + entidad.Id + " no existe en el sistema");
+            iConexion!.Seguros!.Add(entidad!);
             iConexion.SaveChanges();
-
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo un guardado en Seguros";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Guardado";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria("Se guardo un nuevo registro en Seguros", "Creacion");
             return entidad;
         }
 
         public Seguros Eliminar(Seguros entidad)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            AbrirConexion();
+            ValidarDatos(entidad);
 
-            iConexion.Seguros!.Remove(entidad!);
+            if (!ValidarId(entidad.Id))
+                throw new Exception("El seguro con ID " + entidad.Id + " no existe en el sistema");
+            iConexion!.Seguros!.Remove(entidad!);
             iConexion.SaveChanges();
-
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se elimino un registro en Seguros";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Eliminacion";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria("Se elimino un registro en Seguros", "Eliminacion");
             return entidad;
         }
 
         public Seguros Modificar(Seguros entidad)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+          AbrirConexion();
+            ValidarDatos(entidad);
 
-            iConexion.Seguros!.Update(entidad!);
+            if (!ValidarId(entidad.Id))
+                throw new Exception("El seguro con ID " + entidad.Id + " no existe en el sistema");
+            iConexion!.Seguros!.Update(entidad!);
             iConexion.SaveChanges();
-
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se modifico un registro en Seguros";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Modificacion";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria("Se modifico un registro en Seguros", "Modificacion");
             return entidad;
+        }
+        public bool ValidarId(int id)
+        {
+            AbrirConexion();
+
+            var seguro = iConexion!.Seguros!.FirstOrDefault(s => s.Id == id);
+            return seguro != null;
+        }
+
+        public Seguros ConsultarPorId(int id)
+        {
+            AbrirConexion();
+
+            var seguro = iConexion!.Seguros!.FirstOrDefault(s => s.Id == id);
+
+            if (seguro == null)
+                throw new Exception("No se encontró un seguro");
+
+            RegistrarAuditoria("Se realizo una consulta en Seguros", "Consulta");
+            return seguro;
+        }
+        public void ValidarDatos(Seguros entidad)
+        {
+            if (entidad == null)
+                throw new Exception("La información del seguro es obligatoria");
+
+            if (string.IsNullOrEmpty(entidad.Tipo))
+                throw new Exception("El tipo de seguro es obligatorio");
+
+            if (string.IsNullOrEmpty(entidad.Cobertura))
+                throw new Exception("La cobertura del seguro es obligatoria");
+
+            if (string.IsNullOrEmpty(entidad.Aseguradora))
+                throw new Exception("La aseguradora del seguro es obligatoria");
         }
     }
 }

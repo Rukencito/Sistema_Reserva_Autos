@@ -40,9 +40,9 @@ namespace Lib_Unitarias_Autos
         {
             negocio = new MantenimientosNegocio();
 
-            var mantenimiento = negocio.ConsultarPorId(entidad!.Id);
+            entidad = negocio.ConsultarPorId(entidad!.Id);
 
-            if (mantenimiento != null)
+            if (entidad != null)
                 return;
 
             throw new Exception("No se pudo consultar el mantenimiento por ID");
@@ -52,7 +52,7 @@ namespace Lib_Unitarias_Autos
         {
             negocio = new MantenimientosNegocio();
 
-            if (entidad!.Autos == null)
+            if (entidad!.Auto == null)
                 throw new Exception("El mantenimiento no tiene auto asociado");
 
             var lista = negocio.ConsultarPorAuto(entidad.Auto!.Id);

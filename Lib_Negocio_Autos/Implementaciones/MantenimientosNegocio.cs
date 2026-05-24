@@ -108,6 +108,7 @@ namespace Lib_Negocio_Autos.Implementaciones
 
             var mantenimiento = iConexion!.Mantenimientos!
                 .Include(m => m.Auto)
+                .Include(m => m.Taller)
                 .FirstOrDefault(m => m.Id == id);
             if (mantenimiento == null)
             {

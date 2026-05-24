@@ -7,77 +7,100 @@ namespace Lib_Negocio_Autos.Implementaciones
     public class ResenasNegocio : IResenasNegocio
     {
         private IConexion? iConexion;
-        public List<Resenas> Consultar()
+        private void AbrirConexion()
         {
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+        }
 
-            var lista = iConexion.Resenas!.ToList();
-
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo una consulta en Reseñas";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Consulta";
-            this.iConexion.Auditorias!.Add(Auditorias);
+        private void RegistrarAuditoria(string descripcion, string accion)
+        {
+            iConexion!.Auditorias!.Add(new Auditorias
+            {
+                Descripcion = descripcion,
+                FechaHora = DateTime.Now,
+                Usuario = "UsuarioActual",
+                Accion = accion
+            });
             iConexion.SaveChanges();
-
+        }
+        public List<Resenas> Consultar()
+        {
+            AbrirConexion();
+            var lista = iConexion!.Resenas!.ToList();
+            RegistrarAuditoria("Se consultaron las reseñas", "Consulta");
             return lista;
         }
 
         public Resenas Guardar(Resenas entidad)
         {
-
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
-
-            iConexion.Resenas!.Add(entidad!);
+            AbrirConexion();
+            iConexion!.Resenas!.Add(entidad!);
             iConexion.SaveChanges();
-
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo un guardado en Reseñas";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Guardado";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria("Se guardo un nuevo registro en Reseñas", "Creacion");
             return entidad;
         }
 
         public Resenas Eliminar(Resenas entidad)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
-
-            iConexion.Resenas!.Remove(entidad!);
+            AbrirConexion();
+            iConexion!.Resenas!.Remove(entidad!);
             iConexion.SaveChanges();
-
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se elimino un registro en Reseñas";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Eliminacion";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria("Se elimino un registro en Reseñas", "Eliminacion");
             return entidad;
         }
 
         public Resenas Modificar(Resenas entidad)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
-
-            iConexion.Resenas!.Update(entidad!);
+            AbrirConexion();
+            iConexion!.Resenas!.Update(entidad!);
             iConexion.SaveChanges();
-
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se modifico un registro en Reseñas";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Modificacion";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria("Se modifico un registro en Reseñas", "Modificacion");
             return entidad;
         }
+
+        public bool ValidarId(int id)
+        {
+            AbrirConexion();
+
+            var resena = iConexion!.Resenas!.FirstOrDefault(r => r.Id == id);
+            return resena != null;
+        }
+
+        public void ValidarDatos(Resenas entidad)
+        {
+            if (entidad == null)
+                throw new Exception("La información de la reseña es obligatoria");
+
+            if (entidad.Fecha == default)
+                throw new Exception("La fecha de la reseña es obligatoria");
+
+            if (entidad.Calificacion < 1 || entidad.Calificacion > 5)
+                throw new Exception("La calificación debe estar entre 1 y 5");
+
+            if (string.IsNullOrEmpty(entidad.Comentario))
+                throw new Exception("El comentario de la reseña es obligatorio");
+
+            if (string.IsNullOrEmpty(entidad.TipoServicio))
+                throw new Exception("El tipo de servicio de la reseña es obligatorio");
+
+            if (entidad.Clientes <= 0)
+                throw new Exception("El cliente de la reseña es obligatorio");
+        }
+    public List<Resenas> ConsultarPorCliente(int idCliente)
+        {
+            AbrirConexion();
+
+            var lista = iConexion!.Resenas!
+                .Where(r => r.Clientes == idCliente)
+                .ToList();
+
+            if (lista.Count == 0)
+                throw new Exception("No se encontraron reseñas para el cliente");
+
+            RegistrarAuditoria(
+                "Se realizo una consulta en Reseñas por el cliente", "Consulta");
+            return lista;
+        }
     }
-}
+    }

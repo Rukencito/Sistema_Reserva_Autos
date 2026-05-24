@@ -7,77 +7,94 @@ namespace Lib_Negocio_Autos.Implementaciones
     public class SucursalesNegocio : ISucursalesNegocio
     {
         private IConexion? iConexion;
-        public List<Sucursales> Consultar()
+
+        private void AbrirConexion()
         {
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
-
-            var lista = iConexion.Sucursales!.ToList();
-
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo una consulta en Sucursales";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Consulta";
-            this.iConexion.Auditorias!.Add(Auditorias);
+        }
+        private void RegistrarAuditoria(string descripcion, string accion)
+        {
+            iConexion!.Auditorias!.Add(new Auditorias
+            {
+                Descripcion = descripcion,
+                FechaHora = DateTime.Now,
+                Usuario = "UsuarioActual",
+                Accion = accion
+            });
             iConexion.SaveChanges();
+        }
 
+        public List<Sucursales> Consultar()
+        {
+            AbrirConexion();
+
+            var lista = iConexion!.Sucursales!.ToList();
+
+           RegistrarAuditoria("Se realizo una consulta en Sucursales", "Consulta");
             return lista;
         }
 
         public Sucursales Guardar(Sucursales entidad)
         {
 
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            AbrirConexion();
 
-            iConexion.Sucursales!.Add(entidad!);
+            iConexion!.Sucursales!.Add(entidad!);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo un guardado en Sucursales";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Guardado";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria("Se guardo un nuevo registro en Sucursales", "Creacion");
             return entidad;
         }
 
         public Sucursales Eliminar(Sucursales entidad)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
-
-            iConexion.Sucursales!.Remove(entidad!);
+            AbrirConexion();
+            if (!ValidarId(entidad.Id))
+            {
+                throw new Exception("El registro no existe");
+            }
+            iConexion!.Sucursales!.Remove(entidad!);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se elimino un registro en Sucursales";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Eliminacion";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria("Se elimino un registro en Sucursales", "Eliminacion");
             return entidad;
         }
 
         public Sucursales Modificar(Sucursales entidad)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
-
-            iConexion.Sucursales!.Update(entidad!);
+            AbrirConexion();
+            if (!ValidarId(entidad.Id))
+            {
+                throw new Exception("El registro no existe");
+            }
+            iConexion!.Sucursales!.Update(entidad!);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se modifico un registro en Sucursales";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Modificacion";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria("Se modifico un registro en Sucursales", "Modificacion");
             return entidad;
+        }
+        public bool ValidarId(int id)
+        {
+            AbrirConexion();
+
+            var sucursal = iConexion!.Sucursales!.FirstOrDefault(s => s.Id == id);
+            return sucursal != null;
+        }
+
+        public List<Sucursales> ConsultarPorCiudad(string ciudad)
+        {
+            AbrirConexion();
+
+            var lista = iConexion!.Sucursales!
+                .Where(s => s.Ciudad!.ToLower() == ciudad.ToLower())
+                .ToList();
+
+            RegistrarAuditoria(
+                $"Se realizo una consulta en Sucursales por ciudad: {ciudad}",
+                "Consulta"
+            );
+            return lista;
         }
     }
 }

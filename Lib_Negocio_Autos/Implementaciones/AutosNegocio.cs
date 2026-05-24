@@ -214,7 +214,7 @@ namespace Lib_Negocio_Autos.Implementaciones
                 throw new Exception("La marca del auto es obligatoria");
 
             if (entidad.Año <= 1885 || entidad.Año > DateTime.Now.Year + 1)
-                throw new Exception($"El año del auto debe estar entre 1886 y {DateTime.Now.Year + 1}");
+                throw new Exception("El año del auto debe estar entre 1886 y {DateTime.Now.Year + 1}");
 
             if (string.IsNullOrEmpty(entidad.Modelo))
                 throw new Exception("El modelo del auto es obligatorio");

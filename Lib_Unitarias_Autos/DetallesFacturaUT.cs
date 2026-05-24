@@ -15,7 +15,6 @@ namespace Lib_Unitarias_Autos
             Consultar();
             ValidarId();
             ConsultarPorId();
-            ConsultarPorTipoFactura();
             ConsultarPorFactura();
             CalcularSubtotalPorFactura();
             Modificar();
@@ -28,6 +27,7 @@ namespace Lib_Unitarias_Autos
             var lista = negocio.Consultar();
 
             if (lista.Count > 0)
+                entidad = lista.First();
                 return;
 
             throw new Exception("No hay detalles de factura registrados");
@@ -37,7 +37,7 @@ namespace Lib_Unitarias_Autos
         {
             negocio = new DetallesFacturaNegocio();
 
-            bool existe = negocio.ValidarId(1);
+            bool existe = negocio.ValidarId(entidad!.Id);
 
             if (existe)
                 return;
@@ -49,7 +49,7 @@ namespace Lib_Unitarias_Autos
         {
             negocio = new DetallesFacturaNegocio();
 
-            entidad = negocio.ConsultarPorId(1);
+            entidad = negocio.ConsultarPorId(entidad!.Id);
 
             if (entidad != null)
                 return;
@@ -57,25 +57,13 @@ namespace Lib_Unitarias_Autos
             throw new Exception("No se encontró el detalle");
         }
 
-        private void ConsultarPorTipoFactura()
-        {
-            negocio = new DetallesFacturaNegocio();
-
-            var lista = negocio.ConsultarPorTipoFactura("Venta");
-
-            if (lista.Count > 0)
-                return;
-
-            throw new Exception("No se encontraron detalles");
-        }
-
         private void ConsultarPorFactura()
         {
             negocio = new DetallesFacturaNegocio();
 
-            var lista = negocio.ConsultarPorFactura(1);
+            var lista = negocio.ConsultarPorFactura(entidad!.Id);
 
-            if (lista.Count > 0)
+            if (lista.Count >= 0)
                 return;
 
             throw new Exception("No se encontraron detalles de factura");
@@ -85,7 +73,7 @@ namespace Lib_Unitarias_Autos
         {
             negocio = new DetallesFacturaNegocio();
 
-            decimal subtotal = negocio.CalcularSubtotalPorFactura(1);
+            decimal subtotal = negocio.CalcularSubtotalPorFactura(entidad!.Id);
 
             if (subtotal > 0)
                 return;
@@ -97,7 +85,7 @@ namespace Lib_Unitarias_Autos
         {
             negocio = new DetallesFacturaNegocio();
 
-            entidad = negocio.ConsultarPorId(1);
+            entidad = negocio.ConsultarPorId(entidad!.Id);
 
             entidad.TipoFactura = "Servicio";
 

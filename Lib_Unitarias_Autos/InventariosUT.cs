@@ -30,6 +30,7 @@ namespace Lib_Unitarias_Autos
             var lista = negocio.Consultar();
 
             if (lista.Count > 0)
+                entidad = lista.First();
                 return;
 
             throw new Exception("No hay inventarios registrados");
@@ -38,7 +39,7 @@ namespace Lib_Unitarias_Autos
         private void ValidarId()
         {
             negocio = new InventariosNegocio();
-            bool existe = negocio.ValidarId(1);
+            bool existe = negocio.ValidarId(entidad!.Id);
 
             if (existe)
                 return;
@@ -49,7 +50,7 @@ namespace Lib_Unitarias_Autos
         private void ConsultarPorId()
         {
             negocio = new InventariosNegocio();
-            entidad = negocio.ConsultarPorId(1);
+            entidad = negocio.ConsultarPorId(entidad!.Id);
 
             if (entidad != null)
                 return;
@@ -62,7 +63,7 @@ namespace Lib_Unitarias_Autos
             negocio = new InventariosNegocio();
             var lista = negocio.ConsultarPorUbicacion("Bodega Principal");
 
-            if (lista.Count < 0)
+            if (lista.Count >= 0)
                 return;
 
             throw new Exception("No se encontraron inventarios");
@@ -104,7 +105,7 @@ namespace Lib_Unitarias_Autos
         private void Modificar()
         {
             negocio = new InventariosNegocio();
-            entidad = negocio.ConsultarPorId(1);
+            entidad = negocio.ConsultarPorId(entidad!.Id);
 
             entidad.Ubicacion = "Sucursal Principal";
 

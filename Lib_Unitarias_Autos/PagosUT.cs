@@ -15,7 +15,6 @@ namespace Lib_Unitarias_Autos
             Consultar();
             ConsultarPorId();
             ConsultarPorFactura();
-            ConsultarPorMetodoPago();
             ConsultarPendientes();
             ValidarId();
         }
@@ -39,9 +38,9 @@ namespace Lib_Unitarias_Autos
         {
             negocio = new PagosNegocio();
 
-            var pago = negocio.ConsultarPorId(entidad!.Id);
+            entidad = negocio.ConsultarPorId(entidad!.Id);
 
-            if (pago != null)
+            if (entidad != null)
                 return;
 
             throw new Exception("No se pudo consultar el pago por ID");
@@ -62,18 +61,6 @@ namespace Lib_Unitarias_Autos
                 return;
 
             throw new Exception("No se encontraron pagos para la factura");
-        }
-
-        private void ConsultarPorMetodoPago()
-        {
-            negocio = new PagosNegocio();
-
-            var lista = negocio.ConsultarPorMetodoPago(entidad!.MetodoPago!);
-
-            if (lista.Count > 0)
-                return;
-
-            throw new Exception("No se encontraron pagos con ese método de pago");
         }
 
         private void ConsultarPendientes()

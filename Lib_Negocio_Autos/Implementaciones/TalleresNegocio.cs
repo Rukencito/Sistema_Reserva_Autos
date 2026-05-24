@@ -7,77 +7,95 @@ namespace Lib_Negocio_Autos.Implementaciones
     public class TalleresNegocio : ITalleresNegocio
     {
         private IConexion? iConexion;
-        public List<Talleres> Consultar()
+        private void AbrirConexion()
         {
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+        }
 
-            var lista = iConexion.Talleres!.ToList();
-
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo una consulta en Talleres";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Consulta";
-            this.iConexion.Auditorias!.Add(Auditorias);
+        private void RegistrarAuditoria(string descripcion, string accion)
+        {
+            iConexion!.Auditorias!.Add(new Auditorias
+            {
+                Descripcion = descripcion,
+                FechaHora = DateTime.Now,
+                Usuario = "UsuarioActual",
+                Accion = accion
+            });
             iConexion.SaveChanges();
-
+        }
+        public List<Talleres> Consultar()
+        {
+           AbrirConexion();
+            var lista = iConexion!.Talleres!.ToList();
+            RegistrarAuditoria("Se realizo una consulta en Talleres", "Consulta");
             return lista;
         }
 
         public Talleres Guardar(Talleres entidad)
         {
-
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
-
-            iConexion.Talleres!.Add(entidad!);
+            AbrirConexion();
+            ValidarDatos(entidad);
+            iConexion!.Talleres!.Add(entidad!);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo un guardado en Talleres";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Guardado";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria("Se guardo un nuevo registro en Talleres", "Creacion");
             return entidad;
         }
 
         public Talleres Eliminar(Talleres entidad)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+           AbrirConexion();
+            ValidarDatos(entidad);
 
-            iConexion.Talleres!.Remove(entidad!);
+            if (!ValidarId(entidad.Id))
+                throw new Exception("El Taller con ID " + entidad.Id + " no existe en el sistema");
+            iConexion!.Talleres!.Remove(entidad!);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se elimino un registro en Talleres";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Eliminacion";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+           RegistrarAuditoria("Se elimino un registro en Talleres", "Eliminacion");
             return entidad;
         }
 
         public Talleres Modificar(Talleres entidad)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            AbrirConexion();
+            ValidarDatos(entidad);
 
-            iConexion.Talleres!.Update(entidad!);
+            if (!ValidarId(entidad.Id))
+                throw new Exception("El Taller con ID " + entidad.Id + " no existe en el sistema");
+
+            iConexion!.Talleres!.Update(entidad!);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se modifico un registro en Talleres";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Modificacion";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria("Se modifico un registro en Talleres", "Modificacion");
             return entidad;
         }
+        public bool ValidarId(int id)
+        {
+            AbrirConexion();
+
+            var taller = iConexion!.Talleres!.FirstOrDefault(t => t.Id == id);
+            return taller != null;
+        }
+
+        public void ValidarDatos(Talleres entidad)
+        {
+            if (entidad == null)
+                throw new Exception("La información del taller es obligatoria");
+
+            if (string.IsNullOrEmpty(entidad.Nombre))
+                throw new Exception("El nombre del taller es obligatorio");
+
+            if (string.IsNullOrEmpty(entidad.Direccion))
+                throw new Exception("La dirección del taller es obligatoria");
+
+            if (string.IsNullOrEmpty(entidad.Telefono))
+                throw new Exception("El teléfono del taller es obligatorio");
+
+            if (entidad.Capacidad <= 0)
+                throw new Exception("La capacidad del taller es obligatoria");
+        }
+
     }
 }
