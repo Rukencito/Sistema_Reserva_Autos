@@ -78,17 +78,6 @@ namespace Lib_Unitarias_Autos
         }
 
 
-        {
-            negocio = new MantenimientosNegocio();
-
-            var lista = negocio.ConsultarPorTipo(entidad!.Tipo!);
-
-            if (lista.Count > 0)
-                return;
-
-            throw new Exception("No se encontraron mantenimientos por tipo");
-        }
-
         private void ValidarId()
         {
             negocio = new MantenimientosNegocio();
