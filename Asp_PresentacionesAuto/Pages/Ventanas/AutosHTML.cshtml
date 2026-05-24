@@ -1,0 +1,144 @@
+﻿@page
+@using Autos_Razor.Pages
+@model AutosHTMLModel;
+@{
+    ViewData["Title"] = "Autos";
+}
+<center>
+    <div>
+        <form method="POST"
+              enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+
+            <div align="left">
+                <h3>Autos</h3>
+            </div>
+            
+            <div>
+                <input type="submit"
+                       value="Refrescar"
+                       class="btn btn-secondary"
+                       asp-page-handler="BtRefrescar" />
+                <input type="submit"
+                       value="Nuevo"
+                       class="btn btn-secondary"
+                       asp-page-handler="BtNuevo"
+                       disabled="@(Model.Auto!= null)" />
+                <input type="submit"
+                       value="Guardar"
+                       class="btn btn-secondary"
+                       asp-page-handler="BtGuardar"
+                       disabled="@(Model.Auto == null)" />
+            </div>
+
+            @if (Model.Auto != null)
+            {
+                <input type="hidden"
+                       asp-for="@Model.Auto!.Id" />
+
+                <div>
+                    <div class="form-group">
+                        <label>Placa</label>
+                        <div class="col-6">
+                            <input id="inPlaca"
+                                   class="cts_forms form-control"
+                                   asp-for="@Model.Auto!.Placa" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Marca</label>
+                        <div class="col-6">
+                            <input id="inMarca"
+                                   class="cts_forms form-control"
+                                   asp-for="@Model.Auto!.Marca" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Año</label>
+                        <div class="col-6">
+                            <input id="inAño"
+                                   class="cts_forms form-control"
+                                   asp-for="@Model.Auto!.Año" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Modelo</label>
+                    <div class="col-6">
+                        <input id="inModelo"
+                               class="cts_forms form-control"
+                               asp-for="@Model.Auto!.Modelo" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>EstadoAuto</label>
+                    <input type="checkbox" asp-for="@Model.Auto!.Estado" />
+                </div>
+            }
+            
+            @if (ViewData.ContainsKey("Mensaje"))
+            {
+                @await Html.PartialAsync("../Emergentes/Mensajes.cshtml")
+                ;
+            }
+
+            @if (Model.Auto != null && Model.Borrando)
+            {
+                <div class='popup'>
+                    <div class='pp_ms_inner'>
+                        <div style='width:95%'>
+                            <h2 align="left">Mensaje</h2>
+                            <h6 align="left">Desea borrar el Auto?</h6>
+                            <h6 align="left">@Model.Auto!.Placa</h6>
+                            
+                            <input type="submit"
+                                   value="Cerrar"
+                                   asp-page-handler="BtCerrar"
+                                   class="btn btn-secondary" />
+                            <input type="submit"
+                                   value="Borrar"
+                                   asp-page-handler="BtBorrar"
+                                   class="btn btn-secondary" />
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (Model != null && Model.Lista != null && Model.Lista.Count > 0)
+            {
+                <table class="tb_data table table-striped table-bordered table-hover">
+                    <tr>
+                        <th>Placa</th>
+                        <th>Marca</th>
+                        <th>Año</th>
+                        <th>Modelo</th>
+                        <th>Estado</th>
+                    </tr>
+                
+                    @foreach (var elemento in Model.Lista)
+                    {
+                        <tr>
+                            <td>@elemento.Placa</td>
+                            <td>@elemento.Marca</td>
+                            <td>@elemento.Año</td>
+                            <td>@elemento.Modelo</td>
+                            <td>@elemento.Estado</td>
+                            <td>
+                                <input type="submit"
+                                       value="Modificar"
+                                       asp-page-handler="BtModificar"
+                                       class="btn btn-secondary"
+                                       asp-route-data="@elemento.Id" />
+                                <input type="submit"
+                                       value="Borrar"
+                                       asp-page-handler="BtBorrarVal"
+                                       class="btn btn-secondary"
+                                       asp-route-data="@elemento.Id" />
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+        </form>
+    </div>
+</center>
