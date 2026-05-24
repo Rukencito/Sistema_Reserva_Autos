@@ -12,3 +12,4 @@ namespace Lib_Presentacion_Autos.Interfaces
         Contratos Modificar(Contratos entidad);
         Contratos Eliminar(Contratos entidad);
     }
+}

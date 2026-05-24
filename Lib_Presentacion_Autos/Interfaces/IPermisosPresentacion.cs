@@ -12,3 +12,4 @@ namespace Lib_Presentacion_Autos.Interfaces
         Permisos Modificar(Permisos entidad);
         Permisos Eliminar(Permisos entidad);
     }
+}

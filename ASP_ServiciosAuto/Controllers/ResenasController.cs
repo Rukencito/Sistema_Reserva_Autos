@@ -9,7 +9,7 @@ namespace ASP_ServiciosAuto.Controllers
     [Route("[controller]/[action]")]
     public class ResenasController : ControllerBase
     {
-        private IReseñasNegocio? IReseñasNegocio;
+        private IResenasNegocio? IReseñasNegocio;
 
         public ResenasController()
         {

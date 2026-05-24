@@ -97,8 +97,8 @@ namespace Lib_Negocio_Autos.Implementaciones
             AbrirConexion();
 
             var existeDuplicado = iConexion!.Reservas!.Any(r =>
-                r.Autos != null && r.Auto.Id == autoId &&
-                r.Clientes != null && r.Cliente.Id == clienteId &&
+                r.Autos != null && r.Auto!.Id == autoId &&
+                r.Clientes != null && r.Cliente!.Id == clienteId &&
                 r.FechaVencimiento >= DateTime.Now &&
                 (r.EstadoReserva == "Pendiente" || r.EstadoReserva == "Confirmada"));
 
