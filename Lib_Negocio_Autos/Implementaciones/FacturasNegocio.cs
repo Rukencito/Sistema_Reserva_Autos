@@ -180,6 +180,7 @@ namespace Lib_Negocio_Autos.Implementaciones
 
             factura.Estado = true;
             iConexion.Facturas!.Update(factura);
+            iConexion.SaveChanges();
 
             RegistrarAuditoria("Se marcó como pagada la factura con ID " + facturaId, "Pago de Factura");
             return factura;

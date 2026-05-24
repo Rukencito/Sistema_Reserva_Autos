@@ -17,7 +17,6 @@ namespace Lib_Unitarias_Autos
             ValidarCedula();
             ConsultarPorCedula();
             VerificarEstadoDueno();
-            ConsultarActivos();
             AgregarAuto();
             QuitarAuto();
             Modificar();
@@ -30,7 +29,8 @@ namespace Lib_Unitarias_Autos
             var lista = negocio.Consultar();
 
             if (lista.Count > 0)
-                return;
+                entidad = lista.First();
+            return;
 
             throw new Exception("No hay dueños registrados");
         }
@@ -39,7 +39,7 @@ namespace Lib_Unitarias_Autos
         {
             negocio = new DuenosNegocio();
 
-            bool existe = negocio.ValidarId(1);
+            bool existe = negocio.ValidarId(entidad!.Id);
 
             if (existe)
                 return;
@@ -50,7 +50,7 @@ namespace Lib_Unitarias_Autos
         private void ValidarCedula()
         {
             negocio = new DuenosNegocio();
-            bool existe = negocio.ValidarCedula("11223344");
+            bool existe = negocio.ValidarCedula(entidad!.Cedula!);
 
             if (existe)
                 return;
@@ -62,19 +62,18 @@ namespace Lib_Unitarias_Autos
         {
             negocio = new DuenosNegocio();
 
-            entidad = negocio.ConsultarPorCedula("11223344");
+            entidad = negocio.ConsultarPorCedula(entidad!.Cedula!);
 
             if (entidad != null)
                 return;
 
             throw new Exception("No se encontró el dueño");
         }
-
         private void VerificarEstadoDueno()
         {
             negocio = new DuenosNegocio();
 
-            bool estado = negocio.VerificarEstadoDueno(1);
+            bool estado = negocio.VerificarEstadoDueno(entidad!.Id);
 
             if (estado)
                 return;
@@ -82,23 +81,11 @@ namespace Lib_Unitarias_Autos
             throw new Exception("El dueño no está activo");
         }
 
-        private void ConsultarActivos()
-        {
-            negocio = new DuenosNegocio();
-
-            var lista = negocio.ConsultarActivos();
-
-            if (lista.Count >= 0)
-                return;
-
-            throw new Exception("Error consultando dueños activos");
-        }
-
         private void AgregarAuto()
         {
             negocio = new DuenosNegocio();
 
-            entidad = negocio.AgregarAuto(1);
+            entidad = negocio.AgregarAuto(entidad!.Id);
 
             if (entidad.CantidadAutos > 0)
                 return;
@@ -109,7 +96,7 @@ namespace Lib_Unitarias_Autos
         private void QuitarAuto()
         {
             negocio = new DuenosNegocio();
-            entidad = negocio.QuitarAuto(1);
+            entidad = negocio.QuitarAuto(entidad!.Id);
 
             if (entidad.CantidadAutos >= 0)
                 return;
@@ -121,7 +108,7 @@ namespace Lib_Unitarias_Autos
         {
             negocio = new DuenosNegocio();
 
-            entidad = negocio.ConsultarPorCedula("11223344");
+            entidad = negocio.ConsultarPorCedula(entidad!.Cedula!);
 
             entidad.Telefono = "3008888888";
 

@@ -1,5 +1,6 @@
 ﻿using Lib_Negocio_Autos.Implementaciones;
 using Lib_Negocio_Autos.modelo;
+using System.Data;
 
 namespace Lib_Unitarias_Autos
 {
@@ -29,7 +30,11 @@ namespace Lib_Unitarias_Autos
             var lista = negocio.Consultar();
 
             if (lista.Count > 0)
+            {
+                entidad = lista.First();
                 return;
+            }
+                
 
             throw new Exception("No hay facturas registradas");
         }
@@ -50,7 +55,7 @@ namespace Lib_Unitarias_Autos
         {
             negocio = new FacturasNegocio();
 
-            entidad = negocio.ConsultarPorId(1);
+            entidad = negocio.ConsultarPorId(entidad!.Id);
 
             if (entidad != null)
                 return;
@@ -61,8 +66,10 @@ namespace Lib_Unitarias_Autos
         private void ConsultarPorCliente()
         {
             negocio = new FacturasNegocio();
+            if (entidad!.Cliente == null)
+                throw new Exception("La factura no tiene un cliente asociado");
 
-            var lista = negocio.ConsultarPorCliente(1);
+            var lista = negocio.ConsultarPorCliente(entidad.Cliente.Id);
 
             if (lista.Count > 0)
                 return;
@@ -86,11 +93,11 @@ namespace Lib_Unitarias_Autos
         {
             negocio = new FacturasNegocio();
 
-            entidad = negocio.ConsultarPorId(1);
+            entidad = negocio.ConsultarPorId(entidad!.Id);
 
             decimal total = negocio.CalcularTotal(entidad);
 
-            if (total > 0)
+            if (total >= 0)
                 return;
 
             throw new Exception("Error calculando total");
@@ -99,7 +106,16 @@ namespace Lib_Unitarias_Autos
         private void MarcarComoPagada()
         {
             negocio = new FacturasNegocio();
-            entidad = negocio.MarcarComoPagada(1);
+            entidad = negocio.ConsultarPorId(entidad!.Id);
+
+            if (entidad.Estado == true)
+            {
+                entidad.Estado = false;
+                negocio.Modificar(entidad);
+                entidad = negocio.ConsultarPorId(entidad.Id);
+            }
+
+            entidad = negocio.MarcarComoPagada(entidad.Id);
 
             if (entidad.Estado == true)
                 return;
@@ -111,7 +127,7 @@ namespace Lib_Unitarias_Autos
         {
             negocio = new FacturasNegocio();
 
-            entidad = negocio.ConsultarPorId(1);
+            entidad = negocio.ConsultarPorId(entidad!.Id);
 
             entidad.FechaEmision = DateTime.Now;
 

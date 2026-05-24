@@ -95,7 +95,7 @@ namespace Lib_Negocio_Autos.Implementaciones
             AbrirConexion();
 
             var inventario = iConexion!.Inventarios!
-                .Include(i => i.Auto) 
+                
                 .FirstOrDefault(i => i.Id == id);
             if (inventario == null)
                 throw new Exception("No se encontró ningún inventario con ID " + id);

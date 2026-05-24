@@ -11,84 +11,73 @@ namespace Lib_Negocio_Autos.Implementaciones
     public class VentasNegocio : IVentasNegocio
     {
         private IConexion? iConexion;
-        public List<Ventas> Consultar()
+        private void AbrirConexion()
         {
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+        }
 
-            var lista = iConexion.Ventas!.ToList();
-
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo una consulta en Ventas";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Consulta";
-            this.iConexion.Auditorias!.Add(Auditorias);
+        private void RegistrarAuditoria(string descripcion, string accion)
+        {
+            iConexion!.Auditorias!.Add(new Auditorias
+            {
+                Descripcion = descripcion,
+                FechaHora = DateTime.Now,
+                Usuario = "UsuarioActual",
+                Accion = accion
+            });
             iConexion.SaveChanges();
+        }
 
+        public List<Ventas> Consultar()
+        {
+            AbrirConexion();
+
+            var lista = iConexion!.Ventas!.ToList();
+
+            RegistrarAuditoria("Se realizo una consulta en Ventas", "Consulta");
             return lista;
         }
 
         public Ventas Guardar(Ventas entidad)
         {
 
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            AbrirConexion();
 
-            iConexion.Ventas!.Add(entidad!);
+            iConexion!.Ventas!.Add(entidad!);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo un guardado en Ventas";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Guardado";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria("Se guardo un nuevo registro en Ventas", "Creacion");
             return entidad;
         }
 
         public Ventas Eliminar(Ventas entidad)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            AbrirConexion();
 
             if (!ValidarId(entidad.Id))
             {
                 throw new Exception("El registro no existe");
             }
-            iConexion.Ventas!.Remove(entidad!);
+            iConexion!.Ventas!.Remove(entidad!);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se elimino un registro en Ventas";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Eliminacion";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria("Se elimino un registro en Ventas", "Eliminacion");
             return entidad;
         }
 
         public Ventas Modificar(Ventas entidad)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
+            AbrirConexion();
 
             if (!ValidarId(entidad.Id))
             {
                 throw new Exception("El registro no existe");
             }
-            iConexion.Ventas!.Update(entidad!);
+            iConexion!.Ventas!.Update(entidad!);
             iConexion.SaveChanges();
 
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se modifico un registro en Ventas";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; // Reemplaza con el usuario actual
-            Auditorias.Accion = "Modificacion";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria("Se modifico un registro en Ventas", "Modificacion");
             return entidad;
         }
 
@@ -96,8 +85,8 @@ namespace Lib_Negocio_Autos.Implementaciones
         {
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
-            var Alquiler = iConexion.Alquileres!.FirstOrDefault(a => a.Id == id);
-            return Alquiler != null;
+            var Ventas = iConexion.Ventas!.FirstOrDefault(v => v.Id == id);
+            return Ventas != null;
         }
 
         public void ConsultarporCliente(int idCliente)
@@ -105,13 +94,7 @@ namespace Lib_Negocio_Autos.Implementaciones
             iConexion = new Conexion();
             iConexion.string_conexion = Configuraciones.obtener("string_conexion");
             var lista = iConexion.Ventas!.Where(v => v.Cliente!.Id == idCliente).ToList();
-            var Auditorias = new Auditorias();
-            Auditorias.Descripcion = "Se realizo una consulta en Ventas por Cliente";
-            Auditorias.FechaHora = DateTime.Now;
-            Auditorias.Usuario = "UsuarioActual"; 
-            Auditorias.Accion = "Consulta por Cliente";
-            this.iConexion.Auditorias!.Add(Auditorias);
-            iConexion.SaveChanges();
+            RegistrarAuditoria("Se realizo una consulta en Ventas por el cliente con id", "Consulta");
         }
 
     }
