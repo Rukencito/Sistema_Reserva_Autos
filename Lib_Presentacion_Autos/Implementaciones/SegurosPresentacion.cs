@@ -1,10 +1,96 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Lib_Negocio_Autos.modelo;
+using Lib_Presentacion_Autos.Interfaces;
+using Newtonsoft.Json;
 
 namespace Lib_Presentacion_Autos.Implementaciones
 {
-    internal class SegurosPresentacion
+    public class SegurosPresentacion : ISegurosPresentacion
     {
+        private IComunicaciones? iComunicaciones;
+
+        public List<Seguros> Consultar()
+        {
+            var datos = new Dictionary<string, object>();
+            datos["Url"] = "http://localhost:5188/Seguros/Consultar";
+
+            this.iComunicaciones = new Comunicaciones();
+            var task = this.iComunicaciones.Ejecutar(datos)!;
+            task.Wait();
+            var respuesta = task.Result;
+
+            if (!respuesta.ContainsKey("Valor"))
+                return new List<Seguros>();
+
+            return JsonConvert.DeserializeObject<List<Seguros>>(
+                respuesta["Valor"].ToString()!)!;
+        }
+
+        public Seguros Guardar(Seguros entidad)
+        {
+            if (entidad.Id != 0)
+                throw new Exception("Ya se guardo");
+
+            this.iComunicaciones = new Comunicaciones();
+
+            var datos = new Dictionary<string, object>();
+            datos["Url"] = "http://localhost:5188/Seguros/Guardar";
+            datos["Entidad"] = entidad;
+            this.iComunicaciones = new Comunicaciones();
+            var task = this.iComunicaciones.EjecutarPost(datos)!;
+            task.Wait();
+            var respuesta = task.Result;
+
+            if (!respuesta.ContainsKey("Valor"))
+                return new Seguros();
+
+            return JsonConvert.DeserializeObject<Seguros>(
+                respuesta["Valor"].ToString()!)!;
+        }
+
+        public Seguros Modificar(Seguros entidad)
+        {
+            if (entidad.Id == 0)
+                throw new Exception("No se ha guardado");
+
+            this.iComunicaciones = new Comunicaciones();
+
+            var datos = new Dictionary<string, object>();
+            datos["Url"] = "http://localhost:5188/Seguros/Modificar";
+            datos["Entidad"] = entidad;
+            this.iComunicaciones = new Comunicaciones();
+            var task = this.iComunicaciones.EjecutarPut(datos)!;
+            task.Wait();
+            var respuesta = task.Result;
+
+            if (!respuesta.ContainsKey("Valor"))
+                return new Seguros();
+
+            return JsonConvert.DeserializeObject<Seguros>(
+                respuesta["Valor"].ToString()!)!;
+        }
+
+        public Seguros Eliminar(Seguros entidad)
+        {
+            if (entidad.Id == 0)
+                throw new Exception("No se ha guardado");
+
+            this.iComunicaciones = new Comunicaciones();
+
+            var datos = new Dictionary<string, object>();
+            datos["Url"] = "http://localhost:5188/Seguros/Eliminar";
+            datos["Entidad"] = entidad;
+            this.iComunicaciones = new Comunicaciones();
+            var task = this.iComunicaciones.EjecutarDelete(datos)!;
+            task.Wait();
+            var respuesta = task.Result;
+
+            if (!respuesta.ContainsKey("Valor"))
+                return new Seguros();
+
+            return JsonConvert.DeserializeObject<Seguros>(
+                respuesta["Valor"].ToString()!)!;
+        }
     }
+
 }
+
