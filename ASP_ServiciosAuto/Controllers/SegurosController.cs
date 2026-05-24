@@ -47,5 +47,13 @@ namespace ASP_ServiciosAuto.Controllers
                 throw new Exception("No implementado");
             return this.ISegurosNegocio!.Eliminar(id);
         }
+
+        [HttpGet]
+        public Seguros ConsultarPorId(int id)
+        {
+            if (this.ISegurosNegocio == null)
+                throw new Exception("No implementado");
+            return this.ISegurosNegocio!.ConsultarPorId(id);
+        }
     }
 }

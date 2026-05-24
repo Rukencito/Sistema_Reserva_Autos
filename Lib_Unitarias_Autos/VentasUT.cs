@@ -16,6 +16,7 @@ namespace Lib_Unitarias_Autos
             Consultar();
             ValidarId();
             Modificar();
+            ConsultarPorCliente();
         }
         private void Consultar()
         {
@@ -27,6 +28,18 @@ namespace Lib_Unitarias_Autos
                 return;
 
             throw new Exception("Error consultando ventas");
+        }
+
+        private void ConsultarPorCliente()
+        {
+            negocio = new VentasNegocio();
+
+            var lista = negocio.ConsultarPorCliente(entidad!.Clientes!.Value);
+
+            if (lista.Count > 0)
+                return;
+
+            throw new Exception("No se encontraron ventas para el cliente");
         }
 
         private void ValidarId()

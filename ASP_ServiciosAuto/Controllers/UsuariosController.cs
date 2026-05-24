@@ -47,5 +47,29 @@ namespace ASP_ServiciosAuto.Controllers
                 throw new Exception("No implementado");
             return this.IUsuariosNegocio!.Eliminar(id);
         }
+        [HttpGet]
+        public Usuarios ConsultarPorCorreo(string correo)
+        {
+            if (this.IUsuariosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IUsuariosNegocio!.ConsultarPorCorreo(correo);
+        }
+
+        [HttpPost]
+        public Usuarios AsignarRol(int usuarioId, int rolId)
+        {
+            if (this.IUsuariosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IUsuariosNegocio!.AsignarRol(usuarioId, rolId);
+        }
+
+        [HttpGet]
+        public List<Usuarios> ConsultarPorRol(int rolId)
+        {
+            if (this.IUsuariosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IUsuariosNegocio!.ConsultarPorRol(rolId);
+        }
+
     }
 }

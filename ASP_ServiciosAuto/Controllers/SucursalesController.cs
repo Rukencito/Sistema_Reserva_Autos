@@ -47,5 +47,13 @@ namespace ASP_ServiciosAuto.Controllers
                 throw new Exception("No implementado");
             return this.ISucursalesNegocio!.Eliminar(id);
         }
+
+        [HttpGet]
+        public List<Sucursales> ConsultarPorCiudad(string ciudad)
+        {
+            if(this.ISucursalesNegocio == null)
+                throw new Exception("No implementado");
+            return this.ISucursalesNegocio!.ConsultarPorCiudad(ciudad);
+        }
     }
 }

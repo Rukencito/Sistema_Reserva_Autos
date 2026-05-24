@@ -16,7 +16,6 @@ namespace Lib_Unitarias_Autos
             ConsultarPorId();
             ConsultarPorAuto();
             ConsultarPorTaller();
-            ConsultarPorTipo();
             ValidarId();
             FinalizarMantenimiento();
         }
@@ -76,18 +75,6 @@ namespace Lib_Unitarias_Autos
                 return;
 
             throw new Exception("No se encontraron mantenimientos para el taller");
-        }
-
-        private void ConsultarPorTipo()
-        {
-            negocio = new MantenimientosNegocio();
-
-            var lista = negocio.ConsultarPorTipo(entidad!.Tipo!);
-
-            if (lista.Count > 0)
-                return;
-
-            throw new Exception("No se encontraron mantenimientos por tipo");
         }
 
         private void ValidarId()

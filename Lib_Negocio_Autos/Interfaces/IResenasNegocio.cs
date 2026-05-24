@@ -8,5 +8,8 @@ namespace Lib_Negocio_Autos.Interfaces
         Resenas Guardar(Resenas entidad);
         Resenas Eliminar(Resenas entidad);
         Resenas Modificar(Resenas entidad);
+        bool ValidarId(int id);
+        void ValidarDatos(Resenas entidad);
+        List<Resenas> ConsultarPorCliente(int idCliente);
     }
 }

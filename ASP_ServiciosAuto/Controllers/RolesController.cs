@@ -2,6 +2,7 @@
 using Lib_Negocio_Autos.Interfaces;
 using Lib_Negocio_Autos.modelo;
 using Microsoft.AspNetCore.Mvc;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ASP_ServiciosAuto.Controllers
 {
@@ -46,6 +47,22 @@ namespace ASP_ServiciosAuto.Controllers
             if (this.IRolesNegocio == null)
                 throw new Exception("No implementado");
             return this.IRolesNegocio!.Eliminar(id);
+        }
+
+        [HttpGet]
+        public bool NombreExiste(string nombre)
+        {
+            if (this.IRolesNegocio == null)
+                throw new Exception("No implementado");
+            return this.IRolesNegocio!.NombreExiste(nombre);
+        }
+
+        [HttpGet]
+        public Roles ConsultarPorId(int id)
+        {
+            if (this.IRolesNegocio == null)
+                throw new Exception("No implementado");
+            return this.IRolesNegocio!.ConsultarPorId(id);
         }
     }
 }

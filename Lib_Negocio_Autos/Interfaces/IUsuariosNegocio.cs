@@ -8,5 +8,10 @@ namespace Lib_Negocio_Autos.Interfaces
         Usuarios Guardar(Usuarios entidad);
         Usuarios Eliminar(Usuarios entidad);
         Usuarios Modificar(Usuarios entidad);
+        bool ValidarId(int id);
+        Usuarios ConsultarPorCorreo(string correo);
+        Usuarios AsignarRol(int usuarioId, int rolId);
+        List<Usuarios> ConsultarPorRol(int rolId);
+        void ValidarDatos(Usuarios entidad);
     }
 }

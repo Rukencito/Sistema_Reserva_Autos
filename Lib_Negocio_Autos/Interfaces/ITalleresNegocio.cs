@@ -8,5 +8,7 @@ namespace Lib_Negocio_Autos.Interfaces
         Talleres Guardar(Talleres entidad);
         Talleres Eliminar(Talleres entidad);
         Talleres Modificar(Talleres entidad);
+        bool ValidarId(int id);
+        void ValidarDatos(Talleres entidad);
     }
 }

@@ -89,12 +89,37 @@ namespace Lib_Negocio_Autos.Implementaciones
             return Ventas != null;
         }
 
-        public void ConsultarporCliente(int idCliente)
+        public List<Ventas> ConsultarPorCliente(int idCliente)
         {
-            iConexion = new Conexion();
-            iConexion.string_conexion = Configuraciones.obtener("string_conexion");
-            var lista = iConexion.Ventas!.Where(v => v.Cliente!.Id == idCliente).ToList();
-            RegistrarAuditoria("Se realizo una consulta en Ventas por el cliente con id", "Consulta");
+            AbrirConexion();
+
+            var lista = iConexion!.Ventas!
+                .Where(v => v.Clientes == idCliente)
+                .ToList();
+
+            if (lista.Count == 0)
+                throw new Exception($"No se encontraron ventas para el cliente con id: {idCliente}");
+
+            RegistrarAuditoria(
+                $"Se realizo una consulta en Ventas por el cliente con id: {idCliente}",
+                "Consulta"
+            );
+            return lista;
+        }
+
+        public void ValidarDatos(Ventas entidad)
+        {
+            if (entidad == null)
+                throw new Exception("La información de la venta es obligatoria");
+
+            if (string.IsNullOrEmpty(entidad.TipoPago))
+                throw new Exception("El tipo de pago es obligatorio");
+
+            if (entidad.PrecioVenta <= 0)
+                throw new Exception("El precio de venta debe ser mayor a 0");
+
+            if (entidad.FechaVenta == default)
+                throw new Exception("La fecha de venta es obligatoria");
         }
 
     }

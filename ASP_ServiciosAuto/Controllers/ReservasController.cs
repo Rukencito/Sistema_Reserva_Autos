@@ -47,5 +47,27 @@ namespace ASP_ServiciosAuto.Controllers
                 throw new Exception("No implementado");
             return this.IReservasNegocio!.Eliminar(id);
         }
+        [HttpGet]
+        public bool ValidarReservaDuplicada(int autoId, int clienteId, DateTime fechaVencimiento)
+        {
+            if (this.IReservasNegocio == null)
+                throw new Exception("No implementado");
+            return this.IReservasNegocio!.ValidarReservaDuplicada(autoId, clienteId, fechaVencimiento);
+        }
+
+        [HttpPut]
+        public Reservas CambiarEstado(int reservaId, string nuevoEstado)
+        {
+            if (this.IReservasNegocio == null)
+                throw new Exception("No implementado");
+            return this.IReservasNegocio!.CambiarEstado(reservaId, nuevoEstado);
+        }
+        [HttpGet]
+        public List<Reservas> ConsultarPorCliente(int clienteId)
+        {
+            if (this.IReservasNegocio == null)
+                throw new Exception("No implementado");
+            return this.IReservasNegocio!.ConsultarPorCliente(clienteId);
+        }
     }
 }

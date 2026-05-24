@@ -8,5 +8,8 @@ namespace Lib_Negocio_Autos.Interfaces
         Seguros Guardar(Seguros entidad);
         Seguros Eliminar(Seguros entidad);
         Seguros Modificar(Seguros entidad);
+        bool ValidarId(int id);
+        Seguros ConsultarPorId(int id);
+        void ValidarDatos(Seguros entidad);
     }
 }

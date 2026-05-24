@@ -47,5 +47,29 @@ namespace ASP_ServiciosAuto.Controllers
                 throw new Exception("No implementado");
             return this.IPermisosNegocio!.Eliminar(id);
         }
+
+        [HttpGet]
+        public bool TienePermiso(int usuarioId, string nombrePermiso)
+        {
+            if (this.IPermisosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IPermisosNegocio!.TienePermiso(usuarioId, nombrePermiso);
+        }
+        [HttpGet]
+        public bool TienePermisoPorCorreo(string correo, string nombrePermiso)
+        {
+            if (this.IPermisosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IPermisosNegocio!.TienePermisoPorCorreo(correo, nombrePermiso);
+        }
+
+       public bool PermisoExisteEnRol(string nombrePermiso, int rolId)
+        {
+            if (this.IPermisosNegocio == null)
+                throw new Exception("No implementado");
+            return this.IPermisosNegocio!.PermisoExisteEnRol(nombrePermiso, rolId);
+        }
+
+
     }
 }

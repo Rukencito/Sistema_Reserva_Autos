@@ -47,5 +47,14 @@ namespace ASP_ServiciosAuto.Controllers
                 throw new Exception("No implementado");
             return this.IReseñasNegocio!.Eliminar(id);
         }
+
+        [HttpGet]
+
+        public List<Resenas> ConsultarPorCliente(int idCliente)
+        {
+            if (this.IReseñasNegocio == null)
+                throw new Exception("No implementado");
+            return this.IReseñasNegocio!.ConsultarPorCliente(idCliente);
+        }
     }
 }
