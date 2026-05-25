@@ -11,5 +11,7 @@ namespace Lib_Presentacion_Autos.Interfaces
         Pagos Guardar(Pagos entidad);
         Pagos Modificar(Pagos entidad);
         Pagos Eliminar(Pagos entidad);
+        Pagos ConsultarPorId(int id);
+        List<Pagos> ConsultarPorFactura(int facturaId);
     }
 }

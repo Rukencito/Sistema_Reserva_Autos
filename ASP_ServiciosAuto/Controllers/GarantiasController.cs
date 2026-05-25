@@ -49,14 +49,6 @@ namespace ASP_ServiciosAuto.Controllers
         }
 
         [HttpGet]
-        public bool ValidarId(int id)
-        {
-            if (this.IGarantiasNegocio == null)
-                throw new Exception("No implementado");
-            return this.IGarantiasNegocio!.ValidarId(id);
-        }
-
-        [HttpGet]
         public Garantias ConsultarPorId(int id)
         {
             if (this.IGarantiasNegocio == null)

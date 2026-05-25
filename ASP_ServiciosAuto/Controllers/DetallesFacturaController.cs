@@ -49,14 +49,6 @@ namespace ASP_ServiciosAuto.Controllers
         }
 
         [HttpGet]
-        public bool ValidarId(int id)
-        {
-            if (this.IDetallesFacturaNegocio == null)
-                throw new Exception("No implementado");
-            return this.IDetallesFacturaNegocio!.ValidarId(id);
-        }
-
-        [HttpGet]
         public DetallesFactura ConsultarPorId(int id)
         {
             if (this.IDetallesFacturaNegocio == null)

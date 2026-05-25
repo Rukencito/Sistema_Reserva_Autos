@@ -48,14 +48,6 @@ namespace ASP_ServiciosAuto.Controllers
         }
 
         [HttpGet]
-        public bool ValidarId(int id)
-        {
-            if (this.IAlquileresNegocio == null)
-                throw new Exception("No implementado");
-            return this.IAlquileresNegocio.ValidarId(id);
-        }
-
-        [HttpGet]
         public List<Alquileres> ConsultarEstadoAlquiler(bool estadoAlquiler)
         {
             if (this.IAlquileresNegocio == null)

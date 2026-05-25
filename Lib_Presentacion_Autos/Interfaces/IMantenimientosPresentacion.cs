@@ -11,5 +11,9 @@ namespace Lib_Presentacion_Autos.Interfaces
         Mantenimientos Guardar(Mantenimientos entidad);
         Mantenimientos Modificar(Mantenimientos entidad);
         Mantenimientos Eliminar(Mantenimientos entidad);
+        Mantenimientos ConsultarPorId(int id);
+        List<Mantenimientos> ConsultarPorAuto(int autoId);
+        List<Mantenimientos> ConsultarPorTaller(int tallerId);
+        Mantenimientos FinalizarMantenimiento(int mantenimientoId);
     }
 }

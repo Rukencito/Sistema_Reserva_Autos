@@ -10,10 +10,11 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
         public List<Facturas> Consultar()
         {
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Facturas/Consultar";
-
             this.iComunicaciones = new Comunicaciones();
+            var datos = new Dictionary<string, object>();
+
+            datos["Url"] = "http://localhost:5108/Facturas/Consultar";
+
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
             var respuesta = task.Result;
@@ -28,14 +29,14 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public Facturas Guardar(Facturas entidad)
         {
             if (entidad.Id != 0)
-                throw new Exception("Ya se guardo");
+                throw new Exception("La factura ya fue guardada");
 
             this.iComunicaciones = new Comunicaciones();
-
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Facturas/Guardar";
+
+            datos["Url"] = "http://localhost:5108/Facturas/Guardar";
             datos["Entidad"] = entidad;
-            this.iComunicaciones = new Comunicaciones();
+
             var task = this.iComunicaciones.EjecutarPost(datos)!;
             task.Wait();
             var respuesta = task.Result;
@@ -50,14 +51,14 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public Facturas Modificar(Facturas entidad)
         {
             if (entidad.Id == 0)
-                throw new Exception("No se ha guardado");
+                throw new Exception("La factura no ha sido guardada");
 
             this.iComunicaciones = new Comunicaciones();
-
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Facturas/Modificar";
+
+            datos["Url"] = "http://localhost:5108/Facturas/Modificar";
             datos["Entidad"] = entidad;
-            this.iComunicaciones = new Comunicaciones();
+
             var task = this.iComunicaciones.EjecutarPut(datos)!;
             task.Wait();
             var respuesta = task.Result;
@@ -72,14 +73,14 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public Facturas Eliminar(Facturas entidad)
         {
             if (entidad.Id == 0)
-                throw new Exception("No se ha guardado");
+                throw new Exception("La factura no ha sido guardada");
 
             this.iComunicaciones = new Comunicaciones();
-
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Facturas/Eliminar";
+
+            datos["Url"] = "http://localhost:5108/Facturas/Eliminar";
             datos["Entidad"] = entidad;
-            this.iComunicaciones = new Comunicaciones();
+
             var task = this.iComunicaciones.EjecutarDelete(datos)!;
             task.Wait();
             var respuesta = task.Result;
@@ -90,6 +91,82 @@ namespace Lib_Presentacion_Autos.Implementaciones
             return JsonConvert.DeserializeObject<Facturas>(
                 respuesta["Valor"].ToString()!)!;
         }
+
+        public void CalcularTotal(Facturas id)
+        {
+            this.iComunicaciones = new Comunicaciones();
+            var datos = new Dictionary<string, object>();
+
+            datos["Url"] = "http://localhost:5108/Facturas/CalcularTotal";
+            datos["Entidad"] = id;
+
+            var task = this.iComunicaciones.EjecutarPut(datos)!;
+            task.Wait();
+        }
+
+        public List<Facturas> ConsultarPorCliente(int id)
+        {
+            this.iComunicaciones = new Comunicaciones();
+            var datos = new Dictionary<string, object>();
+
+            datos["Url"] = "http://localhost:5108/Facturas/ConsultarPorCliente?id=" + id;
+
+            var task = this.iComunicaciones.Ejecutar(datos)!;
+            task.Wait();
+            var respuesta = task.Result;
+
+            if (!respuesta.ContainsKey("Valor"))
+                return new List<Facturas>();
+
+            return JsonConvert.DeserializeObject<List<Facturas>>(
+                respuesta["Valor"].ToString()!)!;
+        }
+
+        public Facturas ConsultarPorId(int id)
+        {
+            this.iComunicaciones = new Comunicaciones();
+            var datos = new Dictionary<string, object>();
+
+            datos["Url"] = "http://localhost:5108/Facturas/ConsultarPorId?id=" + id;
+
+            var task = this.iComunicaciones.Ejecutar(datos)!;
+            task.Wait();
+            var respuesta = task.Result;
+
+            if (!respuesta.ContainsKey("Valor"))
+                return new Facturas();
+
+            return JsonConvert.DeserializeObject<Facturas>(
+                respuesta["Valor"].ToString()!)!;
+        }
+
+        public List<Facturas> ConsultarPendientes()
+        {
+            this.iComunicaciones = new Comunicaciones();
+            var datos = new Dictionary<string, object>();
+
+            datos["Url"] = "http://localhost:5108/Facturas/ConsultarPendientes";
+
+            var task = this.iComunicaciones.Ejecutar(datos)!;
+            task.Wait();
+            var respuesta = task.Result;
+
+            if (!respuesta.ContainsKey("Valor"))
+                return new List<Facturas>();
+
+            return JsonConvert.DeserializeObject<List<Facturas>>(
+                respuesta["Valor"].ToString()!)!;
+        }
+
+        public void MarcarComoPagada(int id)
+        {
+            this.iComunicaciones = new Comunicaciones();
+            var datos = new Dictionary<string, object>();
+
+            datos["Url"] = "http://localhost:5108/Facturas/MarcarComoPagada?id=" + id;
+
+            var task = this.iComunicaciones.EjecutarPut(datos)!;
+            task.Wait();
+        }
     }
 }
-

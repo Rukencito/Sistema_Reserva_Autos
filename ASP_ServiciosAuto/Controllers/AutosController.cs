@@ -32,28 +32,20 @@ namespace ASP_ServiciosAuto.Controllers
             return this.IAutosNegocio!.Guardar(entidad);
         }
         [HttpPut]
-        public Autos Modificar(Autos id)
+        public Autos Modificar(Autos entidad)
         {
             if (this.IAutosNegocio == null)
                 throw new Exception("No implementado");
-            return this.IAutosNegocio!.Modificar(id);
+            return this.IAutosNegocio!.Modificar(entidad);
         }
 
         [HttpDelete]
 
-        public Autos Eliminar(Autos id)
+        public Autos Eliminar(Autos entidad)
         {
             if (this.IAutosNegocio == null)
                 throw new Exception("No implementado");
-            return this.IAutosNegocio!.Eliminar(id);
-        }
-
-        [HttpGet]
-        public bool ValidarPlaca(string placa)
-        {
-            if (this.IAutosNegocio == null)
-                throw new Exception("No implementado");
-            return this.IAutosNegocio!.ValidarPlaca(placa);
+            return this.IAutosNegocio!.Eliminar(entidad);
         }
 
         [HttpGet]

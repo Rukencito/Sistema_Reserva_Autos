@@ -1,6 +1,7 @@
 ﻿using Lib_Negocio_Autos.modelo;
 using Lib_Presentacion_Autos.Interfaces;
 using Newtonsoft.Json;
+using System.Runtime.Intrinsics.Arm;
 
 namespace Lib_Presentacion_Autos.Implementaciones
 {
@@ -11,7 +12,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public List<Alquileres> Consultar()
         {
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Alquileres/Consultar";
+            datos["Url"] = "http://localhost:5108/Alquileres/Consultar";
 
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.Ejecutar(datos)!;
@@ -33,7 +34,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
             this.iComunicaciones = new Comunicaciones();
 
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Alquileres/Guardar";
+            datos["Url"] = "http://localhost:5108/Alquileres/Guardar";
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPost(datos)!;
@@ -55,7 +56,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
             this.iComunicaciones = new Comunicaciones();
 
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Alquileres/Modificar";
+            datos["Url"] = "http://localhost:5108/Alquileres/Modificar";
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPut(datos)!;
@@ -77,7 +78,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
             this.iComunicaciones = new Comunicaciones();
 
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Alquileres/Eliminar";
+            datos["Url"] = "http://localhost:5108/Alquileres/Eliminar";
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarDelete(datos)!;
@@ -90,7 +91,73 @@ namespace Lib_Presentacion_Autos.Implementaciones
             return JsonConvert.DeserializeObject<Alquileres>(
                 respuesta["Valor"].ToString()!)!;
         }
-    }
 
+        public List<Alquileres> ConsultarEstadoAlquiler(bool estadoAlquiler)
+        {
+            this.iComunicaciones = new Comunicaciones();
+            var datos = new Dictionary<string, object>();
+            datos["Url"] = "http://localhost:5108/Alquileres/ConsultarEstadoAlquiler?estadoAlquiler=" + estadoAlquiler;
+
+            var task = this.iComunicaciones.Ejecutar(datos)!;
+            task.Wait();
+            var respuesta = task.Result;
+
+            if (!respuesta.ContainsKey("Valor"))
+                return new List<Alquileres>();
+
+            return JsonConvert.DeserializeObject<List<Alquileres>>(
+                respuesta["Valor"].ToString()!)!;
+        }
+
+        public List<Alquileres> ConsultarAlquileresPorCliente(int clienteId)
+        {
+            this.iComunicaciones = new Comunicaciones();
+            var datos = new Dictionary<string, object>();
+
+            datos["Url"] = "http://localhost:5108/Alquileres/ConsultarAlquileresPorCliente?clienteId=" 
+                + clienteId;
+            var task = this.iComunicaciones.Ejecutar(datos)!;
+
+            task.Wait();
+            var respuesta = task.Result;
+            if (!respuesta.ContainsKey("Valor"))
+                return new List<Alquileres>();
+
+            return JsonConvert.DeserializeObject<List<Alquileres>>(
+                respuesta["Valor"].ToString()!)!;
+        }
+
+        public bool ExisteCruceDeFechas(int autoId, DateTime fechaInicio, DateTime fechaFin)
+        {
+            this.iComunicaciones = new Comunicaciones();
+            var datos = new Dictionary<string, object>();
+            datos["Url"] = "http://localhost:5108/Alquileres/ExisteCruceDeFechas?autoId=" + autoId +
+                                       "&fechaInicio=" + fechaInicio.ToString("yyyy-MM-dd") +
+                                       "&fechaFin=" + fechaFin.ToString("yyyy-MM-dd"); var task = this.iComunicaciones.Ejecutar(datos)!;
+            task.Wait();
+            var respuesta = task.Result;
+            if (!respuesta.ContainsKey("Valor"))
+                return false;
+
+            return JsonConvert.DeserializeObject<bool>(
+                respuesta["Valor"].ToString()!)!;
+        }
+
+        public decimal CalcularTotalPrecio(decimal precioAlquiler, DateTime fechaInicio, DateTime fechaFin)
+        {
+            this.iComunicaciones = new Comunicaciones();
+            var datos = new Dictionary<string, object>();
+            datos["Url"] = "http://localhost:5108/Alquileres/CalcularTotalPrecio?precioAlquiler=" + precioAlquiler +
+                                       "&fechaInicio=" + fechaInicio.ToString("yyyy-MM-dd") +
+                                       "&fechaFin=" + fechaFin.ToString("yyyy-MM-dd"); var task = this.iComunicaciones.Ejecutar(datos)!;
+            task.Wait();
+            var respuesta = task.Result;
+            if (!respuesta.ContainsKey("Valor"))
+                return 0;
+
+            return JsonConvert.DeserializeObject<decimal>(
+                respuesta["Valor"].ToString()!)!;   
+        }
+    }
 }
 

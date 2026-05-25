@@ -11,5 +11,9 @@ namespace Lib_Presentacion_Autos.Interfaces
         Empleados Guardar(Empleados entidad);
         Empleados Modificar(Empleados entidad);
         Empleados Eliminar(Empleados entidad);
+        Empleados ConsultarPorCedula(string cedula);
+        List<Empleados> ConsultarPorCargo(string cargo);
+        List<Empleados> ConsultarPorSucursal(int sucursalId);
+        decimal CalcularSalarioTotal(int empleadoId);
     }
 }

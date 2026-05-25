@@ -11,5 +11,8 @@ namespace Lib_Presentacion_Autos.Interfaces
         Garantias Guardar(Garantias entidad);
         Garantias Modificar(Garantias entidad);
         Garantias Eliminar(Garantias entidad);
+        Garantias ConsultarPorId(int id);
+        List<Garantias> ConsultarPorAuto(int autoId);
+        bool TieneGarantiaVigente(int autoId);
     }
 }

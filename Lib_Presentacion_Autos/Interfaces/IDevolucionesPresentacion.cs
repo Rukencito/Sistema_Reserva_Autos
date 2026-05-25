@@ -11,5 +11,8 @@ namespace Lib_Presentacion_Autos.Interfaces
         Devoluciones Guardar(Devoluciones entidad);
         Devoluciones Modificar(Devoluciones entidad);
         Devoluciones Eliminar(Devoluciones entidad);
+        Devoluciones ConsultarPorAlquiler(int idAlquiler);
+        Devoluciones ConsultarPorId(int id);
+
     }
 }

@@ -11,5 +11,9 @@ namespace Lib_Presentacion_Autos.Interfaces
         Duenos Guardar(Duenos entidad);
         Duenos Modificar(Duenos entidad);
         Duenos Eliminar(Duenos entidad);
+        Duenos ConsultarPorCedula(string cedula);
+        bool VerificarEstadoDueno(int duenoId);
+        Duenos AgregarAuto(int duenoId);
+        Duenos QuitarAuto(int duenoId);
     }
 }

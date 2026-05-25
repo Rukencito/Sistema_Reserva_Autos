@@ -32,29 +32,20 @@ namespace ASP_ServiciosAuto.Controllers
             return this.IClientesNegocio!.Guardar(entidad);
         }
         [HttpPut]
-        public Clientes Modificar(Clientes id)
+        public Clientes Modificar(Clientes entidad)
         {
             if (this.IClientesNegocio == null)
                 throw new Exception("No implementado");
-            return this.IClientesNegocio!.Modificar(id);
+            return this.IClientesNegocio!.Modificar(entidad);
         }
 
         [HttpDelete]
 
-        public Clientes Eliminar(Clientes id)
+        public Clientes Eliminar(Clientes entidad)
         {
             if (this.IClientesNegocio == null)
                 throw new Exception("No implementado");
-            return this.IClientesNegocio!.Eliminar(id);
-        }
-
-
-        [HttpGet]
-        public bool ValidarCedula(string cedula)
-        {
-            if (this.IClientesNegocio == null)
-                throw new Exception("No implementado");
-            return this.IClientesNegocio!.ValidarCedula(cedula);
+            return this.IClientesNegocio!.Eliminar(entidad);
         }
 
         [HttpGet]

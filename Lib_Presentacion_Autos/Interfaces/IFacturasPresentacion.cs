@@ -11,5 +11,10 @@ namespace Lib_Presentacion_Autos.Interfaces
         Facturas Guardar(Facturas entidad);
         Facturas Modificar(Facturas entidad);
         Facturas Eliminar(Facturas entidad);
+        void CalcularTotal(Facturas id);
+        List<Facturas> ConsultarPorCliente(int id);
+        Facturas ConsultarPorId(int id);
+        List<Facturas> ConsultarPendientes();
+        void MarcarComoPagada(int id);
     }
 }

@@ -11,5 +11,9 @@ namespace Lib_Presentacion_Autos.Interfaces
         Alquileres Guardar(Alquileres entidad);
         Alquileres Modificar(Alquileres entidad);
         Alquileres Eliminar(Alquileres entidad);
+        List<Alquileres> ConsultarEstadoAlquiler(bool estadoAlquiler);
+        List<Alquileres> ConsultarAlquileresPorCliente(int clienteId);
+        bool ExisteCruceDeFechas(int autoId, DateTime fechaInicio, DateTime fechaFin);
+        decimal CalcularTotalPrecio(decimal precioAlquiler, DateTime fechaInicio, DateTime fechaFin);
     }
 }

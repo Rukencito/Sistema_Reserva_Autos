@@ -49,22 +49,6 @@ namespace ASP_ServiciosAuto.Controllers
         }
 
         [HttpGet]
-        public bool ValidarId(int id)
-        {
-            if (this.IDevolucionesNegocio == null)
-                throw new Exception("No implementado");
-            return this.IDevolucionesNegocio!.ValidarId(id);
-        }
-
-        [HttpGet]
-        public bool ExisteDevolucionParaAlquiler(int idAlquiler)
-        {
-            if (this.IDevolucionesNegocio == null)
-                throw new Exception("No implementado");
-            return this.IDevolucionesNegocio!.ExisteDevolucionParaAlquiler(idAlquiler);
-        }
-
-        [HttpGet]
         public Devoluciones ConsultarPorAlquiler(int idAlquiler)
         {
             if (this.IDevolucionesNegocio == null)

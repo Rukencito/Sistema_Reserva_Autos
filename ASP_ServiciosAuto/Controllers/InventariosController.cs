@@ -49,14 +49,6 @@ namespace ASP_ServiciosAuto.Controllers
         }
 
         [HttpGet]
-        public bool ValidarId(int id)
-        {
-            if (this.IInventariosNegocio == null)
-                throw new Exception("No implementado");
-            return this.IInventariosNegocio!.ValidarId(id);
-        }
-
-        [HttpGet]
         public Inventarios ConsultarPorId(int id)
         {
             if (this.IInventariosNegocio == null)

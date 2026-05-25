@@ -49,22 +49,6 @@ namespace ASP_ServiciosAuto.Controllers
         }
 
         [HttpGet]
-        public bool ValidarId(int id)
-        {
-            if (this.IEmpleadosNegocio == null)
-                throw new Exception("No implementado");
-            return this.IEmpleadosNegocio!.ValidarId(id);
-        }
-
-        [HttpGet]
-        public bool ValidarCedula(string cedula)
-        {
-            if (this.IEmpleadosNegocio == null)
-                throw new Exception("No implementado");
-            return this.IEmpleadosNegocio!.ValidarCedula(cedula);
-        }
-
-        [HttpGet]
         public Empleados ConsultarPorCedula(string cedula)
         {
             if (this.IEmpleadosNegocio == null)

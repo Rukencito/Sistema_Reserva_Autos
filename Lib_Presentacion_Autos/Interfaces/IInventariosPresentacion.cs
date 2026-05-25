@@ -11,5 +11,10 @@ namespace Lib_Presentacion_Autos.Interfaces
         Inventarios Guardar(Inventarios entidad);
         Inventarios Modificar(Inventarios entidad);
         Inventarios Eliminar(Inventarios entidad);
+        Inventarios ConsultarPorId(int id);
+        List<Inventarios> ConsultarPorUbicacion(string ubicacion);
+        Inventarios AgregarStock(int inventarioId, int cantidad, decimal precioUnitario);
+        Inventarios ReducirStock(int inventarioId, int cantidad, decimal precioUnitario);
+        Inventarios RecalcularValorTotal(int inventarioId);
     }
 }

@@ -48,14 +48,6 @@ namespace ASP_ServiciosAuto.Controllers
             return this.IFacturasNegocio!.Eliminar(entidad);
         }
 
-        [HttpGet]
-        public bool ValidarId(int id)
-        {
-            if (this.IFacturasNegocio == null)
-                throw new Exception("No implementado");
-            return this.IFacturasNegocio!.ValidarId(id);
-        }
-
         [HttpPut]
         public void CalcularTotal(Facturas id)
         {

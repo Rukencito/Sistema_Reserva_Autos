@@ -11,5 +11,8 @@ namespace Lib_Presentacion_Autos.Interfaces
         DetallesFactura Guardar(DetallesFactura entidad);
         DetallesFactura Modificar(DetallesFactura entidad);
         DetallesFactura Eliminar(DetallesFactura entidad);
+        DetallesFactura ConsultarPorId(int id);
+        List<DetallesFactura> ConsultarPorFactura(int facturaId);
+        decimal CalcularSubtotalPorFactura(int facturaId);
     }
 }

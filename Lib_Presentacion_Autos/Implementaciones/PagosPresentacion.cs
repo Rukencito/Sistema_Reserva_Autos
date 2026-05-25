@@ -10,10 +10,11 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
         public List<Pagos> Consultar()
         {
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Pagos/Consultar";
-
             this.iComunicaciones = new Comunicaciones();
+            var datos = new Dictionary<string, object>();
+
+            datos["Url"] = "http://localhost:5108/Pagos/Consultar";
+
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
             var respuesta = task.Result;
@@ -28,14 +29,14 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public Pagos Guardar(Pagos entidad)
         {
             if (entidad.Id != 0)
-                throw new Exception("Ya se guardo");
+                throw new Exception("El pago ya fue guardado");
 
             this.iComunicaciones = new Comunicaciones();
-
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Pagos/Guardar";
+
+            datos["Url"] = "http://localhost:5108/Pagos/Guardar";
             datos["Entidad"] = entidad;
-            this.iComunicaciones = new Comunicaciones();
+
             var task = this.iComunicaciones.EjecutarPost(datos)!;
             task.Wait();
             var respuesta = task.Result;
@@ -50,14 +51,14 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public Pagos Modificar(Pagos entidad)
         {
             if (entidad.Id == 0)
-                throw new Exception("No se ha guardado");
+                throw new Exception("El pago no ha sido guardado");
 
             this.iComunicaciones = new Comunicaciones();
-
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Pagos/Modificar";
+
+            datos["Url"] = "http://localhost:5108/Pagos/Modificar";
             datos["Entidad"] = entidad;
-            this.iComunicaciones = new Comunicaciones();
+
             var task = this.iComunicaciones.EjecutarPut(datos)!;
             task.Wait();
             var respuesta = task.Result;
@@ -72,14 +73,14 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public Pagos Eliminar(Pagos entidad)
         {
             if (entidad.Id == 0)
-                throw new Exception("No se ha guardado");
+                throw new Exception("El pago no ha sido guardado");
 
             this.iComunicaciones = new Comunicaciones();
-
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Pagos/Eliminar";
+
+            datos["Url"] = "http://localhost:5108/Pagos/Eliminar";
             datos["Entidad"] = entidad;
-            this.iComunicaciones = new Comunicaciones();
+
             var task = this.iComunicaciones.EjecutarDelete(datos)!;
             task.Wait();
             var respuesta = task.Result;
@@ -90,7 +91,41 @@ namespace Lib_Presentacion_Autos.Implementaciones
             return JsonConvert.DeserializeObject<Pagos>(
                 respuesta["Valor"].ToString()!)!;
         }
+
+        public Pagos ConsultarPorId(int id)
+        {
+            this.iComunicaciones = new Comunicaciones();
+            var datos = new Dictionary<string, object>();
+
+            datos["Url"] = "http://localhost:5108/Pagos/ConsultarPorId?id=" + id;
+
+            var task = this.iComunicaciones.Ejecutar(datos)!;
+            task.Wait();
+            var respuesta = task.Result;
+
+            if (!respuesta.ContainsKey("Valor"))
+                return new Pagos();
+
+            return JsonConvert.DeserializeObject<Pagos>(
+                respuesta["Valor"].ToString()!)!;
+        }
+
+        public List<Pagos> ConsultarPorFactura(int facturaId)
+        {
+            this.iComunicaciones = new Comunicaciones();
+            var datos = new Dictionary<string, object>();
+
+            datos["Url"] = "http://localhost:5108/Pagos/ConsultarPorFactura?facturaId=" + facturaId;
+
+            var task = this.iComunicaciones.Ejecutar(datos)!;
+            task.Wait();
+            var respuesta = task.Result;
+
+            if (!respuesta.ContainsKey("Valor"))
+                return new List<Pagos>();
+
+            return JsonConvert.DeserializeObject<List<Pagos>>(
+                respuesta["Valor"].ToString()!)!;
+        }
     }
-
 }
-

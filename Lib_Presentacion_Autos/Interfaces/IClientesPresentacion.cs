@@ -11,5 +11,8 @@ namespace Lib_Presentacion_Autos.Interfaces
         Clientes Guardar(Clientes entidad);
         Clientes Modificar(Clientes entidad);
         Clientes Eliminar(Clientes entidad);
+        Clientes ConsultarPorCedula(string cedula);
+        Clientes AgregarPuntosFidelidad(int clienteId, int puntos);
+        bool TieneLicencia(int clienteId);
     }
 }
