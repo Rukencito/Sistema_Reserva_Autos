@@ -90,6 +90,23 @@ namespace Lib_Presentacion_Autos.Implementaciones
             return JsonConvert.DeserializeObject<Seguros>(
                 respuesta["Valor"].ToString()!)!;
         }
+        public Seguros ConsultarPorId(int id)
+        {
+            var datos = new Dictionary<string, object>();
+            datos["Url"] = "http://localhost:5188/Seguros/ConsultarPorId";
+            datos["Id"] = id;
+
+            this.iComunicaciones = new Comunicaciones();
+            var task = this.iComunicaciones.Ejecutar(datos)!;
+            task.Wait();
+            var respuesta = task.Result;
+
+            if (!respuesta.ContainsKey("Valor"))
+                return new Seguros();
+
+            return JsonConvert.DeserializeObject<Seguros>(
+                respuesta["Valor"].ToString()!)!;
+        }
     }
 
 }

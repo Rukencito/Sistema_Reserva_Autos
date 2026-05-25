@@ -11,7 +11,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public List<Parqueaderos> Consultar()
         {
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Parqueaderos/Consultar";
+            datos["Url"] = "http://localhost:5108/Parqueaderos/Consultar";
 
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.Ejecutar(datos)!;
@@ -33,7 +33,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
             this.iComunicaciones = new Comunicaciones();
 
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Parqueaderos/Guardar";
+            datos["Url"] = "http://localhost:5108/Parqueaderos/Guardar";
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPost(datos)!;
@@ -55,7 +55,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
             this.iComunicaciones = new Comunicaciones();
 
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Parqueaderos/Modificar";
+            datos["Url"] = "http://localhost:5108/Parqueaderos/Modificar";
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPut(datos)!;
@@ -77,7 +77,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
             this.iComunicaciones = new Comunicaciones();
 
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Parqueaderos/Eliminar";
+            datos["Url"] = "http://localhost:5108/Parqueaderos/Eliminar";
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarDelete(datos)!;
@@ -90,7 +90,105 @@ namespace Lib_Presentacion_Autos.Implementaciones
             return JsonConvert.DeserializeObject<Parqueaderos>(
                 respuesta["Valor"].ToString()!)!;
         }
-    }
+        public Parqueaderos ConsultarPorId(int id)
+        {
+            var datos = new Dictionary<string, object>();
+            datos["Url"] = "http://localhost:5108/Parqueaderos/ConsultarPorId";
+            datos["Id"] = id;
 
+            this.iComunicaciones = new Comunicaciones();
+            var task = this.iComunicaciones.Ejecutar(datos)!;
+            task.Wait();
+            var respuesta = task.Result;
+
+            if (!respuesta.ContainsKey("Valor"))
+                return new Parqueaderos();
+
+            return JsonConvert.DeserializeObject<Parqueaderos>(
+                respuesta["Valor"].ToString()!)!;
+        }
+
+        public int ContarAutosEnParqueadero(int parqueaderoId)
+        {
+            var datos = new Dictionary<string, object>();
+            datos["Url"] = "http://localhost:5108/Parqueaderos/ContarAutosEnParqueadero";
+            datos["ParqueaderoId"] = parqueaderoId;
+
+            this.iComunicaciones = new Comunicaciones();
+            var task = this.iComunicaciones.Ejecutar(datos)!;
+            task.Wait();
+            var respuesta = task.Result;
+
+            if (!respuesta.ContainsKey("Valor"))
+                return 0;
+
+            return Convert.ToInt32(respuesta["Valor"].ToString());
+        }
+        public int ConsultarEspaciosDisponibles(int parqueaderoId)
+        {
+            var datos = new Dictionary<string, object>();
+            datos["Url"] = "http://localhost:5108/Parqueaderos/ConsultarEspaciosDisponibles";
+            datos["ParqueaderoId"] = parqueaderoId;
+
+            this.iComunicaciones = new Comunicaciones();
+            var task = this.iComunicaciones.Ejecutar(datos)!;
+            task.Wait();
+            var respuesta = task.Result;
+
+            if (!respuesta.ContainsKey("Valor"))
+                return 0;
+            return Convert.ToInt32(respuesta["Valor"].ToString());
+        }
+      public bool TieneEspacioDisponible(int parqueaderoId)
+        {
+            var datos = new Dictionary<string, object>();
+            datos["Url"] = "http://localhost:5108/Parqueaderos/TieneEspacioDisponible";
+            datos["ParqueaderoId"] = parqueaderoId;
+
+            this.iComunicaciones = new Comunicaciones();
+            var task = this.iComunicaciones.Ejecutar(datos)!;
+            task.Wait();
+            var respuesta = task.Result;
+
+            if (!respuesta.ContainsKey("Valor"))
+                return false;
+            return Convert.ToBoolean(respuesta["Valor"].ToString());
+        }
+
+        public List<Parqueaderos> ConsultarConEspacioDisponible()
+        {
+            var datos = new Dictionary<string, object>();
+            datos["Url"] = "http://localhost:5108/Parqueaderos/ConsultarConEspacioDisponible";
+            this.iComunicaciones = new Comunicaciones();
+            var task = this.iComunicaciones.Ejecutar(datos)!;
+            task.Wait();
+            var respuesta = task.Result;
+            if (!respuesta.ContainsKey("Valor"))
+                return new List<Parqueaderos>();
+
+            return JsonConvert.DeserializeObject<List<Parqueaderos>>(
+                respuesta["Valor"].ToString()!)!;
+        }
+
+        public List<Autos> ConsultarAutosPorParqueadero(int parqueaderoId)
+        {
+            var datos = new Dictionary<string, object>();
+            datos["Url"] = "http://localhost:5108/Parqueaderos/ConsultarAutosPorParqueadero";
+            datos["ParqueaderoId"] = parqueaderoId;
+
+            this.iComunicaciones = new Comunicaciones();
+            var task = this.iComunicaciones.Ejecutar(datos)!;
+            task.Wait();
+            var respuesta = task.Result;
+            if (!respuesta.ContainsKey("Valor"))
+                return new List<Autos>();
+
+            return JsonConvert.DeserializeObject<List<Autos>>(
+                respuesta["Valor"].ToString()!)!;
+        }
+
+    }
 }
+
+
 

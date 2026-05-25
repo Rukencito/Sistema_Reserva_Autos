@@ -11,5 +11,7 @@ namespace Lib_Presentacion_Autos.Interfaces
         Seguros Guardar(Seguros entidad);
         Seguros Modificar(Seguros entidad);
         Seguros Eliminar(Seguros entidad);
+        Seguros ConsultarPorId(int id);
+
     }
 }

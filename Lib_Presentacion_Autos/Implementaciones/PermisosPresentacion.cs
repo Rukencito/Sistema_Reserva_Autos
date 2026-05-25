@@ -11,7 +11,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public List<Permisos> Consultar()
         {
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Permisos/Consultar";
+            datos["Url"] = "http://localhost:5108/Permisos/Consultar";
 
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.Ejecutar(datos)!;
@@ -33,7 +33,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
             this.iComunicaciones = new Comunicaciones();
 
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Permisos/Guardar";
+            datos["Url"] = "http://localhost:5108/Permisos/Guardar";
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPost(datos)!;
@@ -55,7 +55,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
             this.iComunicaciones = new Comunicaciones();
 
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Permisos/Modificar";
+            datos["Url"] = "http://localhost:5108/Permisos/Modificar";
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPut(datos)!;
@@ -77,7 +77,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
             this.iComunicaciones = new Comunicaciones();
 
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Permisos/Eliminar";
+            datos["Url"] = "http://localhost:5108/Permisos/Eliminar";
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarDelete(datos)!;
@@ -89,6 +89,61 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
             return JsonConvert.DeserializeObject<Permisos>(
                 respuesta["Valor"].ToString()!)!;
+        }
+
+        public bool TienePermiso(int usuarioId, string nombrePermiso)
+        {
+            var datos = new Dictionary<string, object>();
+            datos["Url"] = "http://localhost:5108/Permisos/TienePermiso";
+            datos["usuarioId"] = usuarioId;
+            datos["nombrePermiso"] = nombrePermiso;
+
+            this.iComunicaciones = new Comunicaciones();
+            var task = this.iComunicaciones.Ejecutar(datos)!;
+            task.Wait();
+            var respuesta = task.Result;
+
+            if (!respuesta.ContainsKey("Valor"))
+                return false;
+
+            return Convert.ToBoolean(respuesta["Valor"].ToString());
+
+        }
+
+        public bool TienePermisoPorCorreo(string correo, string nombrePermiso)
+        {
+            var datos = new Dictionary<string, object>();
+            datos["Url"] = "http://localhost:5108/Permisos/TienePermisoPorCorreo";
+            datos["Correo"] = correo;
+            datos["nombrePermiso"] = nombrePermiso;
+
+            this.iComunicaciones = new Comunicaciones();
+            var task = this.iComunicaciones.Ejecutar(datos)!;
+            task.Wait();
+            var respuesta = task.Result;
+
+            if (!respuesta.ContainsKey("Valor"))
+                return false;
+
+            return Convert.ToBoolean(respuesta["Valor"].ToString());
+        }
+
+        public bool PermisoExisteEnRol(string nombrePermiso, int rolId)
+        {
+            var datos = new Dictionary<string, object>();
+            datos["Url"] = "http://localhost:5108/Permisos/PermisoExisteEnRol";
+            datos["nombrePermiso"] = nombrePermiso;
+            datos["rolId"] = rolId;
+
+            this.iComunicaciones = new Comunicaciones();
+            var task = this.iComunicaciones.Ejecutar(datos)!;
+            task.Wait();
+            var respuesta = task.Result;
+
+            if (!respuesta.ContainsKey("Valor"))
+                return false;
+
+            return Convert.ToBoolean(respuesta["Valor"].ToString());
         }
     }
 

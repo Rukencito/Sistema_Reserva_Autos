@@ -11,5 +11,6 @@ namespace Lib_Presentacion_Autos.Interfaces
         Resenas Guardar(Resenas entidad);
         Resenas Modificar(Resenas entidad);
         Resenas Eliminar(Resenas entidad);
+        List<Resenas> ConsultarPorCliente(int idCliente);
     }
 }

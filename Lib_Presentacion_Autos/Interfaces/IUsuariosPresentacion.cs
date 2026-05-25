@@ -11,5 +11,8 @@ namespace Lib_Presentacion_Autos.Interfaces
         Usuarios Guardar(Usuarios entidad);
         Usuarios Modificar(Usuarios entidad);
         Usuarios Eliminar(Usuarios entidad);
+        Usuarios ConsultarPorCorreo(string correo);
+        Usuarios AsignarRol(int usuarioId, int rolId);
+
     }
 }

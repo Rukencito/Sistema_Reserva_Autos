@@ -11,5 +11,7 @@ namespace Lib_Presentacion_Autos.Interfaces
         Roles Guardar(Roles entidad);
         Roles Modificar(Roles entidad);
         Roles Eliminar(Roles entidad);
+        bool NombreExiste(string nombre);
+        Roles ConsultarPorId(int id);
     }
 }
