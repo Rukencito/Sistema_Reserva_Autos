@@ -1,8 +1,8 @@
 ﻿@page
-@using Pagos_Razor.Pages
-@model PagosHTMLModel
+@using Ventas_Razor.Pages
+@model VentasHTMLModel
 @{
-    ViewData["Title"] = "Pago";
+    ViewData["Title"] = "Ventas";
 }
 <center>
     <div>
@@ -11,7 +11,7 @@
             @Html.AntiForgeryToken()
 
             <div align="left">
-                <h3>Pago</h3>
+                <h3>Ventas</h3>
             </div>
             
             <div>
@@ -23,26 +23,42 @@
                        value="Nuevo"
                        class="btn btn-secondary"
                        asp-page-handler="BtNuevo"
-                       disabled="@(Model.Pago!= null)" />
+                       disabled="@(Model.Venta!= null)" />
                 <input type="submit"
                        value="Guardar"
                        class="btn btn-secondary"
                        asp-page-handler="BtGuardar"
-                       disabled="@(Model.Pago == null)" />
+                       disabled="@(Model.Venta == null)" />
             </div>
 
-            @if (Model.Pago != null)
+            @if (Model.Venta != null)
             {
                 <input type="hidden"
-                       asp-for="@Model.Pago!.Id" />
+                       asp-for="@Model.Venta!.Id" />
 
                 <div>
                     <div class="form-group">
-                        <label>Monto</label>
+                        <label>Fecha de Venta</label>
                         <div class="col-6">
-                            <input id="inMonto"
+                            <input id="inFechaVenta"
                                    class="cts_forms form-control"
-                                   asp-for="@Model.Pago.Monto" />
+                                   asp-for="@Model.Venta.FechaVenta" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Precio de Venta</label>
+                        <div class="col-6">
+                            <input id="inPrecioVenta"
+                                   class="cts_forms form-control"
+                                   asp-for="@Model.Venta!.PrecioVenta" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo de Pago</label>
+                        <div class="col-6">
+                            <input id="inTipoPago"
+                                   class="cts_forms form-control"
+                                   asp-for="@Model.Venta!.TipoPago" />
                         </div>
                     </div>
                     <div class="form-group">
@@ -50,23 +66,7 @@
                         <div class="col-6">
                             <input id="inEstadoPago"
                                    class="cts_forms form-control"
-                                   asp-for="@Model.Pago!.EstadoPago" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Metodo de Pago</label>
-                        <div class="col-6">
-                            <input id="inMetodoPago"
-                                   class="cts_forms form-control"
-                                   asp-for="@Model.Pago!.MetodoPago" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Fecha de Pago</label>
-                        <div class="col-6">
-                            <input id="inFechaPago"
-                                   class="cts_forms form-control"
-                                   asp-for="@Model.Pago!.FechaPago" />
+                                   asp-for="@Model.Venta!.EstadoPago" />
                         </div>
                     </div>
                 </div>
@@ -79,14 +79,14 @@
                 ;
             }
 
-            @if (Model.Pago != null && Model.Borrando)
+            @if (Model.Venta != null && Model.Borrando)
             {
                 <div class='popup'>
                     <div class='pp_ms_inner'>
                         <div style='width:95%'>
                             <h2 align="left">Mensaje</h2>
-                            <h6 align="left">Desea borrar el Pago?</h6>
-                            <h6 align="left">@Model.Pago!.Monto</h6>
+                            <h6 align="left">Desea borrar el Venta?</h6>
+                            <h6 align="left">@Model.Venta!.PrecioVenta</h6>
                             
                             <input type="submit"
                                    value="Cerrar"
@@ -105,19 +105,19 @@
             {
                 <table class="tb_data table table-striped table-bordered table-hover">
                     <tr>
-                        <th>Monto</th>
-                        <th>Estado de Pago</th>
-                        <th>Metodo de Pago</th>
-                        <th>Fecha de Pago</th>
+                        <th>FechaVenta</th>
+                        <th>PrecioVenta</th>
+                        <th>TipoPago</th>
+                        <th>EstadoPago</th>
                     </tr>
                 
                     @foreach (var elemento in Model.Lista)
                     {
                         <tr>
-                            <td>@elemento.Monto</td>
+                            <td>@elemento.FechaVenta</td>
+                            <td>@elemento.PrecioVenta</td>
+                            <td>@elemento.TipoPago</td>
                             <td>@elemento.EstadoPago</td>
-                            <td>@elemento.MetodoPago</td>
-                            <td>@elemento.FechaPago</td>
                             <td>
                                 <input type="submit"
                                        value="Modificar"
