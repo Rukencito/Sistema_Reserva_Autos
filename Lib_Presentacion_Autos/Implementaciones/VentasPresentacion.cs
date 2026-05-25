@@ -90,6 +90,24 @@ namespace Lib_Presentacion_Autos.Implementaciones
             return JsonConvert.DeserializeObject<Ventas>(
                 respuesta["Valor"].ToString()!)!;
         }
+
+        public List<Ventas> ConsultarPorCliente(int idCliente)
+        {
+            var datos = new Dictionary<string, object>();
+            datos["Url"] = "http://localhost:5188/Ventas/Consultar";
+            datos["idCliente"]= idCliente;
+
+            this.iComunicaciones = new Comunicaciones();
+            var task = this.iComunicaciones.Ejecutar(datos)!;
+            task.Wait();
+            var respuesta = task.Result;
+
+            if (!respuesta.ContainsKey("Valor"))
+                return new List<Ventas>();
+
+            return JsonConvert.DeserializeObject<List<Ventas>>(
+                respuesta["Valor"].ToString()!)!;
+        }
     }
 
 }

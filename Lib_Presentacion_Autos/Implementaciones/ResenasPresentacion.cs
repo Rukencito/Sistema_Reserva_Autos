@@ -11,7 +11,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public List<Resenas> Consultar()
         {
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Resenas/Consultar";
+            datos["Url"] = "http://localhost:5108/Resenas/Consultar";
 
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.Ejecutar(datos)!;
@@ -33,7 +33,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
             this.iComunicaciones = new Comunicaciones();
 
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Resenas/Guardar";
+            datos["Url"] = "http://localhost:5108/Resenas/Guardar";
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPost(datos)!;
@@ -55,7 +55,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
             this.iComunicaciones = new Comunicaciones();
 
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Resenas/Modificar";
+            datos["Url"] = "http://localhost:5108/Resenas/Modificar";
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPut(datos)!;
@@ -77,7 +77,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
             this.iComunicaciones = new Comunicaciones();
 
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Resenas/Eliminar";
+            datos["Url"] = "http://localhost:5108/Resenas/Eliminar";
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarDelete(datos)!;
@@ -88,6 +88,23 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 return new Resenas();
 
             return JsonConvert.DeserializeObject<Resenas>(
+                respuesta["Valor"].ToString()!)!;
+        }
+        public List<Resenas> ConsultarPorCliente(int idCliente)
+        {
+            var datos = new Dictionary<string, object>();
+            datos["Url"] = "http://localhost:5108/Resenas/ConsultarPorCliente";
+            datos["idCliente"] = idCliente;
+
+            this.iComunicaciones = new Comunicaciones();
+            var task = this.iComunicaciones.Ejecutar(datos)!;
+            task.Wait();
+            var respuesta = task.Result;
+
+            if (!respuesta.ContainsKey("Valor"))
+                return new List<Resenas>();
+
+            return JsonConvert.DeserializeObject<List<Resenas>>(
                 respuesta["Valor"].ToString()!)!;
         }
     }

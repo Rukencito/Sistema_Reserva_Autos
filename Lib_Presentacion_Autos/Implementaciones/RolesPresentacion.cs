@@ -11,7 +11,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public List<Roles> Consultar()
         {
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Roles/Consultar";
+            datos["Url"] = "http://localhost:5108/Roles/Consultar";
 
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.Ejecutar(datos)!;
@@ -33,7 +33,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
             this.iComunicaciones = new Comunicaciones();
 
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Roles/Guardar";
+            datos["Url"] = "http://localhost:5108/Roles/Guardar";
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPost(datos)!;
@@ -55,7 +55,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
             this.iComunicaciones = new Comunicaciones();
 
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Roles/Modificar";
+            datos["Url"] = "http://localhost:5108/Roles/Modificar";
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPut(datos)!;
@@ -77,7 +77,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
             this.iComunicaciones = new Comunicaciones();
 
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Roles/Eliminar";
+            datos["Url"] = "http://localhost:5108/Roles/Eliminar";
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarDelete(datos)!;
@@ -90,7 +90,45 @@ namespace Lib_Presentacion_Autos.Implementaciones
             return JsonConvert.DeserializeObject<Roles>(
                 respuesta["Valor"].ToString()!)!;
         }
+
+        public bool NombreExiste(string nombre)
+        {
+            var datos = new Dictionary<string, object>();
+            datos["Url"] = "http://localhost:5108/Roles/NombreExiste";
+            datos["Nombre"] = nombre;
+
+            this.iComunicaciones = new Comunicaciones();
+            var task = this.iComunicaciones.Ejecutar(datos)!;
+            task.Wait();
+            var respuesta = task.Result;
+
+            if (!respuesta.ContainsKey("Valor"))
+                return false;
+
+
+            return Convert.ToBoolean(respuesta["Valor"].ToString());
+        }
+
+        public Roles ConsultarPorId(int id)
+        {
+            var datos = new Dictionary<string, object>();
+            datos["Url"] = "http://localhost:5108/Roles/ConsultarPorId";
+            datos["Id"] = id;
+
+            this.iComunicaciones = new Comunicaciones();
+            var task = this.iComunicaciones.Ejecutar(datos)!;
+            task.Wait();
+            var respuesta = task.Result;
+
+            if (!respuesta.ContainsKey("Valor"))
+                return new Roles();
+
+            return JsonConvert.DeserializeObject<Roles>(
+                respuesta["Valor"].ToString()!)!;
+        }
+    
     }
+
 
 }
 

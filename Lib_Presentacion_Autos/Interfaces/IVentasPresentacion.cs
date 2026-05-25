@@ -11,5 +11,6 @@ namespace Lib_Presentacion_Autos.Interfaces
         Ventas Guardar(Ventas entidad);
         Ventas Modificar(Ventas entidad);
         Ventas Eliminar(Ventas entidad);
+        List<Ventas> ConsultarPorCliente(int idCliente);
     }
 }

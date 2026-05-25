@@ -11,7 +11,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public List<Promociones> Consultar()
         {
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Promociones/Consultar";
+            datos["Url"] = "http://localhost:5108/Promociones/Consultar";
 
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.Ejecutar(datos)!;
@@ -33,7 +33,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
             this.iComunicaciones = new Comunicaciones();
 
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Promociones/Guardar";
+            datos["Url"] = "http://localhost:5108/Promociones/Guardar";
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPost(datos)!;
@@ -55,7 +55,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
             this.iComunicaciones = new Comunicaciones();
 
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Promociones/Modificar";
+            datos["Url"] = "http://localhost:5108/Promociones/Modificar";
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPut(datos)!;
@@ -77,7 +77,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
             this.iComunicaciones = new Comunicaciones();
 
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Promociones/Eliminar";
+            datos["Url"] = "http://localhost:5108/Promociones/Eliminar";
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarDelete(datos)!;

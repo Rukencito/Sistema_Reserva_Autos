@@ -11,5 +11,6 @@ namespace Lib_Presentacion_Autos.Interfaces
         Sucursales Guardar(Sucursales entidad);
         Sucursales Modificar(Sucursales entidad);
         Sucursales Eliminar(Sucursales entidad);
+        List<Sucursales> ConsultarPorCiudad(string ciudad);
     }
 }
