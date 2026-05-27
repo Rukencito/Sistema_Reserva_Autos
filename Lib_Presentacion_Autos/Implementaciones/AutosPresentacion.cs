@@ -92,7 +92,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         {
             this.iComunicaciones = new Comunicaciones();
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/ConsultarPorPlaca?placa=" + placa;
+            datos["Url"] = "http://localhost:5108/Autos/ConsultarPorPlaca?placa=" + placa;
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();

@@ -1,4 +1,5 @@
 using Lib_Negocio_Autos.modelo;
+using Lib_Presentacion_Autos.Implementaciones;
 using Lib_Presentacion_Autos.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -14,7 +15,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public ParqueaderosHTMLModel()
         {
-          // IParqueaderosPresentacion = new  ParqueaderosPresentacion();
+           IParqueaderosPresentacion = new  ParqueaderosPresentacion();
         }
 
         public void OnGet()
