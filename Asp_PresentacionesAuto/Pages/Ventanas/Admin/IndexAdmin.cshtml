@@ -1,6 +1,7 @@
 ﻿@*Pages/Ventanas/Admin/IndexAdmin_Razor.cshtml*@
 @page
 @model Asp_PresentacionesAuto.Pages.Ventanas.Admin.IndexAdminModel;
+@using Microsoft.AspNetCore.Http
 @{
     ViewData["Title"] = "Panel Administrador";
     Layout = "/Pages/Shared/_Layout.cshtml";
@@ -281,7 +282,7 @@
     <div class="adm-masthead">
         <div class="adm-masthead-left">
             <h1>Panel <em>Admin</em></h1>
-            <p>Sistema de Reserva de Autos &mdash; Control total</p>
+            <p>Sistema de Reserva de Autos &mdash; Control total Bienvenido @HttpContext.Session.GetString("Usuario")</p>
         </div>
         <span class="adm-badge">Administrador</span>
     </div>
