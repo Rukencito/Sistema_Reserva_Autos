@@ -9,18 +9,28 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
     public class UsuariosHTMLModel : PageModel
     {
         private IUsuariosPresentacion? IUsuariosPresentacion;
+        private IRolesPresentacion? IRolesPresentacion;
         [BindProperty] public List<Usuarios>? Lista { get; set; }
         [BindProperty] public Usuarios? Usuario { get; set; }
+
+        [BindProperty] public List<Roles>? ListaRoles { get; set; }
         [BindProperty] public bool Borrando { get; set; }
+
 
         public UsuariosHTMLModel()
         {
           IUsuariosPresentacion = new  UsuariosPresentacion();
+          IRolesPresentacion = new RolesPresentacion();
         }
 
         public void OnGet()
         {
             OnPostBtRefrescar();
+        }
+
+        public List<Roles> ObtenerRoles()
+        {
+            return ListaRoles = IRolesPresentacion!.Consultar();
         }
 
         public void OnPostBtRefrescar()

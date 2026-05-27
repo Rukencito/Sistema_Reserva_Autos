@@ -190,19 +190,6 @@ namespace Lib_Negocio_Autos.Implementaciones
             if (string.IsNullOrEmpty(entidad.Contraseña))
                 throw new Exception("La contraseña del usuario es obligatoria");
 
-            ValidarContrasena(entidad.Contraseña);
-        }
-
-        private void ValidarContrasena(string contrasena)
-        {
-            if (contrasena.Length < 4)
-                throw new Exception("La contraseña debe tener al menos 4 caracteres");
-
-            if (!contrasena.Any(char.IsLower))
-                throw new Exception("La contraseña debe tener al menos una letra minúscula");
-
-            if (!contrasena.Any(char.IsDigit))
-                throw new Exception("La contraseña debe tener al menos un número");
         }
     }
 }
