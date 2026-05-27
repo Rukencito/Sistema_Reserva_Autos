@@ -96,7 +96,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
             var request = new HttpRequestMessage //voy a crear una peticion http
             {
                 Method = HttpMethod.Delete, // aqui decimos que la petición sera sobre borrar algo
-                RequestUri = new Uri(url), //aca decimos que la petición sera a esa url
+                RequestUri = new Uri(url!), //aca decimos que la petición sera a esa url
                 Content = body // y aca metemos el contenido de la entidad dentrro
             };
 
@@ -116,24 +116,14 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
         private string Replace(string resp)
         {
-            return resp.Replace("\\\\r\\\\n", "")
+            // Si la respuesta viene envuelta en comillas extra de una serialización doble, las quitamos
+            if (resp.StartsWith("\"") && resp.EndsWith("\""))
+                resp = resp.Substring(1, resp.Length - 2);
+
+            return resp
                 .Replace("\\r\\n", "")
-                .Replace("\\", "")
-                .Replace("\\\"", "\"")
-                .Replace("\"", "'")
-                .Replace("'[", "[")
-                .Replace("]'", "]")
-                .Replace("'{'", "{'")
-                .Replace("\\\\", "\\")
-                .Replace("'}'", "'}")
-                .Replace("}'", "}")
                 .Replace("\\n", "")
-                .Replace("\\r", "")
-                .Replace("    ", "")
-                .Replace("'{", "{")
-                .Replace("\"", "")
-                .Replace("  ", "")
-                .Replace("null", "''");
+                .Replace("\\r", "");
         }
     }
 }

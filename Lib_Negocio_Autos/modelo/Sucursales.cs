@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Lib_Negocio_Autos.modelo
 {
@@ -10,6 +11,7 @@ namespace Lib_Negocio_Autos.modelo
         public string? Direccion { get; set; }
         public string? Telefono { get; set; }
 
+        [JsonIgnore]
         [NotMapped] public List<Autos>? Auto { get; set; }
 
     }

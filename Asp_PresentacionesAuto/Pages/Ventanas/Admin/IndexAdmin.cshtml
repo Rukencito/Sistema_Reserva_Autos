@@ -1,0 +1,600 @@
+﻿@*Pages/Ventanas/Admin/IndexAdmin_Razor.cshtml*@
+@page
+@model Asp_PresentacionesAuto.Pages.Ventanas.Admin.IndexAdminModel;
+@{
+    ViewData["Title"] = "Panel Administrador";
+    Layout = "/Pages/Shared/_Layout.cshtml";
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap');
+
+    :root {
+        --ink:       #0c0c10;
+        --paper:     #f5f3ee;
+        --cream:     #ede9e0;
+        --rust:      #c94c1e;
+        --rust-dim:  #a03a14;
+        --gold:      #c8922a;
+        --slate:     #3a3a4a;
+        --mist:      #9898a8;
+        --line:      #d8d4cc;
+        --col-cfg:   #1e1e2e;
+        --col-ppl:   #1a2e1a;
+        --col-car:   #2e1a0e;
+        --col-ops:   #0e1e2e;
+        --col-fin:   #2e240e;
+    }
+
+    /* Reset para esta página */
+    .admin-root {
+        background: var(--paper);
+        color: var(--ink);
+        font-family: 'DM Mono', monospace;
+        min-height: 100vh;
+        padding: 0;
+    }
+
+    /* ── ENCABEZADO ── */
+    .adm-masthead {
+        padding: 3rem 3rem 2rem;
+        border-bottom: 2px solid var(--ink);
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 2rem;
+    }
+
+    .adm-masthead-left h1 {
+        font-family: 'Syne', sans-serif;
+        font-size: clamp(2.4rem, 5vw, 4rem);
+        font-weight: 800;
+        letter-spacing: -1px;
+        line-height: 1;
+        color: var(--ink);
+        margin: 0;
+    }
+
+    .adm-masthead-left h1 em {
+        font-style: normal;
+        color: var(--rust);
+    }
+
+    .adm-masthead-left p {
+        margin: 0.5rem 0 0;
+        font-size: 0.72rem;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--mist);
+    }
+
+    .adm-badge {
+        background: var(--ink);
+        color: var(--paper);
+        padding: 0.4rem 1rem;
+        border-radius: 2px;
+        font-size: 0.7rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    /* ── LAYOUT COLUMNAS ── */
+    .adm-body {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 0;
+    }
+
+    /* ── COLUMNA ── */
+    .adm-col {
+        border-right: 1px solid var(--line);
+        padding: 0;
+    }
+
+    .adm-col:last-child {
+        border-right: none;
+    }
+
+    /* ── ENCABEZADO DE SECCIÓN ── */
+    .sec-head {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1.4rem 2rem 1.2rem;
+        border-bottom: 1px solid var(--line);
+        position: sticky;
+        top: 0;
+        background: var(--paper);
+        z-index: 2;
+    }
+
+    .sec-num {
+        font-family: 'Syne', sans-serif;
+        font-size: 0.65rem;
+        font-weight: 700;
+        color: var(--mist);
+        letter-spacing: 2px;
+    }
+
+    .sec-title {
+        font-family: 'Syne', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        color: var(--slate);
+    }
+
+    .sec-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-left: auto;
+        flex-shrink: 0;
+    }
+
+    /* colores de dot por sección */
+    .dot-cfg  { background: #7c7cff; }
+    .dot-ppl  { background: #4caf50; }
+    .dot-car  { background: var(--rust); }
+    .dot-ops  { background: #00bcd4; }
+    .dot-fin  { background: var(--gold); }
+
+    /* ── LISTA DE ITEMS ── */
+    .adm-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .adm-item a {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.1rem 2rem;
+        text-decoration: none;
+        color: var(--slate);
+        border-bottom: 1px solid var(--line);
+        transition: background 0.15s, color 0.15s, padding-left 0.2s;
+        position: relative;
+    }
+
+    .adm-item a::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: var(--item-accent, var(--rust));
+        transform: scaleY(0);
+        transition: transform 0.2s;
+        transform-origin: bottom;
+    }
+
+    .adm-item a:hover {
+        background: var(--cream);
+        color: var(--ink);
+        padding-left: 2.4rem;
+    }
+
+    .adm-item a:hover::before {
+        transform: scaleY(1);
+    }
+
+    .adm-item-icon {
+        font-size: 1.1rem;
+        flex-shrink: 0;
+        opacity: 0.85;
+    }
+
+    .adm-item-text {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .adm-item-name {
+        font-size: 0.82rem;
+        font-weight: 500;
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .adm-item-desc {
+        font-size: 0.65rem;
+        color: var(--mist);
+        display: block;
+        margin-top: 0.15rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .adm-arrow {
+        font-size: 0.7rem;
+        color: var(--mist);
+        transition: transform 0.2s, color 0.2s;
+        flex-shrink: 0;
+    }
+
+    .adm-item a:hover .adm-arrow {
+        transform: translateX(4px);
+        color: var(--item-accent, var(--rust));
+    }
+
+    /* colores de acento por sección */
+    .cat-cfg  { --item-accent: #7c7cff; }
+    .cat-ppl  { --item-accent: #4caf50; }
+    .cat-car  { --item-accent: var(--rust); }
+    .cat-ops  { --item-accent: #00bcd4; }
+    .cat-fin  { --item-accent: var(--gold); }
+
+    /* ── SECCIÓN ANCHA (fila inferior) ── */
+    .adm-wide {
+        grid-column: 1 / -1;
+        border-top: 2px solid var(--line);
+        border-right: none;
+    }
+
+    .adm-wide .sec-head {
+        border-bottom: 1px solid var(--line);
+    }
+
+    .adm-wide .adm-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    }
+
+    .adm-wide .adm-item a {
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+    }
+
+    /* ── PIE ── */
+    .adm-footer {
+        border-top: 2px solid var(--ink);
+        padding: 1.2rem 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.65rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--mist);
+    }
+
+    /* ── Responsive ── */
+    @@media (max-width: 900px) {
+        .adm-body { grid-template-columns: 1fr; }
+        .adm-col  { border-right: none; border-bottom: 1px solid var(--line); }
+        .adm-wide { grid-column: 1; }
+        .adm-masthead { flex-direction: column; align-items: flex-start; }
+    }
+</style>
+
+<div class="admin-root">
+
+    <!-- MASTHEAD -->
+    <div class="adm-masthead">
+        <div class="adm-masthead-left">
+            <h1>Panel <em>Admin</em></h1>
+            <p>Sistema de Reserva de Autos &mdash; Control total</p>
+        </div>
+        <span class="adm-badge">Administrador</span>
+    </div>
+
+    <!-- CUERPO: 3 columnas -->
+    <div class="adm-body">
+
+        <!-- COL 1 — CONFIGURACIÓN + PERSONAS -->
+        <div class="adm-col">
+
+            <div class="sec-head">
+                <span class="sec-num">01</span>
+                <span class="sec-title">Configuración</span>
+                <span class="sec-dot dot-cfg"></span>
+            </div>
+            <ul class="adm-list">
+                <li class="adm-item cat-cfg">
+                    <a asp-page="/Ventanas/Admin/Usuarios">
+                        <span class="adm-item-icon">👤</span>
+                        <span class="adm-item-text">
+                            <span class="adm-item-name">Usuarios</span>
+                            <span class="adm-item-desc">Cuentas de acceso al sistema</span>
+                        </span>
+                        <span class="adm-arrow">→</span>
+                    </a>
+                </li>
+                <li class="adm-item cat-cfg">
+                    <a asp-page="/Ventanas/Admin/Roles">
+                        <span class="adm-item-icon">🛡️</span>
+                        <span class="adm-item-text">
+                            <span class="adm-item-name">Roles</span>
+                            <span class="adm-item-desc">Tipos de perfil del sistema</span>
+                        </span>
+                        <span class="adm-arrow">→</span>
+                    </a>
+                </li>
+                <li class="adm-item cat-cfg">
+                    <a asp-page="/Ventanas/Admin/Permisos">
+                        <span class="adm-item-icon">🔑</span>
+                        <span class="adm-item-text">
+                            <span class="adm-item-name">Permisos</span>
+                            <span class="adm-item-desc">Accesos por rol</span>
+                        </span>
+                        <span class="adm-arrow">→</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sec-head" style="margin-top:0.5rem;">
+                <span class="sec-num">02</span>
+                <span class="sec-title">Personas</span>
+                <span class="sec-dot dot-ppl"></span>
+            </div>
+            <ul class="adm-list">
+                <li class="adm-item cat-ppl">
+                    <a asp-page="/Ventanas/Admin/ClientesHTML">
+                        <span class="adm-item-icon">🙋</span>
+                        <span class="adm-item-text">
+                            <span class="adm-item-name">Clientes</span>
+                            <span class="adm-item-desc">Registro de clientes</span>
+                        </span>
+                        <span class="adm-arrow">→</span>
+                    </a>
+                </li>
+                <li class="adm-item cat-ppl">
+                    <a asp-page="/Ventanas/Admin/EmpleadosHTML">
+                        <span class="adm-item-icon">👷</span>
+                        <span class="adm-item-text">
+                            <span class="adm-item-name">Empleados</span>
+                            <span class="adm-item-desc">Personal de la empresa</span>
+                        </span>
+                        <span class="adm-arrow">→</span>
+                    </a>
+                </li>
+                <li class="adm-item cat-ppl">
+                    <a asp-page="/Ventanas/Admin/DuenosHTML">
+                        <span class="adm-item-icon">🤵</span>
+                        <span class="adm-item-text">
+                            <span class="adm-item-name">Dueños</span>
+                            <span class="adm-item-desc">Propietarios de vehículos</span>
+                        </span>
+                        <span class="adm-arrow">→</span>
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+
+        <!-- COL 2 — AUTOS E INFRAESTRUCTURA -->
+        <div class="adm-col">
+
+            <div class="sec-head">
+                <span class="sec-num">03</span>
+                <span class="sec-title">Autos e Infraestructura</span>
+                <span class="sec-dot dot-car"></span>
+            </div>
+            <ul class="adm-list">
+                <li class="adm-item cat-car">
+                    <a asp-page="/Ventanas/Admin/AutosHTML">
+                        <span class="adm-item-icon">🚗</span>
+                        <span class="adm-item-text">
+                            <span class="adm-item-name">Autos</span>
+                            <span class="adm-item-desc">Flota de vehículos</span>
+                        </span>
+                        <span class="adm-arrow">→</span>
+                    </a>
+                </li>
+                <li class="adm-item cat-car">
+                    <a asp-page="/Ventanas/Admin/Parquederos">
+                        <span class="adm-item-icon">🅿️</span>
+                        <span class="adm-item-text">
+                            <span class="adm-item-name">Parqueaderos</span>
+                            <span class="adm-item-desc">Espacios de estacionamiento</span>
+                        </span>
+                        <span class="adm-arrow">→</span>
+                    </a>
+                </li>
+                <li class="adm-item cat-car">
+                    <a asp-page="/Ventanas/Admin/Sucursales">
+                        <span class="adm-item-icon">🏢</span>
+                        <span class="adm-item-text">
+                            <span class="adm-item-name">Sucursales</span>
+                            <span class="adm-item-desc">Sedes de la empresa</span>
+                        </span>
+                        <span class="adm-arrow">→</span>
+                    </a>
+                </li>
+                <li class="adm-item cat-car">
+                    <a asp-page="/Ventanas/Admin/Talleres">
+                        <span class="adm-item-icon">🔧</span>
+                        <span class="adm-item-text">
+                            <span class="adm-item-name">Talleres</span>
+                            <span class="adm-item-desc">Centros de servicio</span>
+                        </span>
+                        <span class="adm-arrow">→</span>
+                    </a>
+                </li>
+                <li class="adm-item cat-car">
+                    <a asp-page="/Ventanas/Admin/InventariosHTML">
+                        <span class="adm-item-icon">📦</span>
+                        <span class="adm-item-text">
+                            <span class="adm-item-name">Inventarios</span>
+                            <span class="adm-item-desc">Stock de repuestos y bienes</span>
+                        </span>
+                        <span class="adm-arrow">→</span>
+                    </a>
+                </li>
+                <li class="adm-item cat-car">
+                    <a asp-page="/Ventanas/Admin/GarantiasHTML">
+                        <span class="adm-item-icon">🛡️</span>
+                        <span class="adm-item-text">
+                            <span class="adm-item-name">Garantías</span>
+                            <span class="adm-item-desc">Garantías de vehículos</span>
+                        </span>
+                        <span class="adm-arrow">→</span>
+                    </a>
+                </li>
+                <li class="adm-item cat-car">
+                    <a asp-page="/Ventanas/Admin/Seguros">
+                        <span class="adm-item-icon">📄</span>
+                        <span class="adm-item-text">
+                            <span class="adm-item-name">Seguros</span>
+                            <span class="adm-item-desc">Pólizas y coberturas</span>
+                        </span>
+                        <span class="adm-arrow">→</span>
+                    </a>
+                </li>
+                <li class="adm-item cat-car">
+                    <a asp-page="/Ventanas/Admin/MantenimientosHTML">
+                        <span class="adm-item-icon">🔩</span>
+                        <span class="adm-item-text">
+                            <span class="adm-item-name">Mantenimientos</span>
+                            <span class="adm-item-desc">Historial de mantenimiento</span>
+                        </span>
+                        <span class="adm-arrow">→</span>
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+
+        <!-- COL 3 — OPERACIONES -->
+        <div class="adm-col">
+
+            <div class="sec-head">
+                <span class="sec-num">04</span>
+                <span class="sec-title">Operaciones</span>
+                <span class="sec-dot dot-ops"></span>
+            </div>
+            <ul class="adm-list">
+                <li class="adm-item cat-ops">
+                    <a asp-page="/Ventanas/Admin/Ventas">
+                        <span class="adm-item-icon">💰</span>
+                        <span class="adm-item-text">
+                            <span class="adm-item-name">Ventas</span>
+                            <span class="adm-item-desc">Registro de ventas de autos</span>
+                        </span>
+                        <span class="adm-arrow">→</span>
+                    </a>
+                </li>
+                <li class="adm-item cat-ops">
+                    <a asp-page="/Ventanas/Admin/AlquileresHTML">
+                        <span class="adm-item-icon">🔄</span>
+                        <span class="adm-item-text">
+                            <span class="adm-item-name">Alquileres</span>
+                            <span class="adm-item-desc">Contratos de alquiler activos</span>
+                        </span>
+                        <span class="adm-arrow">→</span>
+                    </a>
+                </li>
+                <li class="adm-item cat-ops">
+                    <a asp-page="/Ventanas/Admin/Reservas">
+                        <span class="adm-item-icon">📅</span>
+                        <span class="adm-item-text">
+                            <span class="adm-item-name">Reservas</span>
+                            <span class="adm-item-desc">Reservas de clientes</span>
+                        </span>
+                        <span class="adm-arrow">→</span>
+                    </a>
+                </li>
+                <li class="adm-item cat-ops">
+                    <a asp-page="/Ventanas/Admin/DevolucionesHTML">
+                        <span class="adm-item-icon">↩️</span>
+                        <span class="adm-item-text">
+                            <span class="adm-item-name">Devoluciones</span>
+                            <span class="adm-item-desc">Retornos de vehículos</span>
+                        </span>
+                        <span class="adm-arrow">→</span>
+                    </a>
+                </li>
+                <li class="adm-item cat-ops">
+                    <a asp-page="/Ventanas/Admin/ContratosHTML ">
+                        <span class="adm-item-icon">📝</span>
+                        <span class="adm-item-text">
+                            <span class="adm-item-name">Contratos</span>
+                            <span class="adm-item-desc">Contratos firmados</span>
+                        </span>
+                        <span class="adm-arrow">→</span>
+                    </a>
+                </li>
+                <li class="adm-item cat-ops">
+                    <a asp-page="/Ventanas/Admin/Promociones">
+                        <span class="adm-item-icon">🏷️</span>
+                        <span class="adm-item-text">
+                            <span class="adm-item-name">Promociones</span>
+                            <span class="adm-item-desc">Descuentos y campañas</span>
+                        </span>
+                        <span class="adm-arrow">→</span>
+                    </a>
+                </li>
+                <li class="adm-item cat-ops">
+                    <a asp-page="/Ventanas/Admin/Resenas">
+                        <span class="adm-item-icon">⭐</span>
+                        <span class="adm-item-text">
+                            <span class="adm-item-name">Reseñas</span>
+                            <span class="adm-item-desc">Opiniones de clientes</span>
+                        </span>
+                        <span class="adm-arrow">→</span>
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+
+        <!-- FILA COMPLETA — FACTURACIÓN -->
+        <div class="adm-col adm-wide">
+
+            <div class="sec-head">
+                <span class="sec-num">05</span>
+                <span class="sec-title">Facturación y Pagos</span>
+                <span class="sec-dot dot-fin"></span>
+            </div>
+            <ul class="adm-list">
+                <li class="adm-item cat-fin">
+                    <a asp-page="/Ventanas/Admin/FacturasHTML">
+                        <span class="adm-item-icon">🧾</span>
+                        <span class="adm-item-text">
+                            <span class="adm-item-name">Facturas</span>
+                            <span class="adm-item-desc">Documentos de cobro</span>
+                        </span>
+                        <span class="adm-arrow">→</span>
+                    </a>
+                </li>
+                <li class="adm-item cat-fin">
+                    <a asp-page="/Ventanas/Admin/DetallesFacturaHTML">
+                        <span class="adm-item-icon">📑</span>
+                        <span class="adm-item-text">
+                            <span class="adm-item-name">Detalles Factura</span>
+                            <span class="adm-item-desc">Líneas de facturación</span>
+                        </span>
+                        <span class="adm-arrow">→</span>
+                    </a>
+                </li>
+                <li class="adm-item cat-fin">
+                    <a asp-page="/Ventanas/Admin/PagosHTML">
+                        <span class="adm-item-icon">💳</span>
+                        <span class="adm-item-text">
+                            <span class="adm-item-name">Pagos</span>
+                            <span class="adm-item-desc">Transacciones realizadas</span>
+                        </span>
+                        <span class="adm-arrow">→</span>
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+
+    </div><!-- /adm-body -->
+
+    <!-- PIE -->
+    <div class="adm-footer">
+        <span>Sistema Reserva Autos</span>
+        <span>@DateTime.Now.Year &mdash; Todos los módulos</span>
+    </div>
+
+</div>

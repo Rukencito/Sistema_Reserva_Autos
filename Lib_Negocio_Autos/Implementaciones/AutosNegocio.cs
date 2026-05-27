@@ -1,6 +1,7 @@
 ﻿using Lib_Negocio_Autos.Interfaces;
 using Lib_Negocio_Autos.modelo;
 using Lib_Negocio_Autos.nucleo;
+using Microsoft.EntityFrameworkCore;
 
 namespace Lib_Negocio_Autos.Implementaciones
 {
@@ -28,7 +29,12 @@ namespace Lib_Negocio_Autos.Implementaciones
         public List<Autos> Consultar()
         {
             AbrirConexion();
-            var lista = iConexion!.Autos!.ToList();
+            var lista = iConexion!.Autos!
+                .Include(a => a.Parqueadero)
+                .Include(a => a.Dueno)
+                .Include(a => a.Sucursal)
+                .Include(a => a.Inventario)
+                .ToList();
             RegistrarAuditoria("Se realizó una consulta en Autos", "Consulta");
             return lista;
         }

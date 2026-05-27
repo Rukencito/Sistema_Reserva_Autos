@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Lib_Negocio_Autos.modelo
 {
@@ -13,7 +14,9 @@ namespace Lib_Negocio_Autos.modelo
         public int? Clientes { get; set; }
         public int? Empleados { get; set; }
 
+        [JsonIgnore]
         [ForeignKey("Clientes")] public Clientes? Cliente { get; set; }
+        [JsonIgnore]
         [ForeignKey("Empleados")] public Empleados? Empleado { get; set; }
 
         [NotMapped] public List<Autos>? Auto { get; set; }

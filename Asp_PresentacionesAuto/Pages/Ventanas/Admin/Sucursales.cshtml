@@ -1,0 +1,139 @@
+﻿@*Pages/Ventanas/Admin/Sucursales_Razor.cshtml*@
+@page
+@model Asp_PresentacionesAuto.Pages.Ventanas.Admin.SucursalesHTMLModel;
+@{
+    ViewData["Title"] = "Sucursales";
+}
+<center>
+    <div>
+        <form method="POST"
+              enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+
+            <div align="left">
+                <h3>Sucursales</h3>
+            </div>
+            
+            <div>
+                <input type="submit"
+                       value="Refrescar"
+                       class="btn btn-secondary"
+                       asp-page-handler="BtRefrescar" />
+                <input type="submit"
+                       value="Nuevo"
+                       class="btn btn-secondary"
+                       asp-page-handler="BtNuevo"
+                       disabled="@(Model.Sucursal!= null)" />
+                <input type="submit"
+                       value="Guardar"
+                       class="btn btn-secondary"
+                       asp-page-handler="BtGuardar"
+                       disabled="@(Model.Sucursal == null)" />
+            </div>
+
+            @if (Model.Sucursal != null)
+            {
+                <input type="hidden"
+                       asp-for="@Model.Sucursal!.Id" />
+
+                <div>
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <div class="col-6">
+                            <input id="inNombre"
+                                   class="cts_forms form-control"
+                                   asp-for="@Model.Sucursal.Nombre" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Ciudad</label>
+                        <div class="col-6">
+                            <input id="inCiudad"
+                                   class="cts_forms form-control"
+                                   asp-for="@Model.Sucursal!.Ciudad" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Dirección</label>
+                        <div class="col-6">
+                            <input id="inDireccion"
+                                   class="cts_forms form-control"
+                                   asp-for="@Model.Sucursal!.Direccion" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Telefono</label>
+                        <div class="col-6">
+                            <input id="inTelefono"
+                                   class="cts_forms form-control"
+                                   asp-for="@Model.Sucursal!.Telefono" />
+                        </div>
+                    </div>
+                </div>
+                
+            }
+            
+            @if (ViewData.ContainsKey("Mensaje"))
+            {
+                @await Html.PartialAsync("/Pages/Emergentes/Mensajes.cshtml")
+                ;
+            }
+
+            @if (Model.Sucursal != null && Model.Borrando)
+            {
+                <div class='popup'>
+                    <div class='pp_ms_inner'>
+                        <div style='width:95%'>
+                            <h2 align="left">Mensaje</h2>
+                            <h6 align="left">Desea borrar el Sucursal?</h6>
+                            <h6 align="left">@Model.Sucursal!.Nombre</h6>
+                            
+                            <input type="submit"
+                                   value="Cerrar"
+                                   asp-page-handler="BtCerrar"
+                                   class="btn btn-secondary" />
+                            <input type="submit"
+                                   value="Borrar"
+                                   asp-page-handler="BtBorrar"
+                                   class="btn btn-secondary" />
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (Model != null && Model.Lista != null && Model.Lista.Count > 0)
+            {
+                <table class="tb_data table table-striped table-bordered table-hover">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Ciudad</th>
+                        <th>Dirección</th>
+                        <th>Telefono</th>
+                    </tr>
+                
+                    @foreach (var elemento in Model.Lista)
+                    {
+                        <tr>
+                            <td>@elemento.Nombre</td>
+                            <td>@elemento.Ciudad</td>
+                            <td>@elemento.Direccion</td>
+                            <td>@elemento.Telefono</td>
+                            <td>
+                                <input type="submit"
+                                       value="Modificar"
+                                       asp-page-handler="BtModificar"
+                                       class="btn btn-secondary"
+                                       asp-route-data="@elemento.Id" />
+                                <input type="submit"
+                                       value="Borrar"
+                                       asp-page-handler="BtBorrarVal"
+                                       class="btn btn-secondary"
+                                       asp-route-data="@elemento.Id" />
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+        </form>
+    </div>
+</center>

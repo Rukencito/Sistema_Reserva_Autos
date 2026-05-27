@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Lib_Negocio_Autos.modelo
 {
@@ -12,6 +13,7 @@ namespace Lib_Negocio_Autos.modelo
 
         public int? Ventas { get; set; }
 
+        [JsonIgnore]
         [ForeignKey("Ventas")] public Ventas? Venta { get; set; }
 
 

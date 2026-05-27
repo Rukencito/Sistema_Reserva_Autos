@@ -1,0 +1,139 @@
+﻿@*Pages/Ventanas/Admin/Pagos_Razor.cshtml*@
+@page
+@model Asp_PresentacionesAuto.Pages.Ventanas.Admin.PagosHTMLModel;  
+@{
+    ViewData["Title"] = "Pago";
+}
+<center>
+    <div>
+        <form method="POST"
+              enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+
+            <div align="left">
+                <h3>Pago</h3>
+            </div>
+            
+            <div>
+                <input type="submit"
+                       value="Refrescar"
+                       class="btn btn-secondary"
+                       asp-page-handler="BtRefrescar" />
+                <input type="submit"
+                       value="Nuevo"
+                       class="btn btn-secondary"
+                       asp-page-handler="BtNuevo"
+                       disabled="@(Model.Pago!= null)" />
+                <input type="submit"
+                       value="Guardar"
+                       class="btn btn-secondary"
+                       asp-page-handler="BtGuardar"
+                       disabled="@(Model.Pago == null)" />
+            </div>
+
+            @if (Model.Pago != null)
+            {
+                <input type="hidden"
+                       asp-for="@Model.Pago!.Id" />
+
+                <div>
+                    <div class="form-group">
+                        <label>Monto</label>
+                        <div class="col-6">
+                            <input id="inMonto"
+                                   class="cts_forms form-control"
+                                   asp-for="@Model.Pago.Monto" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Estado de Pago</label>
+                        <div class="col-6">
+                            <input id="inEstadoPago"
+                                   class="cts_forms form-control"
+                                   asp-for="@Model.Pago!.EstadoPago" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Metodo de Pago</label>
+                        <div class="col-6">
+                            <input id="inMetodoPago"
+                                   class="cts_forms form-control"
+                                   asp-for="@Model.Pago!.MetodoPago" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha de Pago</label>
+                        <div class="col-6">
+                            <input id="inFechaPago"
+                                   class="cts_forms form-control"
+                                   asp-for="@Model.Pago!.FechaPago" />
+                        </div>
+                    </div>
+                </div>
+                
+            }
+            
+            @if (ViewData.ContainsKey("Mensaje"))
+            {
+                @await Html.PartialAsync("/Pages/Emergentes/Mensajes.cshtml")
+                ;
+            }
+
+            @if (Model.Pago != null && Model.Borrando)
+            {
+                <div class='popup'>
+                    <div class='pp_ms_inner'>
+                        <div style='width:95%'>
+                            <h2 align="left">Mensaje</h2>
+                            <h6 align="left">Desea borrar el Pago?</h6>
+                            <h6 align="left">@Model.Pago!.Monto</h6>
+                            
+                            <input type="submit"
+                                   value="Cerrar"
+                                   asp-page-handler="BtCerrar"
+                                   class="btn btn-secondary" />
+                            <input type="submit"
+                                   value="Borrar"
+                                   asp-page-handler="BtBorrar"
+                                   class="btn btn-secondary" />
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (Model != null && Model.Lista != null && Model.Lista.Count > 0)
+            {
+                <table class="tb_data table table-striped table-bordered table-hover">
+                    <tr>
+                        <th>Monto</th>
+                        <th>Estado de Pago</th>
+                        <th>Metodo de Pago</th>
+                        <th>Fecha de Pago</th>
+                    </tr>
+                
+                    @foreach (var elemento in Model.Lista)
+                    {
+                        <tr>
+                            <td>@elemento.Monto</td>
+                            <td>@elemento.EstadoPago</td>
+                            <td>@elemento.MetodoPago</td>
+                            <td>@elemento.FechaPago</td>
+                            <td>
+                                <input type="submit"
+                                       value="Modificar"
+                                       asp-page-handler="BtModificar"
+                                       class="btn btn-secondary"
+                                       asp-route-data="@elemento.Id" />
+                                <input type="submit"
+                                       value="Borrar"
+                                       asp-page-handler="BtBorrarVal"
+                                       class="btn btn-secondary"
+                                       asp-route-data="@elemento.Id" />
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+        </form>
+    </div>
+</center>

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Lib_Negocio_Autos.modelo
 {
@@ -13,14 +14,15 @@ namespace Lib_Negocio_Autos.modelo
         public string? Telefono { get; set; }
         public bool LicenciaConduccion { get; set; }
         public int? PuntosFidelidad { get; set; }
-        
 
+
+        [JsonIgnore]
         [NotMapped] public List<Alquileres>? Alquiler { get; set; }
-
+        [JsonIgnore]
         [NotMapped] public List<Facturas>? Factura { get; set; }
-
+        [JsonIgnore]
         [NotMapped] public List<Resenas>? Resena { get; set; }
-
+        [JsonIgnore]
         [NotMapped] public List<Reservas>? Reserva { get; set; }
 
     }
