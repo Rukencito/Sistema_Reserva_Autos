@@ -28,17 +28,7 @@ namespace Lib_Negocio_Autos.Implementaciones
             iConexion.SaveChanges();
         }
 
-        /// <summary>
-        /// Hashea una contraseña usando SHA256.
-        /// ✅ CORRECCIÓN BUG #6: las contraseñas nunca se guardan en texto plano.
-        /// NOTA: Para producción se recomienda usar BCrypt (NuGet: BCrypt.Net-Next).
-        /// </summary>
-        private string HashearContrasena(string contrasena)
-        {
-            using var sha256 = SHA256.Create();
-            var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(contrasena));
-            return Convert.ToHexString(bytes);
-        }
+       
         public List<Usuarios> Consultar()
         {
             AbrirConexion();
@@ -58,7 +48,6 @@ namespace Lib_Negocio_Autos.Implementaciones
                 throw new Exception("Ya existe un usuario registrado con el correo " + entidad.Correo);
             }
 
-            entidad.Contraseña = HashearContrasena(entidad.Contraseña!);
 
             iConexion!.Usuarios!.Add(entidad);
             iConexion.SaveChanges();
@@ -180,22 +169,7 @@ namespace Lib_Negocio_Autos.Implementaciones
             return usuarios;
         }
 
-        /// <summary>
-        /// Método de Login — pendiente de implementar.
-        /// Se implementará cuando se configure el sistema de sesiones.
-        /// </summary>
-        public Usuarios? Login(string correo, string contrasena)
-        {
-            // TODO: implementar cuando se configure el sistema de sesiones
-            // Lógica básica:
-            // 1. Buscar usuario por correo
-            // 2. Comparar HashearContrasena(contrasena) con usuario.Contraseña
-            // 3. Verificar que el rol esté activo
-            // 4. Guardar en sesión: HttpContext.Session.SetString("Usuario", usuario.Correo)
-            //                       HttpContext.Session.SetString("Rol", usuario._Roles!.Nombre)
-            // 5. Registrar en auditoría
-            throw new NotImplementedException("Login pendiente de implementar con sesiones");
-        }
+      
         public void ValidarDatos(Usuarios entidad)
         {
             if (entidad == null)
@@ -221,11 +195,8 @@ namespace Lib_Negocio_Autos.Implementaciones
 
         private void ValidarContrasena(string contrasena)
         {
-            if (contrasena.Length < 8)
-                throw new Exception("La contraseña debe tener al menos 8 caracteres");
-
-            if (!contrasena.Any(char.IsUpper))
-                throw new Exception("La contraseña debe tener al menos una letra mayúscula");
+            if (contrasena.Length < 4)
+                throw new Exception("La contraseña debe tener al menos 4 caracteres");
 
             if (!contrasena.Any(char.IsLower))
                 throw new Exception("La contraseña debe tener al menos una letra minúscula");

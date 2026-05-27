@@ -11,7 +11,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public List<Ventas> Consultar()
         {
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Ventas/Consultar";
+            datos["Url"] = "http://localhost:5108/Ventas/Consultar";
 
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.Ejecutar(datos)!;
@@ -33,7 +33,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
             this.iComunicaciones = new Comunicaciones();
 
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Ventas/Guardar";
+            datos["Url"] = "http://localhost:5108/Ventas/Guardar";
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPost(datos)!;
@@ -55,7 +55,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
             this.iComunicaciones = new Comunicaciones();
 
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Ventas/Modificar";
+            datos["Url"] = "http://localhost:5108/Ventas/Modificar";
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPut(datos)!;
@@ -77,7 +77,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
             this.iComunicaciones = new Comunicaciones();
 
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Ventas/Eliminar";
+            datos["Url"] = "http://localhost:5108/Ventas/Eliminar";
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarDelete(datos)!;
@@ -94,7 +94,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public List<Ventas> ConsultarPorCliente(int idCliente)
         {
             var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5188/Ventas/Consultar";
+            datos["Url"] = "http://localhost:5108/Ventas/Consultar";
             datos["idCliente"]= idCliente;
 
             this.iComunicaciones = new Comunicaciones();
