@@ -3,6 +3,8 @@ using Lib_Presentacion_Autos.Implementaciones;
 using Lib_Presentacion_Autos.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Linq.Expressions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 {
@@ -27,9 +29,74 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             IEmpleadosPresentacion= new  EmpleadosPresentacion();
         }
 
+        private void CargarListaFiltrada()
+        {
+            var rol = HttpContext.Session.GetString("RolId");
+            var usuarioId = HttpContext.Session.GetString("EntidadId");
+
+            ViewData["Debug"] = $"Rol='{rol}' | UsuarioId='{usuarioId}' | Presentacion={IAlquileresPresentacion != null}";
+
+            Lista = IAlquileresPresentacion!.Consultar();
+
+            if (rol == "2" && int.TryParse(usuarioId, out int clienteId))
+                Lista = Lista!.Where(x => x.Clientes == clienteId).ToList();
+            else if (rol == "3" && int.TryParse(usuarioId, out int empleadoId))
+                Lista = Lista!.Where(x => x.Empleados == empleadoId).ToList();
+        }
+
         public void OnGet()
         {
-            OnPostBtRefrescar();
+            try
+            {
+                CargarListaFiltrada();
+                Alquiler = null;
+                Borrando = false;
+            }
+            catch (Exception ex)
+            {
+                ViewData["Debug"] += $" | EXCEPCION: {ex.Message} | Inner: {ex.InnerException?.Message}";
+            }
+        }
+        public void OnPostBtRefrescar()
+        {
+            try
+            {
+                CargarListaFiltrada();
+                Alquiler = null;
+                Borrando = false;
+                ModelState.Clear();
+            }
+            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
+        }
+
+        public void OnPostBtGuardar()
+        {
+            try
+            {
+                if (Alquiler == null) return;
+
+                var rol = HttpContext.Session.GetString("RolId");
+                var usuarioId = HttpContext.Session.GetString("EntidadId");
+
+                // Si es cliente o empleado, forzar su propio ID al guardar
+                if (rol == "2" && int.TryParse(usuarioId, out int clienteId))
+                    Alquiler.Clientes = clienteId;
+                else if (rol == "3" && int.TryParse(usuarioId, out int empleadoId))
+                    Alquiler.Empleados = empleadoId;
+
+                if (Alquiler.Id == 0)
+                    Alquiler = IAlquileresPresentacion!.Guardar(Alquiler!);
+                else
+                    Alquiler = IAlquileresPresentacion!.Modificar(Alquiler!);
+
+                if (Alquiler.Id == 0) return;
+
+                CargarListaFiltrada();
+                Alquiler = null;
+                Borrando = false;
+                ModelState.Clear();
+            }
+            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
         }
         public List<Autos> ObtenerAutos()
         {
@@ -45,26 +112,6 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             return ListaEmpleado = IEmpleadosPresentacion!.Consultar();
         }
 
-        public void OnPostBtRefrescar()
-        {
-            try
-            {
-                if (IAlquileresPresentacion == null)
-                    return;
-
-                Lista = IAlquileresPresentacion.Consultar();
-
-                Alquiler = null;
-
-                Borrando = false;
-
-                ModelState.Clear();
-            }
-            catch (Exception ex)
-            {
-                ViewData["Mensaje"] = ex.Message;
-            }
-        }
 
         public void OnPostBtNuevo()
         {
@@ -77,31 +124,40 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
             try
             {
-                OnPostBtRefrescar();
-                Alquiler = Lista!.FirstOrDefault(x => x.Id == data);
+                var rol = HttpContext.Session.GetString("RolId");
+                var usuarioId = HttpContext.Session.GetString("EntidadId");
+
+                Lista = IAlquileresPresentacion!.Consultar();
+
+                //Admin
+                if (rol == "1")
+                {
+                    Alquiler = Lista!.FirstOrDefault(x => x.Id == data);
+                }
+                
+                //Cliente
+                else if (rol == "2")
+                {
+                    Alquiler = Lista!.FirstOrDefault(x => 
+                    x.Id == data && x.Clientes == int.Parse(usuarioId!));
+                }
+
+                //Empleado
+                else if (rol == "3")
+                {
+                    Alquiler = Lista!.FirstOrDefault(x =>
+                    x.Id == data && x.Empleados == int.Parse(usuarioId!));
+                }
+
+                if (Alquiler == null)
+                {
+                    ViewData["Mensaje"] = "No tienes permiso para modificar este alquiler.";
+                }
+
                 Lista = null;
                 Borrando = false;
             }
-            catch (Exception ex)
-            {
-                ViewData["Mensaje"] = ex.Message;
-            }
-        }
 
-        public void OnPostBtGuardar()
-        {
-            try
-            {
-                if (Alquiler == null)
-                    return;
-                if (Alquiler.Id == 0)
-                    Alquiler = IAlquileresPresentacion!.Guardar(Alquiler!);
-                else
-                    Alquiler = IAlquileresPresentacion!.Modificar(Alquiler!);
-                if (Alquiler.Id == 0)
-                    return;
-                OnPostBtRefrescar();
-            }
             catch (Exception ex)
             {
                 ViewData["Mensaje"] = ex.Message;
@@ -112,9 +168,51 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
             try
             {
+                var rol = HttpContext.Session.GetString("RolId");
+                var usuarioId = HttpContext.Session.GetString("EntidadId");
+
+                var Lista = IAlquileresPresentacion!.Consultar();
+
+                Alquileres? AlquilerPermitido = null;
+
+                //Admin
+                if (rol == "1")
+                {
+                    AlquilerPermitido = Lista!.FirstOrDefault(x => x.Id == Alquiler!.Id);
+                }
+
+                //Cliente
+                else if (rol == "2")
+                {
+                    AlquilerPermitido = Lista!.FirstOrDefault(x =>
+                    x.Id == Alquiler!.Id && x.Clientes.ToString() == usuarioId!);
+                }
+
+                //Empleado
+                else if (rol == "3")
+                {
+                    AlquilerPermitido = Lista!.FirstOrDefault(x =>
+                    x.Id == Alquiler!.Id && x.Empleados.ToString() == usuarioId!);
+                }
+
                 if (Alquiler == null)
+                {
+                    ViewData["Mensaje"] = "No tienes permiso para modificar este alquiler.";
+                }
+
+                if (AlquilerPermitido == null)
+                {
+                    ViewData["Mensaje"] = "No tienes permiso para eliminar este alquiler.";
+                    OnGet();
                     return;
+                }
+
                 Alquiler = IAlquileresPresentacion!.Eliminar(Alquiler!);
+
+                OnGet();
+
+                Lista = null;
+                Borrando = false;
                 OnPostBtRefrescar();
             }
             catch (Exception ex)

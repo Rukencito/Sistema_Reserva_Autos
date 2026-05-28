@@ -91,6 +91,40 @@
                             </select>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label>Cliente</label>
+                        <div class="col-6">
+                            <select id="Clientes"
+                                    class="cts_forms form-control"
+                                    asp-for="@Model.Usuario!.Clientes"
+                                    asp-items="@(new SelectList(Model.ObtenerClientes(), "Id", "Nombre"))">
+                                <option value="">Seleccione un cliente</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Dueño</label>
+                        <div class="col-6">
+                            <select id="Duenos"
+                                    class="cts_forms form-control"
+                                    asp-for="@Model.Usuario!.Duenos"
+                                    asp-items="@(new SelectList(Model.ObtenerDuenos(), "Id", "Nombre"))">
+                                <option value="">Seleccione un dueño</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Empleado</label>
+                        <div class="col-6">
+                            <select id="Empleados"
+                                    class="cts_forms form-control"
+                                    asp-for="@Model.Usuario!.Empleados"
+                                    asp-items="@(new SelectList(Model.ObtenerEmpleados(), "Id", "Nombre"))">
+                                <option value="">Seleccione un empleado</option>
+                            </select>
+                        </div>
+                    </div>
+
                 </div>
                 
             }
@@ -134,7 +168,10 @@
                         <th>Correo</th>
                         <th>Contraseña</th>
                         <th>Telefono</th>
-                        <th>Rol</th>
+                        <th>Roles</th>
+                        <th>Clientes</th>
+                        <th>Dueños</th>
+                        <th>Empleados</th>
                     </tr>
                 
                     @foreach (var elemento in Model.Lista)
@@ -146,6 +183,9 @@
                             <td>@elemento.Contraseña</td>
                             <td>@elemento.Telefono</td>
                             <td>@elemento.Roles</td>
+                            <td>@elemento.Clientes</td>
+                            <td>@elemento.Duenos</td>
+                            <td>@elemento.Empleados</td>
                             <td>
                                 <input type="submit"
                                        value="Modificar"

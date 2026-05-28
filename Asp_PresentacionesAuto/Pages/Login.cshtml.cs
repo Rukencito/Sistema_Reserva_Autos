@@ -62,14 +62,17 @@ namespace Asp_PresentacionesAuto.Pages
                 }
                 else if (usuario.Roles == 2)
                 {
+                    HttpContext.Session.SetString("EntidadId", usuario.Clientes.ToString()!);
                     HttpContext.Response.Redirect("/Ventanas/Cliente/IndexClientes");
                 }
                 else if (usuario.Roles == 3)
                 {
+                    HttpContext.Session.SetString("EntidadId", usuario.Empleados.ToString()!);
                     HttpContext.Response.Redirect("/Ventanas/Empleado/IndexEmpleados");
                 }
                 else if (usuario.Roles == 4)
                 {
+                    HttpContext.Session.SetString("EntidadId", usuario.Duenos.ToString()!);
                     HttpContext.Response.Redirect("/Ventanas/Dueno/IndexDuenos");
                 }
                 else

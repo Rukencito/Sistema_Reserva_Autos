@@ -3,10 +3,6 @@ GO
 USE db_SistemaAutos;
 GO
 
--- ============================================================
--- Tablas sin dependencias
--- ============================================================
-
 CREATE TABLE [Sucursales] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
 	[Nombre] NVARCHAR(100),
@@ -53,9 +49,6 @@ CREATE TABLE [Roles] (
 	[Estado] BIT NOT NULL
 
 );
--- ===========================================================
--- Tablas con herencia
--- ===========================================================
 
 CREATE TABLE [Clientes] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
@@ -96,10 +89,6 @@ CREATE TABLE [Duenos] (
 	[Estado] BIT,
 );
 
--- ============================================================
--- Tabla principal que depende de varias tablas (Autos)
--- ============================================================
-
 CREATE TABLE [Autos] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
 	[Placa] NVARCHAR(20) NOT NULL UNIQUE,
@@ -114,9 +103,6 @@ CREATE TABLE [Autos] (
 	[Inventarios] INT NOT NULL REFERENCES [Inventarios](Id),
 );
 
--- ============================================================
--- Tablas que dependen de clientes y empleados
--- ============================================================
 
 CREATE TABLE [Ventas] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
@@ -129,9 +115,6 @@ CREATE TABLE [Ventas] (
 	[Autos] INT NOT NULL REFERENCES [Autos](Id)
 );
 
--- ============================================================
--- Tablas que dependen de Autos
--- ============================================================
 
 CREATE TABLE [Alquileres] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
@@ -180,10 +163,6 @@ CREATE TABLE [Reservas] (
 	[Clientes] INT NOT NULL REFERENCES [Clientes](Id)
 );
 
--- ============================================================
--- Tablas que dependen de Alquileres
--- ============================================================
-
 CREATE TABLE [Devoluciones] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
 	[FechaEntrega] DATETIME NOT NULL,
@@ -202,10 +181,6 @@ CREATE TABLE [Contratos] (
 	[Alquileres] INT NOT NULL REFERENCES [Alquileres](Id)
 );
 
--- ============================================================
--- Tablas que dependen de Ventas
--- ============================================================
-
 CREATE TABLE [Promociones] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
 	[Descripcion] NVARCHAR(255),
@@ -215,9 +190,6 @@ CREATE TABLE [Promociones] (
 	[Ventas] INT NOT NULL REFERENCES [Ventas](Id)
 );
 
--- ============================================================
--- Tablas que dependen de Clientes
--- ============================================================
 
 CREATE TABLE [Facturas] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
@@ -236,9 +208,6 @@ CREATE TABLE [Resenas] (
 	[Clientes] INT NOT NULL REFERENCES [Clientes](Id)
 );
 
--- ============================================================
--- Tablas que dependen de Facturas
--- ============================================================
 
 CREATE TABLE [DetallesFactura] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
@@ -257,10 +226,6 @@ CREATE TABLE [Pagos] (
 	[Facturas] INT NOT NULL REFERENCES [Facturas](Id)
 );
 
--- ============================================================
--- Tablas que dependen de Roles
--- ============================================================
-
 CREATE TABLE [Permisos] (
 	[Id] INT PRIMARY KEY IDENTITY(1,1),
 	[Nombre] NVARCHAR(50) NOT NULL,
@@ -275,12 +240,12 @@ CREATE TABLE [Usuarios] (
 	[Correo] NVARCHAR(100) NOT NULL UNIQUE,
 	[Contraseña] NVARCHAR(255) NOT NULL,
 	[Telefono] NVARCHAR(20),
-	[Roles] INT NOT NULL REFERENCES [Roles](Id)
+	[Roles] INT NOT NULL REFERENCES [Roles](Id),
+	[Clientes] INT REFERENCES [Clientes](Id),
+	[Empleados] INT REFERENCES [Empleados](Id),
+	[Duenos] INT REFERENCES [Duenos](Id)
 );
 
--- ============================================================
--- Insercion de datos de prueba
--- ============================================================
 
 INSERT INTO [Sucursales] (Nombre, Ciudad, Direccion, Telefono) VALUES
 ('Sucursal Central', 'Medell', 'Calle Principal 123', '555-0001');

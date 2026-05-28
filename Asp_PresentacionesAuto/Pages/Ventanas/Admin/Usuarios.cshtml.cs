@@ -10,10 +10,16 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
     {
         private IUsuariosPresentacion? IUsuariosPresentacion;
         private IRolesPresentacion? IRolesPresentacion;
+        private IClientesPresentacion? IClientesPresentacion;
+        private IEmpleadosPresentacion? IEmpleadosPresentacion;
+        private IDuenosPresentacion? IDuenosPresentacion;
         [BindProperty] public List<Usuarios>? Lista { get; set; }
         [BindProperty] public Usuarios? Usuario { get; set; }
 
         [BindProperty] public List<Roles>? ListaRoles { get; set; }
+        [BindProperty] public List<Clientes>? ListaClientes { get; set; }
+        [BindProperty] public List<Empleados>? ListaEmpleados { get; set; }
+        [BindProperty] public List<Duenos>? ListaDuenos { get; set; }
         [BindProperty] public bool Borrando { get; set; }
 
 
@@ -21,6 +27,9 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
           IUsuariosPresentacion = new  UsuariosPresentacion();
           IRolesPresentacion = new RolesPresentacion();
+          IClientesPresentacion = new ClientesPresentacion();
+          IEmpleadosPresentacion = new EmpleadosPresentacion();
+          IDuenosPresentacion = new DuenosPresentacion();
         }
 
         public void OnGet()
@@ -31,6 +40,21 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         public List<Roles> ObtenerRoles()
         {
             return ListaRoles = IRolesPresentacion!.Consultar();
+        }
+
+        public List<Clientes> ObtenerClientes()
+        {
+            return ListaClientes = IClientesPresentacion!.Consultar();
+        }
+
+        public List<Empleados> ObtenerEmpleados()
+        {
+            return ListaEmpleados = IEmpleadosPresentacion!.Consultar();
+        }
+
+        public List<Duenos> ObtenerDuenos()
+        {
+            return ListaDuenos = IDuenosPresentacion!.Consultar();
         }
 
         public void OnPostBtRefrescar()

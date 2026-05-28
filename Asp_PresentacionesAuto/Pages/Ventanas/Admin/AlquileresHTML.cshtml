@@ -33,6 +33,11 @@
                        disabled="@(Model.Alquiler == null)" />
             </div>
 
+            @if (ViewData["Debug"] != null)
+            {
+                <div class="alert alert-info">@ViewData["Debug"]</div>
+            }
+
             @if (Model.Alquiler != null)
             {
                 <input type="hidden"

@@ -24,6 +24,8 @@ namespace Lib_Negocio_Autos.modelo
         [NotMapped] public List<Resenas>? Resena { get; set; }
         [JsonIgnore]
         [NotMapped] public List<Reservas>? Reserva { get; set; }
+        [JsonIgnore]
+        [NotMapped] public List<Usuarios>? Usuario { get; set; }
 
     }
 }
