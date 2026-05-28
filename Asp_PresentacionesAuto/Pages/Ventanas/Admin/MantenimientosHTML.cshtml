@@ -40,33 +40,33 @@
 
                 <div>
                     <div class="form-group">
-                        <label>Nombre</label>
+                        <label>Fecha</label>
                         <div class="col-6">
-                            <input id="inNombre"
+                            <input id="inFecha"
                                    class="cts_forms form-control"
                                    asp-for="@Model.Mantenimiento!.Fecha" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Identificacion</label>
+                        <label>Tipo</label>
                         <div class="col-6">
-                            <input id="inIdentificacion"
+                            <input id="inTipo"
                                    class="cts_forms form-control"
                                    asp-for="@Model.Mantenimiento!.Tipo" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Telefono</label>
+                        <label>Descripcion</label>
                         <div class="col-6">
-                            <input id="inTelefono"
+                            <input id="inDescripcion"
                                    class="cts_forms form-control"
                                    asp-for="@Model.Mantenimiento!.Descripcion" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Telefono</label>
+                        <label>Costo</label>
                         <div class="col-6">
-                            <input id="inTelefono"
+                            <input id="inCosto"
                                    class="cts_forms form-control"
                                    asp-for="@Model.Mantenimiento!.Costo" />
                         </div>
@@ -145,8 +145,8 @@
                             <td>@elemento.Tipo</td>
                             <td>@elemento.Descripcion</td>
                             <td>@elemento.Costo</td>
-                            <td>@elemento.Autos</td>
-                            <td>@elemento.Talleres</td>
+                            <td>@elemento.Auto?.Placa</td>
+                            <td>@elemento.Taller?.Nombre</td>
                             <td>
                                 <input type="submit"
                                        value="Modificar"

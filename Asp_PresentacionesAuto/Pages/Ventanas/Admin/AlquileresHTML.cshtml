@@ -159,9 +159,9 @@
                             <td>@elemento.FechaFin</td>
                             <td>@elemento.PrecioAlquiler</td>
                             <td>@elemento.EstadoAlquiler</td>
-                            <td>@elemento.Auto</td>
-                            <td>@elemento.Cliente</td>
-                            <td>@elemento.Empleado</td>
+                            <td>@elemento.Auto?.Placa</td>
+                            <td>@elemento.Cliente?.Nombre</td>
+                            <td>@elemento.Empleado?.Nombre</td>
                             <td>
                                 <input type="submit"
                                        value="Modificar"

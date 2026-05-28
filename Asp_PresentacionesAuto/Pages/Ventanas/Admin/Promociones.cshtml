@@ -132,7 +132,7 @@
                             <td>@elemento.FechaInicio</td>
                             <td>@elemento.FechaFin</td>
                             <td>@elemento.Descuento</td>
-                            <td>@elemento.Venta</td>
+                            <td>@elemento.Venta?.FechaVenta.ToString("dd/MM/yyyy")</td>
 
                             <td>
                                 <input type="submit"

@@ -31,6 +31,13 @@ namespace Lib_Negocio_Autos.Implementaciones
         {
             AbrirConexion();
             var lista = iConexion!.Devoluciones!.ToList();
+
+            foreach (var devolucion in lista)
+            {
+                devolucion.Alquiler = iConexion.Alquileres!
+                    .FirstOrDefault(a => a.Id == devolucion.Alquileres);
+            }
+
             RegistrarAuditoria("Se realizó una consulta en Devoluciones", "Consulta");
             return lista;
         }
@@ -40,7 +47,7 @@ namespace Lib_Negocio_Autos.Implementaciones
             AbrirConexion();
             ValidarDatos(entidad);
 
-            if (ExisteDevolucionParaAlquiler(entidad.Alquiler!.Id))
+            if (ExisteDevolucionParaAlquiler(entidad.Alquileres))
             {
                 throw new Exception("Ya existe una devolución registrada para ese alquiler");
             }
@@ -48,10 +55,10 @@ namespace Lib_Negocio_Autos.Implementaciones
             iConexion!.Devoluciones!.Add(entidad);
             iConexion.SaveChanges();
 
-            CerrarAlquiler(entidad.Alquiler.Id);
+            CerrarAlquiler(entidad.Alquileres);
 
             RegistrarAuditoria(
-                "Se registró la devolución del alquiler ID " + entidad.Alquiler.Id,
+                "Se registró la devolución del alquiler ID " + entidad.Alquileres,
                 "Guardado");
 
             return entidad;
@@ -179,9 +186,8 @@ namespace Lib_Negocio_Autos.Implementaciones
             if (entidad.FechaEntrega == DateTime.MinValue)
                 throw new Exception("La fecha de entrega es obligatoria");
 
-            if (entidad.Alquiler.FechaInicio != DateTime.MinValue &&
-                entidad.FechaEntrega < entidad.Alquiler.FechaInicio)
-                throw new Exception("La fecha de entrega no puede ser anterior a la fecha de inicio del alquiler");
+            if (entidad.Alquileres == 0)
+                throw new Exception("La devolución debe estar asociada a un alquiler");
 
             if (entidad.NivelCombustible < 0 || entidad.NivelCombustible > 100)
                 throw new Exception("El nivel de combustible debe estar entre 0 y 100");

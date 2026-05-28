@@ -30,6 +30,13 @@ namespace Lib_Negocio_Autos.Implementaciones
         {
             AbrirConexion();
             var lista = iConexion!.DetallesFactura!.ToList();
+
+            foreach (var detalle in lista)
+            {
+                detalle.Factura = iConexion.Facturas!
+                    .FirstOrDefault(f => f.Id == detalle.Facturas);
+            }
+
             RegistrarAuditoria("Se realizó una consulta en DetallesFactura", "Consulta");
             return lista;
         }
@@ -160,8 +167,8 @@ namespace Lib_Negocio_Autos.Implementaciones
             if (string.IsNullOrEmpty(entidad.TipoFactura))
                 throw new ArgumentException("El tipo de factura no puede estar vacío");
 
-            if (entidad.Factura == null)
-                throw new ArgumentException("El detalle debe estar asociado a una factura");
+            if (entidad.Facturas == 0)
+                throw new ArgumentException("El detalle debe estar asociado a una factura"); ;
         }
     }
 }

@@ -73,6 +73,15 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label>Color</label>
+                    <div class="col-6">
+                        <input id="inColor"
+                               class="cts_forms form-control"
+                               asp-for="@Model.Auto!.Color" />
+                    </div>
+                </div>
+                
+                <div class="form-group">
                     <label>EstadoAuto</label>
                     <input type="checkbox" asp-for="@Model.Auto!.Estado" />
                 </div>
@@ -159,6 +168,7 @@
                         <th>Año</th>
                         <th>Modelo</th>
                         <th>Estado</th>
+                        <th>Color</th>
                         <th>Parqueadero</th>
                         <th>Dueños</th>
                         <th>Sucursal</th>
@@ -173,10 +183,11 @@
                             <td>@elemento.Año</td>
                             <td>@elemento.Modelo</td>
                             <td>@elemento.Estado</td>
-                            <td>@elemento.Parqueadero</td>
-                            <td>@elemento.Dueno</td>
-                            <td>@elemento.Sucursal</td>
-                            <td>@elemento.Inventario</td>
+                            <td>@elemento.Color</td>
+                            <td>@elemento.Parqueadero?.Nombre</td>
+                            <td>@elemento.Dueno?.Nombre</td>
+                            <td>@elemento.Sucursal?.Nombre</td>
+                            <td>@elemento.Inventario?.Cantidad</td>
 
 
                             <td>

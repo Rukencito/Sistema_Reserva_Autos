@@ -40,25 +40,25 @@
 
                 <div>
                     <div class="form-group">
-                        <label>Nombre</label>
+                        <label>Fecha Entrega</label>
                         <div class="col-6">
-                            <input id="inNombre"
+                            <input id="inFechaEntrega"
                                    class="cts_forms form-control"
                                    asp-for="@Model.Devolucion!.FechaEntrega" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Identificacion</label>
+                        <label>NivelCombustible</label>
                         <div class="col-6">
-                            <input id="inIdentificacion"
+                            <input id="inNivelCombustible"
                                    class="cts_forms form-control"
                                    asp-for="@Model.Devolucion!.NivelCombustible" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Telefono</label>
+                        <label>Observaciones</label>
                         <div class="col-6">
-                            <input id="inTelefono"
+                            <input id="inObservaciones"
                                    class="cts_forms form-control"
                                    asp-for="@Model.Devolucion!.Observaciones" />
                         </div>
@@ -121,7 +121,7 @@
                             <td>@elemento.FechaEntrega</td>
                             <td>@elemento.NivelCombustible</td>
                             <td>@elemento.Observaciones</td>
-                            <td>@elemento.Alquileres</td>
+                            <td>@elemento.Alquiler?.FechaInicio.ToString("dd/MM/yyyy")</td>
                             <td>
                                 <input type="submit"
                                        value="Modificar"

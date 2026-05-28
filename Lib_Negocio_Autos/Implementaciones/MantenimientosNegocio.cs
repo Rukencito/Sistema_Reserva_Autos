@@ -31,6 +31,15 @@ namespace Lib_Negocio_Autos.Implementaciones
         {
             AbrirConexion();
             var lista = iConexion!.Mantenimientos!.ToList();
+
+            foreach (var mantenimiento in lista)
+            {
+                mantenimiento.Auto = iConexion.Autos!
+                    .FirstOrDefault(a => a.Id == mantenimiento.Autos);
+                mantenimiento.Taller = iConexion.Talleres!
+                    .FirstOrDefault(t => t.Id == mantenimiento.Talleres);
+            }
+
             RegistrarAuditoria("Se realizó una consulta en Mantenimientos", "Consulta");
             return lista;
         }
@@ -40,16 +49,13 @@ namespace Lib_Negocio_Autos.Implementaciones
             AbrirConexion();
             ValidarDatos(entidad);
 
-            if (entidad.Auto!= null)
-            {
-                BloquearAuto(entidad.Auto.Id);
-            }
+            BloquearAuto(entidad.Autos!.Value);
 
             iConexion!.Mantenimientos!.Add(entidad);
             iConexion.SaveChanges();
 
             RegistrarAuditoria(
-                "Se registró mantenimiento tipo " + entidad.Tipo + " para el auto ID " + entidad.Auto!.Id,
+                "Se registró mantenimiento tipo " + entidad.Tipo + " para el auto ID " + entidad.Autos,
                 "Guardado");
 
             return entidad;
@@ -207,13 +213,14 @@ namespace Lib_Negocio_Autos.Implementaciones
 
         public void ValidarDatos(Mantenimientos entidad)
         {
+        {
             if (entidad == null)
                 throw new Exception("La información del mantenimiento es obligatoria");
 
-            if (entidad.Auto == null)
+            if (entidad.Autos == null || entidad.Autos == 0)
                 throw new Exception("El mantenimiento debe estar asociado a un auto");
 
-            if (entidad.Taller == null)
+            if (entidad.Talleres == null || entidad.Talleres == 0)
                 throw new Exception("El mantenimiento debe estar asociado a un taller");
 
             if (entidad.Fecha == DateTime.MinValue)
@@ -228,5 +235,6 @@ namespace Lib_Negocio_Autos.Implementaciones
             if (entidad.Costo <= 0)
                 throw new Exception("El costo del mantenimiento debe ser mayor a cero");
         }
+    }
     }
 }

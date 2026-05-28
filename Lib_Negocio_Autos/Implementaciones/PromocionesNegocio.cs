@@ -31,6 +31,13 @@ namespace Lib_Negocio_Autos.Implementaciones
 
             AbrirConexion();
             var lista = iConexion!.Promociones!.ToList();
+
+            foreach (var promocion in lista)
+            {
+                promocion.Venta = iConexion.Ventas!
+                    .FirstOrDefault(v => v.Id == promocion.Ventas);
+            }
+
             RegistrarAuditoria("Se realizó una consulta en Promociones", "Consulta");
             return lista;
         }

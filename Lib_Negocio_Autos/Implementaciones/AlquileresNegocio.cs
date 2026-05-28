@@ -30,6 +30,14 @@ namespace Lib_Negocio_Autos.Implementaciones
         {
             AbrirConexion();
             var lista = iConexion!.Alquileres!.ToList();
+
+            foreach (var alquiler in lista)
+            {
+                alquiler.Auto = iConexion.Autos!.FirstOrDefault(a => a.Id == alquiler.Autos);
+                alquiler.Cliente = iConexion.Clientes!.FirstOrDefault(c => c.Id == alquiler.Clientes);
+                alquiler.Empleado = iConexion.Empleados!.FirstOrDefault(e => e.Id == alquiler.Empleados);
+            }
+
             RegistrarAuditoria("Se realizó una consulta en Alquileres", "Consulta");
             return lista;
         }
@@ -39,7 +47,7 @@ namespace Lib_Negocio_Autos.Implementaciones
             AbrirConexion();
             ValidarDatos(entidad);
 
-            if (entidad.Auto != null && ExisteCruceDeFechas(entidad.Auto.Id, entidad.FechaInicio, entidad.FechaFin))
+            if (entidad.Autos != 0 && ExisteCruceDeFechas(entidad.Autos, entidad.FechaInicio, entidad.FechaFin))
                 throw new Exception("El auto ya tiene un alquiler activo en ese rango de fechas");
 
             iConexion!.Alquileres!.Add(entidad);

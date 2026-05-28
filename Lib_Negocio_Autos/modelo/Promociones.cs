@@ -13,7 +13,6 @@ namespace Lib_Negocio_Autos.modelo
 
         public int? Ventas { get; set; }
 
-        [JsonIgnore]
         [ForeignKey("Ventas")] public Ventas? Venta { get; set; }
 
 

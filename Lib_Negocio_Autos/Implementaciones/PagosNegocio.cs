@@ -30,6 +30,13 @@ namespace Lib_Negocio_Autos.Implementaciones
         {
             AbrirConexion();
             var lista = iConexion!.Pagos!.ToList();
+
+            foreach (var pago in lista)
+            {
+                pago.Factura = iConexion.Facturas!
+                    .FirstOrDefault(f => f.Id == pago.Facturas);
+            }
+
             RegistrarAuditoria("Se realizó una consulta en Pagos", "Consulta");
             return lista;
         }
@@ -39,17 +46,13 @@ namespace Lib_Negocio_Autos.Implementaciones
             AbrirConexion();
             ValidarDatos(entidad);
 
-            if (entidad.Factura!= null && entidad.Factura.Estado == true)
-                throw new Exception("La factura ya está marcada como pagada completamente");
-
             iConexion!.Pagos!.Add(entidad);
             iConexion.SaveChanges();
 
-            if (entidad.Factura != null)
-                ActualizarEstadoFactura(entidad.Factura.Id);
+            ActualizarEstadoFactura(entidad.Facturas!.Value);
 
             RegistrarAuditoria(
-                "Se registró un pago de " + entidad.Monto + " para la factura ID " + entidad.Factura!.Id,
+                "Se registró un pago de " + entidad.Monto + " para la factura ID " + entidad.Facturas,
                 "Guardado");
 
             return entidad;
@@ -82,8 +85,8 @@ namespace Lib_Negocio_Autos.Implementaciones
             iConexion!.Pagos!.Update(entidad);
             iConexion.SaveChanges();
 
-            if (entidad.Factura != null)
-                ActualizarEstadoFactura(entidad.Factura.Id);
+            if (entidad.Facturas != null && entidad.Facturas != 0)
+                ActualizarEstadoFactura(entidad.Facturas.Value);
 
             RegistrarAuditoria(
                 "Se modificó el pago con ID " + entidad.Id,
@@ -158,7 +161,7 @@ namespace Lib_Negocio_Autos.Implementaciones
             if (entidad == null)
                 throw new Exception("La información del pago es obligatoria");
 
-            if (entidad.Factura == null)
+            if (entidad.Facturas == null || entidad.Facturas == 0)
                 throw new Exception("El pago debe estar asociado a una factura");
 
             if (entidad.Monto <= 0)

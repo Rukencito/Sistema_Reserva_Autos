@@ -31,6 +31,13 @@ namespace Lib_Negocio_Autos.Implementaciones
         {
             AbrirConexion();
             var lista = iConexion!.Contratos!.ToList();
+
+            foreach (var contrato in lista)
+            {
+                contrato.Alquiler = iConexion.Alquileres!
+                    .FirstOrDefault(a => a.Id == contrato.Alquileres);
+            }
+
             RegistrarAuditoria("Se realizó una consulta en Contratos", "Consulta");
             return lista;
         }
@@ -146,7 +153,7 @@ namespace Lib_Negocio_Autos.Implementaciones
             if (entidad.FechaFin <= entidad.FechaInicio)
                 throw new Exception("La fecha de fin debe ser posterior a la fecha de inicio");
 
-            if (entidad.Alquiler == null)
+            if (entidad.Alquileres == 0)
                 throw new Exception("El contrato debe estar asociado a un alquiler");
         }
     }
