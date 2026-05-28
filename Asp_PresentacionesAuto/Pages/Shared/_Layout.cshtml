@@ -523,7 +523,7 @@
 <body>
 
     @{
-        // ✅ Claves correctas según el Login real
+        
         var sesionNombre = Context.Session.GetString("UsuarioNombre") ?? "";
         var sesionCorreo = Context.Session.GetString("Usuario") ?? "";
         var rolIdStr = Context.Session.GetString("RolId") ?? "0";
@@ -639,9 +639,10 @@
                 {
                     <div class="user-avatar">@inicial</div>
                     <span>@sesionNombre</span>
-                    <a asp-page="/Login"
-                       asp-page-handler="BtCerrar"
-                       class="btn-logout">Salir</a>
+                    <form method="POST" action="/Login?handler=BtCerrar" style="display:inline;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn-logout">Salir</button>
+                    </form>
                 }
                 else
                 {
