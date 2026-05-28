@@ -63,11 +63,40 @@
                     </div>
                     <div class="form-group">
                         <label>Estado de Pago</label>
-                        <div class="col-6">
-                            <input id="inEstadoPago"
-                                   class="cts_forms form-control"
-                                   asp-for="@Model.Venta!.EstadoPago" />
-                        </div>
+                        <input type="checkbox" asp-for="@Model.Venta!.EstadoPago" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Clientes</label>
+                    <div class="col-6">
+                        <select id="Clientes"
+                                class="cts_forms form-control"
+                                asp-for="@Model.Venta!.Clientes"
+                                asp-items="@(new SelectList(Model.ObtenerClientes(), "Id", "Nombre"))">
+                            <option value="">Seleccione un Cliente</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Empleado</label>
+                    <div class="col-6">
+                        <select id="Empleados"
+                                class="cts_forms form-control"
+                                asp-for="@Model.Venta!.Empleados"
+                                asp-items="@(new SelectList(Model.ObtenerEmpleados(), "Id", "Nombre"))">
+                            <option value="">Seleccione un Empleado</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Auto</label>
+                    <div class="col-6">
+                        <select id="Autos"
+                                class="cts_forms form-control"
+                                asp-for="@Model.Venta!.Autos"
+                                asp-items="@(new SelectList(Model.ObtenerAutos(), "Id", "Placa"))">
+                            <option value="">Seleccione un Auto</option>
+                        </select>
                     </div>
                 </div>
                 
@@ -109,6 +138,11 @@
                         <th>PrecioVenta</th>
                         <th>TipoPago</th>
                         <th>EstadoPago</th>
+                        <th>Clientes</th>
+                        <th>Empleados</th>
+                        <th>Autos</th>
+
+
                     </tr>
                 
                     @foreach (var elemento in Model.Lista)
@@ -118,6 +152,9 @@
                             <td>@elemento.PrecioVenta</td>
                             <td>@elemento.TipoPago</td>
                             <td>@elemento.EstadoPago</td>
+                            <td>@elemento.Clientes</td>
+                            <td>@elemento.Empleados</td>
+                            <td>@elemento.Autos</td>
                             <td>
                                 <input type="submit"
                                        value="Modificar"

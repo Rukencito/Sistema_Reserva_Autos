@@ -66,6 +66,42 @@
                     <label>EstadoAlquiler</label>
                     <input type="checkbox" asp-for="@Model.Alquiler!.EstadoAlquiler" />
                 </div>
+                                    <div class="form-group">
+                        <label>Auto</label>
+                        <div class="col-6">
+                            <select id="Autos"
+                                    class="cts_forms form-control"
+                                    asp-for="@Model.Alquiler!.Autos"
+                                    asp-items="@(new SelectList(Model.ObtenerAutos(), "Id", "Placa"))">
+                                <option value="">Seleccione el Auto</option>
+                            </select>
+                        </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Cliente</label>
+                    <div class="col-6">
+                        <select id="Clientes"
+                                class="cts_forms form-control"
+                                asp-for="@Model.Alquiler!.Clientes"
+                                asp-items="@(new SelectList(Model.ObtenerClientes(), "Id", "Nombre"))">
+                            <option value="">Seleccione el Cliente</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Empleados</label>
+                    <div class="col-6">
+                        <select id="Empleados"
+                                class="cts_forms form-control"
+                                asp-for="@Model.Alquiler!.Empleados"
+                                asp-items="@(new SelectList(Model.ObtenerEmpleados(), "Id", "Nombre"))">
+                            <option value="">Seleccione el Empleado</option>
+                        </select>
+                    </div>
+                </div>
+
             }
             
             @if (ViewData.ContainsKey("Mensaje"))
@@ -104,6 +140,9 @@
                         <th>FechaFin</th>
                         <th>PrecioAlquiler</th>
                         <th>EstadoAlquiler</th>
+                        <th>Autos</th>
+                        <th>Clientes</th>
+                        <th>Empleados</th>
                     </tr>
                 
                     @foreach (var elemento in Model.Lista)
@@ -113,6 +152,9 @@
                             <td>@elemento.FechaFin</td>
                             <td>@elemento.PrecioAlquiler</td>
                             <td>@elemento.EstadoAlquiler</td>
+                            <td>@elemento.Auto</td>
+                            <td>@elemento.Cliente</td>
+                            <td>@elemento.Empleado</td>
                             <td>
                                 <input type="submit"
                                        value="Modificar"

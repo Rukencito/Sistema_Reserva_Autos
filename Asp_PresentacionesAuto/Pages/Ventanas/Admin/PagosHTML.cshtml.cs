@@ -9,18 +9,25 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
     public class PagosHTMLModel : PageModel
     {
         private IPagosPresentacion? IPagosPresentacion;
+        private IFacturasPresentacion? IFacturasPresentacion;
         [BindProperty] public List<Pagos>? Lista { get; set; }
+        [BindProperty] public List<Facturas>? ListaFactura { get; set; }
         [BindProperty] public Pagos? Pago { get; set; }
         [BindProperty] public bool Borrando { get; set; }
 
         public PagosHTMLModel()
         {
            IPagosPresentacion = new  PagosPresentacion();
+            IFacturasPresentacion = new FacturasPresentacion();
         }
 
         public void OnGet()
         {
             OnPostBtRefrescar();
+        }
+        public List<Facturas> ObtenerFacturas()
+        {
+            return ListaFactura = IFacturasPresentacion!.Consultar();
         }
 
         public void OnPostBtRefrescar()

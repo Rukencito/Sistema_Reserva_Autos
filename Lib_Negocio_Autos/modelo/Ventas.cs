@@ -13,13 +13,15 @@ namespace Lib_Negocio_Autos.modelo
 
         public int? Clientes { get; set; }
         public int? Empleados { get; set; }
+        public int? Autos { get; set; }
 
         [JsonIgnore]
         [ForeignKey("Clientes")] public Clientes? Cliente { get; set; }
         [JsonIgnore]
         [ForeignKey("Empleados")] public Empleados? Empleado { get; set; }
+        [JsonIgnore]
+        [ForeignKey("Autos")] public Autos? Auto { get; set; }
 
-        [NotMapped] public List<Autos>? Auto { get; set; }
         [NotMapped] public List<Promociones>? Promocion { get; set; }
 
     }

@@ -9,18 +9,26 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
     public class SegurosHTMLModel : PageModel
     {
         private ISegurosPresentacion? ISegurosPresentacion;
+        private IAutosPresentacion? IAutosPresentacion;
         [BindProperty] public List<Seguros>? Lista { get; set; }
+        [BindProperty] public List<Autos>? ListaAuto { get; set; }
         [BindProperty] public Seguros? Seguro { get; set; }
         [BindProperty] public bool Borrando { get; set; }
 
         public SegurosHTMLModel()
         {
           ISegurosPresentacion = new  SegurosPresentacion();
+            IAutosPresentacion = new AutosPresentacion();
         }
 
         public void OnGet()
         {
             OnPostBtRefrescar();
+        }
+
+        public List<Autos> ObtenerAutos()
+        {
+            return ListaAuto = IAutosPresentacion!.Consultar();
         }
 
         public void OnPostBtRefrescar()

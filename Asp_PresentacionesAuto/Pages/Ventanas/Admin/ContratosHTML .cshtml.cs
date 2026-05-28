@@ -9,18 +9,25 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
     public class ContratosHTMLModel : PageModel
     {
         private IContratosPresentacion? IContratosPresentacion;
+        private IAlquileresPresentacion? IAlquileresPresentacion;
         [BindProperty] public List<Contratos>? Lista { get; set; }
+        [BindProperty] public List<Alquileres>? ListaAlquiler { get; set; }
         [BindProperty] public Contratos? Contrato { get; set; }
         [BindProperty] public bool Borrando { get; set; }
 
         public ContratosHTMLModel()
         {
             IContratosPresentacion = new ContratosPresentacion();
+            IAlquileresPresentacion = new AlquileresPresentacion();
         }
 
         public void OnGet()
         {
             OnPostBtRefrescar();
+        }
+        public List<Alquileres> ObtenerAlquileres()
+        {
+            return ListaAlquiler = IAlquileresPresentacion!.Consultar();
         }
 
         public void OnPostBtRefrescar()

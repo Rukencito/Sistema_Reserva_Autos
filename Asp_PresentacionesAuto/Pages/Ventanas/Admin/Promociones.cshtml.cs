@@ -9,18 +9,26 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
     public class PromocionesHTMLModel : PageModel
     {
         private IPromocionesPresentacion? IPromocionesPresentacion;
+        private IVentasPresentacion? IVentasPresentacion;
         [BindProperty] public List<Promociones>? Lista { get; set; }
+        [BindProperty] public List<Ventas>? ListaVenta { get; set; }
         [BindProperty] public Promociones? Promocion { get; set; }
         [BindProperty] public bool Borrando { get; set; }
 
         public PromocionesHTMLModel()
         {
           IPromocionesPresentacion = new  PromocionesPresentacion();
+            IVentasPresentacion = new VentasPresentacion();
         }
 
         public void OnGet()
         {
             OnPostBtRefrescar();
+        }
+
+        public List<Ventas> ObtenerVentas()
+        {
+            return ListaVenta = IVentasPresentacion!.Consultar();
         }
 
         public void OnPostBtRefrescar()

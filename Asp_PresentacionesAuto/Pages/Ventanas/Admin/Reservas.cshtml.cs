@@ -9,13 +9,19 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
     public class ReservasHTMLModel : PageModel
     {
         private IReservasPresentacion? IReservasPresentacion;
+        private IAutosPresentacion? IAutosPresentacion;
+        private IClientesPresentacion? IClientesPresentacion;
         [BindProperty] public List<Reservas>? Lista { get; set; }
+        [BindProperty] public List<Autos>? ListaAuto { get; set; }
+        [BindProperty] public List<Clientes>? ListaCliente { get; set; }
         [BindProperty] public Reservas? Reserva { get; set; }
         [BindProperty] public bool Borrando { get; set; }
 
         public ReservasHTMLModel()
         {
           IReservasPresentacion = new  ReservasPresentacion();
+            IAutosPresentacion = new AutosPresentacion();
+            IClientesPresentacion = new ClientesPresentacion();
         }
 
         public void OnGet()
@@ -23,6 +29,14 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             OnPostBtRefrescar();
         }
 
+        public List<Autos> ObtenerAutos()
+        {
+            return ListaAuto = IAutosPresentacion!.Consultar();
+        }
+        public List<Clientes> ObtenerClientes()
+        {
+            return ListaCliente = IClientesPresentacion!.Consultar();
+        }
         public void OnPostBtRefrescar()
         {
             try

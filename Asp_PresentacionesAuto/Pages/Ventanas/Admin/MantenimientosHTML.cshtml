@@ -70,6 +70,28 @@
                         </div>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label>Auto</label>
+                    <div class="col-6">
+                        <select id="Autos"
+                                class="cts_forms form-control"
+                                asp-for="@Model.Mantenimiento!.Autos"
+                                asp-items="@(new SelectList(Model.ObtenerAutos(), "Id", "Placa"))">
+                            <option value="">Seleccione un Auto</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Taller</label>
+                    <div class="col-6">
+                        <select id="Talleres"
+                                class="cts_forms form-control"
+                                asp-for="@Model.Mantenimiento!.Talleres"
+                                asp-items="@(new SelectList(Model.ObtenerTalleres(), "Id", "Nombre"))">
+                            <option value="">Seleccione un Taller</option>
+                        </select>
+                    </div>
+                </div>
                 
             }
             
@@ -109,6 +131,9 @@
                         <th>Tipo</th>
                         <th>Descripcion</th>
                         <th>Costo</th>
+                        <th>Autos</th>
+                        <th>Talleres</th>
+
                     </tr>
                 
                     @foreach (var elemento in Model.Lista)
@@ -118,6 +143,8 @@
                             <td>@elemento.Tipo</td>
                             <td>@elemento.Descripcion</td>
                             <td>@elemento.Costo</td>
+                            <td>@elemento.Autos</td>
+                            <td>@elemento.Talleres</td>
                             <td>
                                 <input type="submit"
                                        value="Modificar"
