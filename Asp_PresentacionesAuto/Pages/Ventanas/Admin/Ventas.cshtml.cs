@@ -9,14 +9,40 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
     public class VentasHTMLModel : PageModel
     {
         private IVentasPresentacion? IVentasPresentacion;
+        private IClientesPresentacion? IClientesPresentacion;
+        private IEmpleadosPresentacion? IEmpleadosPresentacion;
+        private IAutosPresentacion? IAutosPresentacion;
         [BindProperty] public List<Ventas>? Lista { get; set; }
+        [BindProperty] public List<Clientes>? ListaCliente { get; set; }
+        [BindProperty] public List<Empleados>? ListaEmpleado { get; set; }
+        [BindProperty] public List<Autos>? ListaAuto { get; set; }
         [BindProperty] public Ventas? Venta { get; set; }
         [BindProperty] public bool Borrando { get; set; }
 
         public VentasHTMLModel()
         {
           IVentasPresentacion = new  VentasPresentacion();
+            IClientesPresentacion = new ClientesPresentacion();
+            IEmpleadosPresentacion = new EmpleadosPresentacion();
+            IAutosPresentacion = new AutosPresentacion();
         }
+
+        public List<Clientes> ObtenerClientes()
+        {
+            return ListaCliente = IClientesPresentacion!.Consultar();
+        }
+
+        public List<Empleados> ObtenerEmpleados()
+        {
+            return ListaEmpleado = IEmpleadosPresentacion!.Consultar();
+        }
+
+        public List<Autos> ObtenerAutos()
+        {
+            return ListaAuto = IAutosPresentacion!.Consultar();
+        }
+
+
 
         public void OnGet()
         {
@@ -29,8 +55,14 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             {
                 if (IVentasPresentacion == null)
                     return;
+
                 Lista = IVentasPresentacion.Consultar();
+
                 Venta = null;
+
+                Borrando = false;
+
+                ModelState.Clear();
             }
             catch (Exception ex)
             {

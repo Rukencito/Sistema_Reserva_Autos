@@ -70,6 +70,17 @@
                         </div>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label>Cliente</label>
+                    <div class="col-6">
+                        <select id="Clientes"
+                                class="cts_forms form-control"
+                                asp-for="@Model.Resena!.Clientes"
+                                asp-items="@(new SelectList(Model.ObtenerClientes(), "Id", "Nombre"))">
+                            <option value="">Seleccione el Cliente</option>
+                        </select>
+                    </div>
+                </div>
                 
             }
             
@@ -109,6 +120,7 @@
                         <th>Fecha</th>
                         <th>Calificación</th>
                         <th>Tipo de Servicio</th>
+                        <th>Clientes</th>
                     </tr>
                 
                     @foreach (var elemento in Model.Lista)
@@ -118,6 +130,7 @@
                             <td>@elemento.Fecha</td>
                             <td>@elemento.Calificacion</td>
                             <td>@elemento.TipoServicio</td>
+                            <td>@elemento.Clientes</td>
                             <td>
                                 <input type="submit"
                                        value="Modificar"

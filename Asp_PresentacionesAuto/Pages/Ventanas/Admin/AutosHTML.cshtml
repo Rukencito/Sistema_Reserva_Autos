@@ -74,6 +74,50 @@
                     <label>EstadoAuto</label>
                     <input type="checkbox" asp-for="@Model.Auto!.Estado" />
                 </div>
+                <div class="form-group">
+                    <label>Parqueadero</label>
+                    <div class="col-6">
+                        <select id="Parqueaderos"
+                                class="cts_forms form-control"
+                                asp-for="@Model.Auto!.Parqueaderos"
+                                asp-items="@(new SelectList(Model.ObtenerParqueaderos(), "Id", "Nombre"))">
+                            <option value="">Seleccione un Parqueadero</option>
+                        </select>
+                    </div>
+                </div>
+                     <div class="form-group">
+                        <label>Dueño</label>
+                        <div class="col-6">
+                            <select id="Duenos"
+                                    class="cts_forms form-control"
+                                    asp-for="@Model.Auto!.Duenos"
+                                    asp-items="@(new SelectList(Model.ObtenerDuenos(), "Id", "Nombre"))">
+                                <option value="">Seleccione un Dueño</option>
+                            </select>
+                        </div>
+                    </div>
+                <div class="form-group">
+                    <label>Sucursal</label>
+                    <div class="col-6">
+                        <select id="Sucursales"
+                                class="cts_forms form-control"
+                                asp-for="@Model.Auto!.Sucursales"
+                                asp-items="@(new SelectList(Model.ObtenerSucursales(), "Id", "Nombre"))">
+                            <option value="">Seleccione una Sucursal</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Inventario</label>
+                    <div class="col-6">
+                        <select id="Inventarios"
+                                class="cts_forms form-control"
+                                asp-for="@Model.Auto!.Inventarios"
+                                asp-items="@(new SelectList(Model.ObtenerInventarios(), "Id", "Cantidad"))">
+                            <option value="">Seleccione un Inventario</option>
+                        </select>
+                    </div>
+                </div>
             }
             
             @if (ViewData.ContainsKey("Mensaje"))
@@ -113,6 +157,10 @@
                         <th>Año</th>
                         <th>Modelo</th>
                         <th>Estado</th>
+                        <th>Parqueadero</th>
+                        <th>Dueños</th>
+                        <th>Sucursal</th>
+                        <th>Inventario</th>
                     </tr>
                 
                     @foreach (var elemento in Model.Lista)
@@ -123,6 +171,12 @@
                             <td>@elemento.Año</td>
                             <td>@elemento.Modelo</td>
                             <td>@elemento.Estado</td>
+                            <td>@elemento.Parqueadero</td>
+                            <td>@elemento.Dueno</td>
+                            <td>@elemento.Sucursal</td>
+                            <td>@elemento.Inventario</td>
+
+
                             <td>
                                 <input type="submit"
                                        value="Modificar"

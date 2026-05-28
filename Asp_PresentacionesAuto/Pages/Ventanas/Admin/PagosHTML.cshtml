@@ -70,6 +70,17 @@
                         </div>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label>Facturas</label>
+                    <div class="col-6">
+                        <select id="Ventas"
+                                class="cts_forms form-control"
+                                asp-for="@Model.Pago!.Factura"
+                                asp-items="@(new SelectList(Model.ObtenerFacturas(), "Id", "Total"))">
+                            <option value="">Seleccione la Factura</option>
+                        </select>
+                    </div>
+                </div>
                 
             }
             
@@ -109,6 +120,7 @@
                         <th>Estado de Pago</th>
                         <th>Metodo de Pago</th>
                         <th>Fecha de Pago</th>
+                        <th>Factura</th>
                     </tr>
                 
                     @foreach (var elemento in Model.Lista)
@@ -118,6 +130,7 @@
                             <td>@elemento.EstadoPago</td>
                             <td>@elemento.MetodoPago</td>
                             <td>@elemento.FechaPago</td>
+                            <td>@elemento.Factura</td>
                             <td>
                                 <input type="submit"
                                        value="Modificar"

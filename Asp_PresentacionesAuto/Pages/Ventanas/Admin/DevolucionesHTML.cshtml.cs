@@ -9,18 +9,26 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
     public class DevolucionesHTMLModel : PageModel
     {
         private IDevolucionesPresentacion? IDevolucionesPresentacion;
+        private IAlquileresPresentacion? IAlquileresPresentacion;
         [BindProperty] public List<Devoluciones>? Lista { get; set; }
+        [BindProperty] public List<Alquileres>? ListaAlquiler { get; set; }
         [BindProperty] public Devoluciones? Devolucion { get; set; }
         [BindProperty] public bool Borrando { get; set; }
 
         public DevolucionesHTMLModel()
         {
             IDevolucionesPresentacion = new DevolucionesPresentacion();
+            IAlquileresPresentacion = new AlquileresPresentacion();
         }
 
         public void OnGet()
         {
             OnPostBtRefrescar();
+        }
+
+        public List<Alquileres> ObtenerAlquileres()
+        {
+            return ListaAlquiler = IAlquileresPresentacion!.Consultar();
         }
 
         public void OnPostBtRefrescar()

@@ -9,18 +9,49 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
     public class AutosHTMLModel : PageModel
     {
         private IAutosPresentacion? IAutosPresentacion;
+        private IParqueaderosPresentacion? IParqueaderosPresentacion;
+        private IDuenosPresentacion? IDuenosPresentacion;
+        private ISucursalesPresentacion? ISucursalesPresentacion;
+        private IInventariosPresentacion? IInventariosPresentacion;
         [BindProperty] public List<Autos>? Lista { get; set; }
+        [BindProperty] public List<Parqueaderos>? ListaParqueadero { get; set; }
+        [BindProperty] public List<Duenos>? ListaDueno { get; set; }
+        [BindProperty] public List<Sucursales>? ListaSucursal { get; set; }
+        [BindProperty] public List<Inventarios>? ListaInventario { get; set; }
         [BindProperty] public Autos? Auto { get; set; }
         [BindProperty] public bool Borrando { get; set; }
 
         public AutosHTMLModel()
         {
             IAutosPresentacion = new AutosPresentacion();
+            IParqueaderosPresentacion = new ParqueaderosPresentacion();
+            IDuenosPresentacion = new DuenosPresentacion();
+            ISucursalesPresentacion = new SucursalesPresentacion();
+            IInventariosPresentacion = new InventariosPresentacion();
         }
 
         public void OnGet()
         {
             OnPostBtRefrescar();
+        }
+        public List<Parqueaderos> ObtenerParqueaderos()
+        {
+            return ListaParqueadero = IParqueaderosPresentacion!.Consultar();
+        }
+
+        public List<Duenos> ObtenerDuenos()
+        {
+            return ListaDueno = IDuenosPresentacion!.Consultar();
+        }
+
+        public List<Sucursales> ObtenerSucursales()
+        {
+            return ListaSucursal = ISucursalesPresentacion!.Consultar();
+        }
+
+        public List<Inventarios> ObtenerInventarios()
+        {
+            return ListaInventario = IInventariosPresentacion!.Consultar();
         }
 
         public void OnPostBtRefrescar()
@@ -29,8 +60,14 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             {
                 if (IAutosPresentacion == null)
                     return;
+
                 Lista = IAutosPresentacion.Consultar();
+
                 Auto = null;
+
+                Borrando = false;
+
+                ModelState.Clear();
             }
             catch (Exception ex)
             {
