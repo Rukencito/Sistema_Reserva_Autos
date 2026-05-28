@@ -1,10 +1,185 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Autos Disponibles";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    .autos-title {
+        font-family: 'Syne',sans-serif;
+        font-size: 2.5rem;
+        font-weight: 800;
+        letter-spacing: 2px;
+        margin-bottom: 2rem;
+        color: var(--ink);
+    }
+
+    .autos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+        gap: 1.5rem;
+    }
+
+    .auto-card {
+        background: var(--cream);
+        border: 1px solid var(--line);
+        overflow: hidden;
+        transition: .2s;
+    }
+
+        .auto-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--rust);
+        }
+
+    .auto-img {
+        width: 100%;
+        height: 210px;
+        object-fit: cover;
+    }
+
+    .auto-body {
+        padding: 1.2rem;
+    }
+
+    .auto-name {
+        font-family: 'Syne',sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--ink);
+    }
+
+    .auto-info {
+        color: var(--slate);
+        font-size: .85rem;
+        margin: .7rem 0;
+        line-height: 1.6;
+    }
+
+    .auto-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1rem;
+    }
+
+    .precio {
+        color: var(--rust);
+        font-weight: 700;
+        font-size: 1rem;
+    }
+
+    .estado {
+        background: var(--gold);
+        color: var(--ink);
+        padding: .35rem .7rem;
+        font-size: .7rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <h1 class="autos-title">AUTOS DE NUESTRO CATÁLOGO</h1>
+    <p style="
+        color: var(--slate);
+        font-size: 1rem;
+        margin-top: -1rem;
+        margin-bottom: 2.5rem;
+        letter-spacing: .5px;
+        ">
+        Regístrate para poder reservar alguno de nuestros autos disponibles.
+    </p>
+
+    <div class="autos-grid">
+
+        <div class="auto-card">
+            <img class="auto-img" src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=1200&auto=format&fit=crop" />
+            <div class="auto-body">
+                <div class="auto-name">Chevrolet Camaro</div>
+                <div class="auto-info">
+                    Automático • Gasolina • 5 puestos • Modelo 2024
+                </div>
+
+                <div class="auto-footer">
+                    <span class="precio">$320.000/día</span>
+                    <span class="estado"> NO DISPONIBLE</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="auto-card">
+            <img class="auto-img" src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1200&auto=format&fit=crop" />
+            <div class="auto-body">
+                <div class="auto-name">BMW M4</div>
+                <div class="auto-info">
+                    Automático • Turbo • Deportivo • Modelo 2025
+                </div>
+
+                <div class="auto-footer">
+                    <span class="precio">$450.000/día</span>
+                    <span class="estado">DISPONIBLE</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="auto-card">
+            <img class="auto-img" src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1200&auto=format&fit=crop" />
+            <div class="auto-body">
+                <div class="auto-name">Mercedes Benz C63</div>
+                <div class="auto-info">
+                    Automático • Full equipo • 4 puertas • Modelo 2023
+                </div>
+
+                <div class="auto-footer">
+                    <span class="precio">$390.000/día</span>
+                    <span class="estado">DISPONIBLE</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="auto-card">
+            <img class="auto-img" src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?q=80&w=1200&auto=format&fit=crop" />
+            <div class="auto-body">
+                <div class="auto-name">Audi R8</div>
+                <div class="auto-info">
+                    Automático • Deportivo • Premium • Modelo 2024
+                </div>
+
+                <div class="auto-footer">
+                    <span class="precio">$520.000/día</span>
+                    <span class="estado">RESERVA ANTICIPADA</span>
+                </div>
+            </div>
+        </div>
+        <div class="auto-card">
+            <img class="auto-img" src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?q=80&w=1200&auto=format&fit=crop" />
+            <div class="auto-body">
+                <div class="auto-name">Toyota Corolla</div>
+                <div class="auto-info">
+                    Automático • Gasolina • 5 puestos • Modelo 2025
+                </div>
+
+                <div class="auto-footer">
+                    <span class="precio">$160.000/día</span>
+                    <span class="estado">DISPONIBLE CON ANTICIPO</span>
+                </div>
+            </div>
+        </div>
+        <div class="auto-card">
+            <img class="auto-img" src="https://images.unsplash.com/photo-1553440569-bcc63803a83d?q=80&w=1200&auto=format&fit=crop" />
+            <div class="auto-body">
+                <div class="auto-name">Renault Duster</div>
+                <div class="auto-info">
+                    Manual • Gasolina • 5 puestos • Modelo 2026
+                </div>
+
+                <div class="auto-footer">
+                    <span class="precio">$210.000/día</span>
+                    <span class="estado">NO DISPONIBLE</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
