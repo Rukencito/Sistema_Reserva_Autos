@@ -1,0 +1,282 @@
+﻿@*Pages/Ventanas/Clientes/IndexClientes_Razor.cshtml*@
+@page
+@model Asp_PresentacionesAuto.Pages.Ventanas.Cliente.IndexClientesModel;
+@{
+    ViewData["Title"] = "Mi Panel";
+    var nombre = HttpContext.Session.GetString("UsuarioNombre") ?? "Cliente";
+}
+}
+
+<style>
+    .cli-hero {
+        padding: 2.5rem 0 2rem;
+        border-bottom: 2px solid var(--ink);
+        margin-bottom: 2.5rem;
+    }
+
+    .cli-hero-label {
+        font-size: 0.65rem;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        color: var(--mist);
+        margin-bottom: 0.5rem;
+    }
+
+    .cli-hero-title {
+        font-family: 'Syne', sans-serif;
+        font-weight: 800;
+        font-size: clamp(2rem, 5vw, 3.2rem);
+        line-height: 1;
+        color: var(--ink);
+    }
+
+        .cli-hero-title em {
+            font-style: normal;
+            color: var(--rust);
+        }
+
+    .cli-hero-sub {
+        font-size: 0.75rem;
+        color: var(--mist);
+        margin-top: 0.6rem;
+        letter-spacing: 1px;
+    }
+
+    /* Tarjetas de acceso rápido */
+    .cli-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1px;
+        background: var(--line);
+        border: 1px solid var(--line);
+        margin-bottom: 2.5rem;
+    }
+
+    .cli-card {
+        background: var(--paper);
+        padding: 1.6rem 1.4rem;
+        text-decoration: none;
+        color: var(--ink);
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        transition: background 0.15s;
+        position: relative;
+    }
+
+        .cli-card::after {
+            content: '→';
+            position: absolute;
+            bottom: 1.2rem;
+            right: 1.4rem;
+            font-size: 0.9rem;
+            color: var(--mist);
+            transition: color 0.2s, transform 0.2s;
+        }
+
+        .cli-card:hover {
+            background: var(--cream);
+            color: var(--ink);
+            text-decoration: none;
+        }
+
+            .cli-card:hover::after {
+                color: var(--rust);
+                transform: translateX(3px);
+            }
+
+    .cli-card-icon {
+        font-size: 1.6rem;
+        line-height: 1;
+    }
+
+    .cli-card-title {
+        font-family: 'Syne', sans-serif;
+        font-weight: 700;
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    .cli-card-desc {
+        font-size: 0.7rem;
+        color: var(--mist);
+        line-height: 1.5;
+    }
+
+    .cli-card-tag {
+        display: inline-block;
+        font-size: 0.58rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding: 0.15rem 0.5rem;
+        border: 1px solid var(--line);
+        color: var(--mist);
+        font-family: 'Syne', sans-serif;
+        font-weight: 700;
+    }
+
+    /* Sección de estado rápido */
+    .cli-status-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .cli-stat {
+        border: 1px solid var(--line);
+        border-top: 3px solid var(--rust);
+        padding: 1rem 1.2rem;
+        background: var(--paper);
+    }
+
+    .cli-stat-label {
+        font-size: 0.6rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--mist);
+        margin-bottom: 0.4rem;
+    }
+
+    .cli-stat-value {
+        font-family: 'Syne', sans-serif;
+        font-weight: 800;
+        font-size: 1.8rem;
+        color: var(--ink);
+        line-height: 1;
+    }
+
+    .cli-stat-sub {
+        font-size: 0.65rem;
+        color: var(--mist);
+        margin-top: 0.3rem;
+    }
+
+    /* Sección informativa */
+    .cli-info-strip {
+        background: var(--ink);
+        color: var(--paper);
+        padding: 1.2rem 1.8rem;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+    }
+
+        .cli-info-strip .strip-icon {
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+
+        .cli-info-strip .strip-text {
+            font-size: 0.72rem;
+            color: rgba(245,243,238,0.75);
+            line-height: 1.6;
+        }
+
+            .cli-info-strip .strip-text strong {
+                color: var(--paper);
+                font-family: 'Syne', sans-serif;
+                font-weight: 700;
+                letter-spacing: 1px;
+            }
+
+    /* Label de sección */
+    .cli-section-label {
+        font-size: 0.65rem;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        color: var(--mist);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+        .cli-section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--line);
+        }
+</style>
+
+<!-- HERO -->
+<div class="cli-hero">
+    <div class="cli-hero-label">Bienvenido de vuelta</div>
+    <h1 class="cli-hero-title">Hola, <em>@nombre</em></h1>
+    <p class="cli-hero-sub">Gestiona tus reservas, alquileres y pagos desde aquí.</p>
+</div>
+
+<!-- STRIP INFORMATIVO -->
+<div class="cli-info-strip">
+    <div class="strip-icon">💡</div>
+    <div class="strip-text">
+        <strong>Consejo</strong> — Para reservar un auto ve a la sección
+        <strong>Reservas</strong> y elige la fecha que necesitas.
+        Si tienes un alquiler activo puedes ver su estado en <strong>Alquileres</strong>.
+    </div>
+</div>
+
+<!-- ACCESO RÁPIDO -->
+<div class="cli-section-label">Acceso rápido</div>
+<div class="cli-grid">
+
+    <a asp-page="/Ventanas/Cliente/MisAlquileresHTML" class="cli-card">
+        <div class="cli-card-icon">🔄</div>
+        <div class="cli-card-title">Alquileres</div>
+        <div class="cli-card-desc">Revisa tus alquileres activos, historial y fechas de devolución.</div>
+        <span class="cli-card-tag">Activos</span>
+    </a>
+
+    <a asp-page="/Ventanas/Cliente/MisReservasHTML" class="cli-card">
+        <div class="cli-card-icon">📅</div>
+        <div class="cli-card-title">Reservas</div>
+        <div class="cli-card-desc">Crea nuevas reservas y consulta el estado de las existentes.</div>
+        <span class="cli-card-tag">Pendientes</span>
+    </a>
+
+    <a asp-page="/Ventanas/Cliente/MisContratosHTML" class="cli-card">
+        <div class="cli-card-icon">📝</div>
+        <div class="cli-card-title">Contratos</div>
+        <div class="cli-card-desc">Accede a los contratos firmados asociados a tus alquileres.</div>
+        <span class="cli-card-tag">Documentos</span>
+    </a>
+
+    <a asp-page="/Ventanas/Cliente/MisFacturasHTML" class="cli-card">
+        <div class="cli-card-icon">🧾</div>
+        <div class="cli-card-title">Facturas</div>
+        <div class="cli-card-desc">Consulta y descarga las facturas generadas por tus servicios.</div>
+        <span class="cli-card-tag">Finanzas</span>
+    </a>
+
+    <a asp-page="/Ventanas/Cliente/MisDetallesFacturaHTML" class="cli-card">
+        <div class="cli-card-icon">📑</div>
+        <div class="cli-card-title">Detalles Factura</div>
+        <div class="cli-card-desc">Ve el desglose completo de cada ítem en tus facturas.</div>
+        <span class="cli-card-tag">Desglose</span>
+    </a>
+
+    <a asp-page="/Ventanas/Cliente/MisPagosHTML" class="cli-card">
+        <div class="cli-card-icon">💳</div>
+        <div class="cli-card-title">Pagos</div>
+        <div class="cli-card-desc">Historial de pagos realizados y saldos pendientes.</div>
+        <span class="cli-card-tag">Historial</span>
+    </a>
+
+    <a asp-page="/Ventanas/Cliente/MisMantenimientosHTML" class="cli-card">
+        <div class="cli-card-icon">🔧</div>
+        <div class="cli-card-title">Mantenimientos</div>
+        <div class="cli-card-desc">Consulta los mantenimientos realizados a los autos que alquilaste.</div>
+        <span class="cli-card-tag">Historial</span>
+    </a>
+
+    <a asp-page="/Ventanas/Cliente/MisResenasHTML" class="cli-card">
+        <div class="cli-card-icon">⭐</div>
+        <div class="cli-card-title">Reseñas</div>
+        <div class="cli-card-desc">Califica los servicios recibidos y deja tu opinión.</div>
+        <span class="cli-card-tag">Opiniones</span>
+    </a>
+
+</div>

@@ -1,0 +1,294 @@
+﻿@*Pages/Ventanas/Empleado/IndexEmpleados_Razor.cshtml*@
+@page
+@model Asp_PresentacionesAuto.Pages.Ventanas.Empleado.IndexEmpleadosModel
+@{
+    ViewData["Title"] = "Panel Empleado";
+    var nombre = HttpContext.Session.GetString("UsuarioNombre") ?? "Empleado";
+}
+
+<style>
+    .emp-hero {
+        padding: 2.5rem 0 2rem;
+        border-bottom: 2px solid var(--ink);
+        margin-bottom: 2.5rem;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .emp-hero-label {
+        font-size: 0.65rem;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        color: var(--mist);
+        margin-bottom: 0.5rem;
+    }
+
+    .emp-hero-title {
+        font-family: 'Syne', sans-serif;
+        font-weight: 800;
+        font-size: clamp(2rem, 5vw, 3.2rem);
+        line-height: 1;
+        color: var(--ink);
+    }
+
+        .emp-hero-title em {
+            font-style: normal;
+            color: var(--rust);
+        }
+
+    .emp-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: var(--ink);
+        color: var(--paper);
+        font-family: 'Syne', sans-serif;
+        font-weight: 700;
+        font-size: 0.68rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+    }
+
+    /* Strip informativo */
+    .emp-strip {
+        background: var(--cream);
+        border-left: 3px solid var(--rust);
+        padding: 1rem 1.5rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .emp-strip-icon {
+        font-size: 1.3rem;
+        flex-shrink: 0;
+    }
+
+    .emp-strip-text {
+        font-size: 0.72rem;
+        color: var(--slate);
+        line-height: 1.6;
+    }
+
+        .emp-strip-text strong {
+            color: var(--ink);
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+        }
+
+    /* Label de sección */
+    .emp-section-label {
+        font-size: 0.65rem;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        color: var(--mist);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+        .emp-section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--line);
+        }
+
+    /* Grid principal — 3 columnas */
+    .emp-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1px;
+        background: var(--line);
+        border: 1px solid var(--line);
+        margin-bottom: 2.5rem;
+    }
+
+    .emp-card {
+        background: var(--paper);
+        padding: 1.8rem 1.5rem 2rem;
+        text-decoration: none;
+        color: var(--ink);
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        transition: background 0.15s;
+        position: relative;
+    }
+
+        .emp-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--card-top, var(--rust));
+            transform: scaleX(0);
+            transition: transform 0.25s;
+            transform-origin: left;
+        }
+
+        .emp-card:hover {
+            background: var(--cream);
+            color: var(--ink);
+            text-decoration: none;
+        }
+
+            .emp-card:hover::before {
+                transform: scaleX(1);
+            }
+
+        .emp-card::after {
+            content: '→';
+            position: absolute;
+            bottom: 1.2rem;
+            right: 1.4rem;
+            font-size: 0.9rem;
+            color: var(--mist);
+            transition: color 0.2s, transform 0.2s;
+        }
+
+        .emp-card:hover::after {
+            color: var(--rust);
+            transform: translateX(3px);
+        }
+
+    .emp-card-icon {
+        font-size: 2rem;
+        line-height: 1;
+    }
+
+    .emp-card-title {
+        font-family: 'Syne', sans-serif;
+        font-weight: 700;
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    .emp-card-desc {
+        font-size: 0.72rem;
+        color: var(--mist);
+        line-height: 1.6;
+        padding-right: 1.5rem;
+    }
+
+    .emp-card-tag {
+        display: inline-block;
+        font-size: 0.58rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding: 0.15rem 0.5rem;
+        font-family: 'Syne', sans-serif;
+        font-weight: 700;
+        border: 1px solid var(--rust);
+        color: var(--rust);
+        width: fit-content;
+    }
+
+    /* Tarjeta destacada */
+    .emp-card-featured {
+        --card-top: var(--ink);
+    }
+
+        .emp-card-featured .emp-card-tag {
+            border-color: var(--ink);
+            color: var(--ink);
+        }
+
+        .emp-card-featured:hover::after {
+            color: var(--ink);
+        }
+</style>
+
+<!-- HERO -->
+<div class="emp-hero">
+    <div>
+        <div class="emp-hero-label">Panel de trabajo</div>
+        <h1 class="emp-hero-title">Hola, <em>@nombre</em></h1>
+    </div>
+    <div class="emp-hero-badge">
+        <span>👷</span>
+        <span>Empleado</span>
+    </div>
+</div>
+
+<!-- STRIP -->
+<div class="emp-strip">
+    <div class="emp-strip-icon">📋</div>
+    <div class="emp-strip-text">
+        Desde aquí puedes gestionar los <strong>alquileres</strong> y
+        <strong>reservas</strong> de los clientes, registrar
+        <strong>devoluciones</strong>, hacer seguimiento de
+        <strong>mantenimientos</strong> y atender los
+        <strong>contratos</strong> activos.
+    </div>
+</div>
+
+<!-- ACCESO RÁPIDO -->
+<div class="emp-section-label">Mis secciones</div>
+
+<div class="emp-grid">
+
+    <a asp-page="/Ventanas/Empleado/MisAlquileresHTML" class="emp-card emp-card-featured">
+        <div class="emp-card-icon">🔄</div>
+        <div class="emp-card-title">Alquileres</div>
+        <div class="emp-card-desc">
+            Gestiona los alquileres activos, registra nuevos y hace seguimiento de fechas.
+        </div>
+        <span class="emp-card-tag">Principal</span>
+    </a>
+
+    <a asp-page="/Ventanas/Empleado/MisClientesHTML" class="emp-card">
+        <div class="emp-card-icon">🙋</div>
+        <div class="emp-card-title">Clientes</div>
+        <div class="emp-card-desc">
+            Consulta la información de los clientes y verifica licencias y estado de pago.
+        </div>
+        <span class="emp-card-tag">Consulta</span>
+    </a>
+
+    <a asp-page="/Ventanas/Empleado/MisReservasHTML" class="emp-card">
+        <div class="emp-card-icon">📅</div>
+        <div class="emp-card-title">Reservas</div>
+        <div class="emp-card-desc">
+            Confirma, cancela o gestiona las reservas pendientes de los clientes.
+        </div>
+        <span class="emp-card-tag">Pendientes</span>
+    </a>
+
+    <a asp-page="/Ventanas/Empleado/MisContratosHTML" class="emp-card">
+        <div class="emp-card-icon">📝</div>
+        <div class="emp-card-title">Contratos</div>
+        <div class="emp-card-desc">
+            Accede a los contratos asociados a los alquileres que gestionas.
+        </div>
+        <span class="emp-card-tag">Documentos</span>
+    </a>
+
+    <a asp-page="/Ventanas/Empleado/MisDevolucionesHTML" class="emp-card">
+        <div class="emp-card-icon">↩️</div>
+        <div class="emp-card-title">Devoluciones</div>
+        <div class="emp-card-desc">
+            Registra la entrega del vehículo, nivel de combustible y kilometraje.
+        </div>
+        <span class="emp-card-tag">Registro</span>
+    </a>
+
+    <a asp-page="/Ventanas/Empleado/MisMantenimientosHTML" class="emp-card">
+        <div class="emp-card-icon">🔧</div>
+        <div class="emp-card-title">Mantenimientos</div>
+        <div class="emp-card-desc">
+            Consulta y registra los mantenimientos de los vehículos en los talleres.
+        </div>
+        <span class="emp-card-tag">Historial</span>
+    </a>
+
+</div>

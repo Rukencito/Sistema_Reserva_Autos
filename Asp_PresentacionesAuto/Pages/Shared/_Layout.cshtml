@@ -1,9 +1,4 @@
-﻿@*
-    Archivo: Pages/Shared/_Layout.cshtml
-    Estilo: Editorial — crema / tinta / óxido
-*@
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -11,17 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] — Sistema Autos</title>
 
-    <!-- Bootstrap (utilidades) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
 
     <style>
-
-            /* ═══════════════════════════════════════════
-                       TOKENS
-                    ═══════════════════════════════════════════ */
             :root {
                 --paper: #f5f3ee;
                 --cream: #ede9e0;
@@ -36,9 +24,6 @@
                 --topbar-h: 56px;
             }
 
-            /* ═══════════════════════════════════════════
-                       RESET BASE
-                    ═══════════════════════════════════════════ */
             *, *::before, *::after {
                 box-sizing: border-box;
                 margin: 0;
@@ -54,9 +39,7 @@
                 overflow-x: hidden;
             }
 
-            /* ═══════════════════════════════════════════
-                       SIDEBAR
-                    ═══════════════════════════════════════════ */
+            /* ── SIDEBAR ── */
             .layout-sidebar {
                 position: fixed;
                 top: 0;
@@ -69,7 +52,6 @@
                 z-index: 100;
             }
 
-            /* — Marca — */
             .sidebar-brand {
                 padding: 1.6rem 1.4rem 1.4rem;
                 border-bottom: 1px solid rgba(255,255,255,0.08);
@@ -109,7 +91,6 @@
                 margin-top: 0.2rem;
             }
 
-            /* — Sección de menú — */
             .sidebar-section {
                 padding: 1.2rem 0 0;
             }
@@ -123,7 +104,6 @@
                 display: block;
             }
 
-            /* — Ítem de menú — */
             .sidebar-nav {
                 list-style: none;
             }
@@ -160,28 +140,24 @@
                         opacity: 1;
                     }
 
-            /* — Divisor — */
             .sidebar-divider {
                 margin: 0.8rem 1.4rem;
                 border: none;
                 border-top: 1px solid rgba(255,255,255,0.07);
             }
 
-            /* — Botón Admin (al fondo) — */
-            .sidebar-admin {
+            .sidebar-bottom {
                 margin-top: auto;
                 padding: 1rem 1.2rem 1.4rem;
                 border-top: 1px solid rgba(255,255,255,0.08);
             }
 
-            .btn-admin {
+            .btn-bottom {
                 display: flex;
                 align-items: center;
                 gap: 0.7rem;
                 width: 100%;
                 padding: 0.75rem 1rem;
-                background: var(--rust);
-                color: var(--paper);
                 border: none;
                 font-family: 'Syne', sans-serif;
                 font-weight: 700;
@@ -193,26 +169,41 @@
                 transition: background 0.2s, padding-left 0.2s;
             }
 
-                .btn-admin:hover {
+            .btn-bottom-login {
+                background: var(--gold);
+                color: var(--ink);
+            }
+
+                .btn-bottom-login:hover {
+                    background: #a87820;
+                    color: var(--ink);
+                    text-decoration: none;
+                    padding-left: 1.3rem;
+                }
+
+            .btn-bottom-admin {
+                background: var(--rust);
+                color: var(--paper);
+            }
+
+                .btn-bottom-admin:hover {
                     background: var(--rust-dim);
                     color: var(--paper);
                     text-decoration: none;
                     padding-left: 1.3rem;
                 }
 
-                .btn-admin .admin-arrow {
-                    margin-left: auto;
-                    font-size: 0.8rem;
-                    transition: transform 0.2s;
-                }
+            .btn-bottom .bottom-arrow {
+                margin-left: auto;
+                font-size: 0.8rem;
+                transition: transform 0.2s;
+            }
 
-                .btn-admin:hover .admin-arrow {
-                    transform: translateX(3px);
-                }
+            .btn-bottom:hover .bottom-arrow {
+                transform: translateX(3px);
+            }
 
-            /* ═══════════════════════════════════════════
-                       TOPBAR
-                    ═══════════════════════════════════════════ */
+            /* ── TOPBAR ── */
             .layout-topbar {
                 position: fixed;
                 top: 0;
@@ -276,25 +267,37 @@
                 font-weight: 700;
             }
 
-            /* ═══════════════════════════════════════════
-                       CONTENIDO PRINCIPAL
-                    ═══════════════════════════════════════════ */
+            .btn-logout {
+                font-size: 0.65rem;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                color: var(--rust);
+                border: 1px solid var(--rust);
+                padding: 0.25rem 0.7rem;
+                background: transparent;
+                font-family: 'Syne', sans-serif;
+                font-weight: 700;
+                text-decoration: none;
+                transition: background 0.2s, color 0.2s;
+            }
+
+                .btn-logout:hover {
+                    background: var(--rust);
+                    color: var(--paper);
+                }
+
+            /* ── MAIN ── */
             .layout-main {
                 margin-left: var(--sidebar-w);
                 padding-top: var(--topbar-h);
                 min-height: 100vh;
-                background: var(--paper);
             }
 
             .layout-body {
                 padding: 2rem 2.5rem 3rem;
             }
 
-            /* ═══════════════════════════════════════════
-                       HELPERS GLOBALES
-                    ═══════════════════════════════════════════ */
-
-            /* Tablas */
+            /* ── TABLA ── */
             .table {
                 color: var(--ink);
                 border-color: var(--line);
@@ -327,7 +330,7 @@
                     vertical-align: middle;
                 }
 
-            /* Botones */
+            /* ── BOTONES ── */
             .btn-primary {
                 background: var(--rust);
                 border: none;
@@ -385,7 +388,7 @@
                     color: var(--paper);
                 }
 
-            /* Inputs */
+            /* ── INPUTS ── */
             .form-control, .form-select {
                 border-radius: 0;
                 border: 1px solid var(--line);
@@ -413,7 +416,7 @@
                 display: block;
             }
 
-            /* Cards de contenido */
+            /* ── CARDS ── */
             .content-card {
                 background: var(--paper);
                 border: 1px solid var(--line);
@@ -434,7 +437,7 @@
                 border-bottom: 1px solid var(--line);
             }
 
-            /* Badges */
+            /* ── BADGES ── */
             .badge-status {
                 display: inline-block;
                 padding: 0.2rem 0.6rem;
@@ -469,18 +472,14 @@
                 border: 1px solid var(--line);
             }
 
-            /* ═══════════════════════════════════════════
-                       RESPONSIVE
-                    ═══════════════════════════════════════════ */
             @@media (max-width: 900px) {
                 :root {
                     --sidebar-w: 64px;
                 }
 
-                .brand-text, .brand-sub,
-                .sidebar-section-label,
+                .brand-text, .brand-sub, .sidebar-section-label,
                 .sidebar-nav li a span:not(.nav-icon),
-                .btn-admin span:not(.admin-arrow) {
+                .btn-bottom span:not(.bottom-arrow) {
                     display: none;
                 }
 
@@ -491,19 +490,18 @@
                     border-bottom: 2px solid transparent;
                 }
 
-                    .sidebar-nav li a:hover,
-                    .sidebar-nav li a.active {
+                    .sidebar-nav li a:hover, .sidebar-nav li a.active {
                         padding-left: 0.8rem;
                         border-left: none;
                         border-bottom-color: var(--rust);
                     }
 
-                .btn-admin {
+                .btn-bottom {
                     justify-content: center;
                     padding: 0.8rem;
                 }
 
-                    .btn-admin:hover {
+                    .btn-bottom:hover {
                         padding-left: 0.8rem;
                     }
 
@@ -515,15 +513,31 @@
                     justify-content: center;
                 }
 
-                .admin-arrow {
+                .bottom-arrow {
                     display: none;
                 }
             }
-
     </style>
 </head>
 
 <body>
+
+    @{
+        // ✅ Claves correctas según el Login real
+        var sesionNombre = Context.Session.GetString("UsuarioNombre") ?? "";
+        var sesionCorreo = Context.Session.GetString("Usuario") ?? "";
+        var rolIdStr = Context.Session.GetString("RolId") ?? "0";
+        int.TryParse(rolIdStr, out int rolId);
+
+        bool estaLogueado = !string.IsNullOrEmpty(sesionCorreo);
+        bool esAdmin = rolId == 1;
+        bool esCliente = rolId == 2;
+        bool esEmpleado = rolId == 3;
+        bool esDueno = rolId == 4;
+
+        string inicial = sesionNombre.Length > 0
+            ? sesionNombre[0].ToString().ToUpper() : "?";
+    }
 
     <!-- ══════════════ SIDEBAR ══════════════ -->
     <aside class="layout-sidebar">
@@ -539,53 +553,76 @@
         <div class="sidebar-section">
             <span class="sidebar-section-label">Navegación</span>
             <ul class="sidebar-nav">
+
                 <li>
                     <a asp-page="/Index">
                         <span class="nav-icon">⌂</span>
                         <span>Inicio</span>
                     </a>
                 </li>
-                <li>
-                    <a href="#">
-                        <span class="nav-icon">🚗</span>
-                        <span>Autos</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <span class="nav-icon">🙋</span>
-                        <span>Clientes</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <span class="nav-icon">📅</span>
-                        <span>Reservas</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <span class="nav-icon">💳</span>
-                        <span>Pagos</span>
-                    </a>
-                </li>
-                <li>
-                    <a asp-page="/Login">
-                        <span class="nav-icon">💳</span>
-                        <span>Iniciar Sesion</span>
-                    </a>
-                </li>
+
+                @if (esAdmin)
+                {
+                    <li><a asp-page="/Ventanas/Admin/AutosHTML"><span class="nav-icon">🚗</span><span>Autos</span></a></li>
+                    <li><a asp-page="/Ventanas/Admin/ClientesHTML"><span class="nav-icon">🙋</span><span>Clientes</span></a></li>
+                    <li><a asp-page="/Ventanas/Admin/ReservasHTML"><span class="nav-icon">📅</span><span>Reservas</span></a></li>
+                    <li><a asp-page="/Ventanas/Admin/PagosHTML"><span class="nav-icon">💳</span><span>Pagos</span></a></li>
+                }
+                else if (esCliente)
+                {
+                    <li><a asp-page="/Ventanas/Cliente/MisAlquileresHTML"><span class="nav-icon">🔄</span><span>Alquileres</span></a></li>
+                    <li><a asp-page="/Ventanas/Cliente/MisReservasHTML"><span class="nav-icon">📅</span><span>Reservas</span></a></li>
+                    <li><a asp-page="/Ventanas/Cliente/MisContratosHTML"><span class="nav-icon">📝</span><span>Contratos</span></a></li>
+                    <li><a asp-page="/Ventanas/Cliente/MisFacturasHTML"><span class="nav-icon">🧾</span><span>Facturas</span></a></li>
+                    <li><a asp-page="/Ventanas/Cliente/MisDetallesFacturaHTML"><span class="nav-icon">📑</span><span>Detalles Factura</span></a></li>
+                    <li><a asp-page="/Ventanas/Cliente/MisPagosHTML"><span class="nav-icon">💳</span><span>Pagos</span></a></li>
+                    <li><a asp-page="/Ventanas/Cliente/MisMantenimientosHTML"><span class="nav-icon">🔧</span><span>Mantenimientos</span></a></li>
+                    <li><a asp-page="/Ventanas/Cliente/MisResenasHTML"><span class="nav-icon">⭐</span><span>Reseñas</span></a></li>
+                }
+                else if (esEmpleado)
+                {
+                    <li><a asp-page="/Ventanas/Empleado/MisAlquileresHTML"><span class="nav-icon">🔄</span><span>Alquileres</span></a></li>
+                    <li><a asp-page="/Ventanas/Empleado/MisClientesHTML"><span class="nav-icon">🙋</span><span>Clientes</span></a></li>
+                    <li><a asp-page="/Ventanas/Empleado/MisReservasHTML"><span class="nav-icon">📅</span><span>Reservas</span></a></li>
+                    <li><a asp-page="/Ventanas/Empleado/MisContratosHTML"><span class="nav-icon">📝</span><span>Contratos</span></a></li>
+                    <li><a asp-page="/Ventanas/Empleado/MisDevolucionesHTML"><span class="nav-icon">↩️</span><span>Devoluciones</span></a></li>
+                    <li><a asp-page="/Ventanas/Empleado/MisMantenimientosHTML"><span class="nav-icon">🔧</span><span>Mantenimientos</span></a></li>
+                }
+                else if (esDueno)
+                {
+                    <li><a asp-page="/Ventanas/Dueno/MisAutosHTML"><span class="nav-icon">🚗</span><span>Mis Autos</span></a></li>
+                    <li><a asp-page="/Ventanas/Dueno/MisReservasHTML"><span class="nav-icon">📅</span><span>Reservas</span></a></li>
+                    <li><a asp-page="/Ventanas/Dueno/MisPagosHTML"><span class="nav-icon">💳</span><span>Pagos</span></a></li>
+                    <li><a asp-page="/Ventanas/Dueno/MisMantenimientosHTML"><span class="nav-icon">🔧</span><span>Mantenimientos</span></a></li>
+                    <li><a asp-page="/Ventanas/Dueno/MisResenasHTML"><span class="nav-icon">⭐</span><span>Reseñas</span></a></li>
+                }
+                else
+                {
+                    <li><a asp-page="/Ventanas/Public/AutosDisponiblesHTML"><span class="nav-icon">🚗</span><span>Autos</span></a></li>
+                }
+
             </ul>
         </div>
 
         <hr class="sidebar-divider" />
 
-        <div class="sidebar-admin">
-            <a asp-page="/Ventanas/Admin/IndexAdmin" class="btn-admin">
-                <span>⬡</span>
-                <span>Panel Admin</span>
-                <span class="admin-arrow">→</span>
-            </a>
+        <div class="sidebar-bottom">
+            @if (esAdmin)
+            {
+                <a asp-page="/Ventanas/Admin/IndexAdmin" class="btn-bottom btn-bottom-admin">
+                    <span>⬡</span>
+                    <span>Panel Admin</span>
+                    <span class="bottom-arrow">→</span>
+                </a>
+            }
+            else if (!estaLogueado)
+            {
+                <a asp-page="/Login" class="btn-bottom btn-bottom-login">
+                    <span>🔐</span>
+                    <span>Iniciar Sesion</span>
+                    <span class="bottom-arrow">→</span>
+                </a>
+            }
         </div>
 
     </aside>
@@ -598,8 +635,23 @@
         <div class="topbar-right">
             <span class="topbar-time" id="js-clock"></span>
             <div class="topbar-user">
-                <div class="user-avatar">A</div>
-                <span>Administrador</span>
+                @if (estaLogueado)
+                {
+                    <div class="user-avatar">@inicial</div>
+                    <span>@sesionNombre</span>
+                    <a asp-page="/Login"
+                       asp-page-handler="BtCerrar"
+                       class="btn-logout">Salir</a>
+                }
+                else
+                {
+                    <div class="user-avatar">?</div>
+                    <span>Invitado</span>
+                    <a asp-page="/Login" class="btn-logout"
+                       style="border-color:var(--gold); color:var(--gold);">
+                        Ingresar
+                    </a>
+                }
             </div>
         </div>
     </header>
@@ -612,13 +664,14 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
         (function tick() {
         var el = document.getElementById('js-clock');
         if (el) {
         var d = new Date();
-        el.textContent = d.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        el.textContent = d.toLocaleTimeString('es-CO', {
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+        });
         }
         setTimeout(tick, 1000);
         })();
@@ -626,7 +679,8 @@
         (function () {
         var links = document.querySelectorAll('.sidebar-nav a');
         links.forEach(function (a) {
-        if (a.href === window.location.href) a.classList.add('active');
+        if (a.href === window.location.href)
+        a.classList.add('active');
         });
         })();
     </script>

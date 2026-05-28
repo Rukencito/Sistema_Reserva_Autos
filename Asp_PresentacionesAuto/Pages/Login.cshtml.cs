@@ -57,9 +57,25 @@ namespace Asp_PresentacionesAuto.Pages
 
                 // Redirigir según rol
                 if (usuario.Roles == 1)
+                {
                     HttpContext.Response.Redirect("/Ventanas/Admin/IndexAdmin");
+                }
+                else if (usuario.Roles == 2)
+                {
+                    HttpContext.Response.Redirect("/Ventanas/Cliente/IndexClientes");
+                }
+                else if (usuario.Roles == 3)
+                {
+                    HttpContext.Response.Redirect("/Ventanas/Empleado/IndexEmpleados");
+                }
+                else if (usuario.Roles == 4)
+                {
+                    HttpContext.Response.Redirect("/Ventanas/Dueno/IndexDuenos");
+                }
                 else
+                {
                     HttpContext.Response.Redirect("/Index");
+                }
             }
             catch (Exception ex)
             {

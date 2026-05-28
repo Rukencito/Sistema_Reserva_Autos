@@ -1,0 +1,287 @@
+﻿@*Pages/Ventanas/Dueno/IndexDuenos_Razor.cshtml*@
+@page
+@model Asp_PresentacionesAuto.Pages.Ventanas.Dueno.IndexDuenosModel;
+@{
+    ViewData["Title"] = "Panel Dueño";
+    var nombre = HttpContext.Session.GetString("UsuarioNombre") ?? "Dueño";
+}
+
+<style>
+    .duo-hero {
+        padding: 2.5rem 0 2rem;
+        border-bottom: 2px solid var(--ink);
+        margin-bottom: 2.5rem;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .duo-hero-label {
+        font-size: 0.65rem;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        color: var(--mist);
+        margin-bottom: 0.5rem;
+    }
+
+    .duo-hero-title {
+        font-family: 'Syne', sans-serif;
+        font-weight: 800;
+        font-size: clamp(2rem, 5vw, 3.2rem);
+        line-height: 1;
+        color: var(--ink);
+    }
+
+        .duo-hero-title em {
+            font-style: normal;
+            color: var(--gold);
+        }
+
+    .duo-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: var(--ink);
+        color: var(--gold);
+        font-family: 'Syne', sans-serif;
+        font-weight: 700;
+        font-size: 0.68rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+    }
+
+    /* Strip informativo */
+    .duo-strip {
+        background: #1a1400;
+        border-left: 3px solid var(--gold);
+        padding: 1rem 1.5rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .duo-strip-icon {
+        font-size: 1.3rem;
+        flex-shrink: 0;
+    }
+
+    .duo-strip-text {
+        font-size: 0.72rem;
+        color: rgba(200,146,42,0.85);
+        line-height: 1.6;
+    }
+
+        .duo-strip-text strong {
+            color: var(--gold);
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+        }
+
+    /* Label de sección */
+    .duo-section-label {
+        font-size: 0.65rem;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        color: var(--mist);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+        .duo-section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--line);
+        }
+
+    /* Grid de tarjetas */
+    .duo-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 1px;
+        background: var(--line);
+        border: 1px solid var(--line);
+        margin-bottom: 2.5rem;
+    }
+
+    .duo-card {
+        background: var(--paper);
+        padding: 1.8rem 1.5rem 2rem;
+        text-decoration: none;
+        color: var(--ink);
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        transition: background 0.15s;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .duo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--card-top, var(--gold));
+            transform: scaleX(0);
+            transition: transform 0.25s;
+            transform-origin: left;
+        }
+
+        .duo-card:hover {
+            background: var(--cream);
+            color: var(--ink);
+            text-decoration: none;
+        }
+
+            .duo-card:hover::before {
+                transform: scaleX(1);
+            }
+
+        .duo-card::after {
+            content: '→';
+            position: absolute;
+            bottom: 1.2rem;
+            right: 1.4rem;
+            font-size: 0.9rem;
+            color: var(--mist);
+            transition: color 0.2s, transform 0.2s;
+        }
+
+        .duo-card:hover::after {
+            color: var(--gold);
+            transform: translateX(3px);
+        }
+
+    .duo-card-icon {
+        font-size: 2rem;
+        line-height: 1;
+    }
+
+    .duo-card-title {
+        font-family: 'Syne', sans-serif;
+        font-weight: 700;
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    .duo-card-desc {
+        font-size: 0.72rem;
+        color: var(--mist);
+        line-height: 1.6;
+        padding-right: 1.5rem;
+    }
+
+    .duo-card-tag {
+        display: inline-block;
+        font-size: 0.58rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding: 0.15rem 0.5rem;
+        font-family: 'Syne', sans-serif;
+        font-weight: 700;
+        border: 1px solid var(--gold);
+        color: var(--gold);
+        background: transparent;
+        width: fit-content;
+    }
+
+    /* Tarjeta destacada (autos) */
+    .duo-card-featured {
+        --card-top: var(--rust);
+    }
+
+        .duo-card-featured .duo-card-tag {
+            border-color: var(--rust);
+            color: var(--rust);
+        }
+
+        .duo-card-featured:hover::after {
+            color: var(--rust);
+        }
+</style>
+
+<!-- HERO -->
+<div class="duo-hero">
+    <div>
+        <div class="duo-hero-label">Panel de propietario</div>
+        <h1 class="duo-hero-title">Bienvenido, <em>@nombre</em></h1>
+    </div>
+    <div class="duo-hero-badge">
+        <span>🔑</span>
+        <span>Dueño</span>
+    </div>
+</div>
+
+<!-- STRIP -->
+<div class="duo-strip">
+    <div class="duo-strip-icon">💡</div>
+    <div class="duo-strip-text">
+        Desde aquí puedes gestionar <strong>tus autos</strong>, ver las
+        <strong>reservas</strong> activas, revisar los
+        <strong>mantenimientos</strong> realizados y consultar el historial de
+        <strong>pagos</strong> y <strong>reseñas</strong> de tus vehículos.
+    </div>
+</div>
+
+<!-- ACCESO RÁPIDO -->
+<div class="duo-section-label">Mis secciones</div>
+
+<div class="duo-grid">
+
+    <a asp-page="/Ventanas/Dueno/MisAutosHTML" class="duo-card duo-card-featured">
+        <div class="duo-card-icon">🚗</div>
+        <div class="duo-card-title">Mis Autos</div>
+        <div class="duo-card-desc">
+            Consulta, registra y gestiona todos los vehículos que tienes en el sistema.
+        </div>
+        <span class="duo-card-tag">Principal</span>
+    </a>
+
+    <a asp-page="/Ventanas/Dueno/MisReservasHTML" class="duo-card">
+        <div class="duo-card-icon">📅</div>
+        <div class="duo-card-title">Reservas</div>
+        <div class="duo-card-desc">
+            Ve las reservas activas y pendientes de los autos de tu propiedad.
+        </div>
+        <span class="duo-card-tag">Activas</span>
+    </a>
+
+    <a asp-page="/Ventanas/Dueno/MisPagosHTML" class="duo-card">
+        <div class="duo-card-icon">💳</div>
+        <div class="duo-card-title">Pagos</div>
+        <div class="duo-card-desc">
+            Historial de pagos generados por los alquileres de tus vehículos.
+        </div>
+        <span class="duo-card-tag">Historial</span>
+    </a>
+
+    <a asp-page="/Ventanas/Dueno/MisMantenimientosHTML" class="duo-card">
+        <div class="duo-card-icon">🔧</div>
+        <div class="duo-card-title">Mantenimientos</div>
+        <div class="duo-card-desc">
+            Revisa los mantenimientos registrados para cada uno de tus autos.
+        </div>
+        <span class="duo-card-tag">Historial</span>
+    </a>
+
+    <a asp-page="/Ventanas/Dueno/MisResenasHTML" class="duo-card">
+        <div class="duo-card-icon">⭐</div>
+        <div class="duo-card-title">Reseñas</div>
+        <div class="duo-card-desc">
+            Consulta las opiniones y calificaciones que dejaron los clientes sobre tus autos.
+        </div>
+        <span class="duo-card-tag">Opiniones</span>
+    </a>
+
+</div>
+
