@@ -173,9 +173,10 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
                 OnGet();
 
+                CargarListaFiltrada();
                 Lista = null;
                 Borrando = false;
-                OnPostBtRefrescar();
+                ModelState.Clear();
             }
             catch (Exception ex)
             {

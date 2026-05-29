@@ -33,7 +33,6 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
             Lista = IDetallesFacturaPresentacion!.Consultar();
 
-            // Solo clientes tienen filtro, empleados y admin ven todo
             if (rol == "2" && int.TryParse(entidadId, out int clienteId))
             {
                 var facturasCliente = IFacturasPresentacion!.Consultar()
