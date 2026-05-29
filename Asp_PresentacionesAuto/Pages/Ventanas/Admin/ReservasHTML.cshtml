@@ -1,8 +1,19 @@
-﻿@*Pages/Ventanas/Admin/Seguros_Razor.cshtml*@
+﻿@*Pages/Ventanas/Admin/Reservas_Razor.cshtml*@
 @page
-@model Asp_PresentacionesAuto.Pages.Ventanas.Admin.SegurosHTMLModel;
+@model Asp_PresentacionesAuto.Pages.Ventanas.Admin.ReservasHTMLModel;
 @{
-    ViewData["Title"] = "Seguros";
+    ViewData["Title"] = "Reservas";
+    string urlRegresar;
+    var rol = HttpContext.Session.GetString("RolId");
+
+    if (rol == "2")
+        urlRegresar = "/Ventanas/Cliente/IndexClientes";
+    else if (rol == "3")
+        urlRegresar = "/Ventanas/Empleado/IndexEmpleados";
+    else if (rol == "4")
+        urlRegresar = "/Ventanas/Dueno/IndexDuenos";
+    else
+        urlRegresar = "/Ventanas/Admin/IndexAdmin";
 }
 <center>
     <div>
@@ -11,12 +22,11 @@
             @Html.AntiForgeryToken()
 
             <div align="left">
-                <h3>Seguros</h3>
+                <h3>Reservas</h3>
             </div>
             
             <div>
-                <a href="/Ventanas/Admin/IndexAdmin"
-                   class="btn btn-danger">&#8592; Regresar</a>
+                <a href="@urlRegresar" class="btn btn-danger">&#8592; Regresar</a>
                 <input type="submit"
                        value="Refrescar"
                        class="btn btn-secondary"
@@ -25,46 +35,50 @@
                        value="Nuevo"
                        class="btn btn-secondary"
                        asp-page-handler="BtNuevo"
-                       disabled="@(Model.Seguro!= null)" />
+                       disabled="@(Model.Reserva!= null)" />
                 <input type="submit"
                        value="Guardar"
                        class="btn btn-secondary"
                        asp-page-handler="BtGuardar"
-                       disabled="@(Model.Seguro == null)" />
+                       disabled="@(Model.Reserva == null)" />
             </div>
 
-            @if (Model.Seguro != null)
+            @if (Model.Reserva != null)
             {
                 <input type="hidden"
-                       asp-for="@Model.Seguro!.Id" />
+                       asp-for="@Model.Reserva!.Id" />
 
                 <div>
                     <div class="form-group">
-                        <label>Estado</label>
-                        <input type="checkbox" asp-for="@Model.Seguro!.Estado" />
-                    </div>
-                    <div class="form-group">
-                        <label>Tipo</label>
+                        <label>Fecha de Reserva</label>
                         <div class="col-6">
-                            <input id="inTipo"
+                            <input id="inFechaReserva"
                                    class="cts_forms form-control"
-                                   asp-for="@Model.Seguro!.Tipo" />
+                                   asp-for="@Model.Reserva.FechaReserva" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Cobertura</label>
+                        <label>Estado de Reserva</label>
                         <div class="col-6">
-                            <input id="inCobertura"
+                            <input id="inEstadoReserva"
                                    class="cts_forms form-control"
-                                   asp-for="@Model.Seguro!.Cobertura" />
+                                   asp-for="@Model.Reserva!.EstadoReserva" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Aseguradora</label>
+                        <label>Anticipo</label>
                         <div class="col-6">
-                            <input id="inAseguradora"
+                            <input id="inAnticipo"
                                    class="cts_forms form-control"
-                                   asp-for="@Model.Seguro!.Aseguradora" />
+                                   asp-for="@Model.Reserva!.Anticipo" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha de Vencimiento</label>
+                        <div class="col-6">
+                            <input id="inFechaVencimiento"
+                                   class="cts_forms form-control"
+                                   asp-for="@Model.Reserva!.FechaVencimiento" />
                         </div>
                     </div>
                 </div>
@@ -73,9 +87,21 @@
                     <div class="col-6">
                         <select id="Autos"
                                 class="cts_forms form-control"
-                                asp-for="@Model.Seguro!.Autos"
+                                asp-for="@Model.Reserva!.Autos"
                                 asp-items="@(new SelectList(Model.ObtenerAutos(), "Id", "Placa"))">
-                            <option value="">Seleccione un Auto</option>
+                            <option value="">Seleccione el Auto</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Cliente</label>
+                    <div class="col-6">
+                        <select id="Clientes"
+                                class="cts_forms form-control"
+                                asp-for="@Model.Reserva!.Clientes"
+                                asp-items="@(new SelectList(Model.ObtenerClientes(), "Id", "Nombre"))">
+                            <option value="">Seleccione el Cliente</option>
                         </select>
                     </div>
                 </div>
@@ -88,14 +114,14 @@
                 ;
             }
 
-            @if (Model.Seguro != null && Model.Borrando)
+            @if (Model.Reserva != null && Model.Borrando)
             {
                 <div class='popup'>
                     <div class='pp_ms_inner'>
                         <div style='width:95%'>
                             <h2 align="left">Mensaje</h2>
-                            <h6 align="left">Desea borrar el Seguro?</h6>
-                            <h6 align="left">@Model.Seguro!.Tipo</h6>
+                            <h6 align="left">Desea borrar el Reserva?</h6>
+                            <h6 align="left">@Model.Reserva!.FechaReserva</h6>
                             
                             <input type="submit"
                                    value="Cerrar"
@@ -114,21 +140,23 @@
             {
                 <table class="tb_data table table-striped table-bordered table-hover">
                     <tr>
-                        <th>Tipo</th>
-                        <th>Estado</th>
-                        <th>Cobertura</th>
-                        <th>Aseguradora</th>
+                        <th>FechaReserva</th>
+                        <th>EstadoReserva</th>
+                        <th>Anticipo</th>
+                        <th>Fecha de Vencimiento</th>
                         <th>Autos</th>
+                        <th>Clientes</th>
                     </tr>
                 
                     @foreach (var elemento in Model.Lista)
                     {
                         <tr>
-                            <td>@elemento.Tipo</td>
-                            <td>@elemento.Estado</td>
-                            <td>@elemento.Cobertura</td>
-                            <td>@elemento.Aseguradora</td>
+                            <td>@elemento.FechaReserva</td>
+                            <td>@elemento.EstadoReserva</td>
+                            <td>@elemento.Anticipo</td>
+                            <td>@elemento.FechaVencimiento</td>
                             <td>@elemento.Auto?.Placa</td>
+                            <td>@elemento.Cliente?.Nombre</td>
                             <td>
                                 <input type="submit"
                                        value="Modificar"

@@ -3,6 +3,17 @@
 @model Asp_PresentacionesAuto.Pages.Ventanas.Admin.GarantiasHTMLModel;
 @{
     ViewData["Title"] = "Garantias";
+    string urlRegresar;
+    var rol = HttpContext.Session.GetString("RolId");
+
+    if (rol == "2")
+        urlRegresar = "/Ventanas/Cliente/IndexClientes";
+    else if (rol == "3")
+        urlRegresar = "/Ventanas/Empleado/IndexEmpleados";
+    else if (rol == "4")
+        urlRegresar = "/Ventanas/Dueno/IndexDuenos";
+    else
+        urlRegresar = "/Ventanas/Admin/IndexAdmin";
 }
 <center>
     <div>
@@ -15,8 +26,7 @@
             </div>
             
             <div>
-                <a href="/Ventanas/Admin/IndexAdmin"
-                   class="btn btn-danger">&#8592; Regresar</a>
+                <a href="@urlRegresar" class="btn btn-danger">&#8592; Regresar</a>
                 <input type="submit"
                        value="Refrescar"
                        class="btn btn-secondary"

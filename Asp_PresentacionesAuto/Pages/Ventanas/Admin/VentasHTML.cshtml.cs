@@ -6,27 +6,25 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 {
-    public class MantenimientosHTMLModel : PageModel
+    public class VentasHTMLModel : PageModel
     {
-        private IMantenimientosPresentacion? IMantenimientosPresentacion;
+        private IVentasPresentacion? IVentasPresentacion;
+        private IClientesPresentacion? IClientesPresentacion;
+        private IEmpleadosPresentacion? IEmpleadosPresentacion;
         private IAutosPresentacion? IAutosPresentacion;
-        private ITalleresPresentacion? ITalleresPresentacion;
-        [BindProperty] public List<Mantenimientos>? Lista { get; set; }
+        [BindProperty] public List<Ventas>? Lista { get; set; }
+        [BindProperty] public List<Clientes>? ListaCliente { get; set; }
+        [BindProperty] public List<Empleados>? ListaEmpleado { get; set; }
         [BindProperty] public List<Autos>? ListaAuto { get; set; }
-        [BindProperty] public List<Talleres>? ListaTaller { get; set; }
-        [BindProperty] public Mantenimientos? Mantenimiento { get; set; }
+        [BindProperty] public Ventas? Venta { get; set; }
         [BindProperty] public bool Borrando { get; set; }
 
-        public MantenimientosHTMLModel()
+        public VentasHTMLModel()
         {
-          IMantenimientosPresentacion = new  MantenimientosPresentacion();
+            IVentasPresentacion = new VentasPresentacion();
+            IClientesPresentacion = new ClientesPresentacion();
+            IEmpleadosPresentacion = new EmpleadosPresentacion();
             IAutosPresentacion = new AutosPresentacion();
-            ITalleresPresentacion = new TalleresPresentacion();
-        }
-
-        public List<Talleres> ObtenerTalleres()
-        {
-            return ListaTaller = ITalleresPresentacion!.Consultar();
         }
 
         private void CargarListaFiltrada()
@@ -34,18 +32,20 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             var rol = HttpContext.Session.GetString("RolId");
             var entidadId = HttpContext.Session.GetString("EntidadId");
 
-            Lista = IMantenimientosPresentacion!.Consultar();
+            Lista = IVentasPresentacion!.Consultar();
 
-            // Empleado ve todos los mantenimientos sin filtro
-            // Dueño solo ve mantenimientos de sus autos
-            if (rol == "4" && int.TryParse(entidadId, out int duenoId))
+            if (rol == "2" && int.TryParse(entidadId, out int clienteId))
+                Lista = Lista!.Where(x => x.Clientes == clienteId).ToList();
+            else if (rol == "3" && int.TryParse(entidadId, out int empleadoId))
+                Lista = Lista!.Where(x => x.Empleados == empleadoId).ToList();
+            else if (rol == "4" && int.TryParse(entidadId, out int duenoId))
             {
                 var autosDueno = IAutosPresentacion!.Consultar()
                     .Where(a => a.Duenos.HasValue && a.Duenos.Value == duenoId)
                     .Select(a => a.Id)
                     .ToList();
 
-                Lista = Lista!.Where(x => autosDueno.Contains(x.Autos ?? 0)).ToList();
+                Lista = Lista!.Where(x => x.Autos.HasValue && autosDueno.Contains(x.Autos.Value)).ToList();
             }
         }
 
@@ -54,11 +54,17 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             try
             {
                 CargarListaFiltrada();
-                Mantenimiento = null;
+                Venta = null;
                 Borrando = false;
             }
             catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
         }
+
+        public List<Clientes> ObtenerClientes()
+            => ListaCliente = IClientesPresentacion!.Consultar();
+
+        public List<Empleados> ObtenerEmpleados()
+            => ListaEmpleado = IEmpleadosPresentacion!.Consultar();
 
         public List<Autos> ObtenerAutos()
         {
@@ -73,13 +79,12 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             return ListaAuto = todos;
         }
 
-
         public void OnPostBtRefrescar()
         {
             try
             {
                 CargarListaFiltrada();
-                Mantenimiento = null;
+                Venta = null;
                 Borrando = false;
                 ModelState.Clear();
             }
@@ -90,15 +95,14 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
             var rol = HttpContext.Session.GetString("RolId");
 
-            // Solo Admin y Empleado pueden crear
-            if (rol != "1" && rol != "3")
+            if (rol == "4")
             {
-                ViewData["Mensaje"] = "No tienes permiso para crear mantenimientos.";
+                ViewData["Mensaje"] = "No tienes permiso para crear ventas.";
                 CargarListaFiltrada();
                 return;
             }
 
-            Mantenimiento = new Mantenimientos();
+            Venta = new Ventas();
             Lista = null;
             Borrando = false;
         }
@@ -110,23 +114,23 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                 var rol = HttpContext.Session.GetString("RolId");
                 var entidadId = HttpContext.Session.GetString("EntidadId");
 
-                var listaTemp = IMantenimientosPresentacion!.Consultar();
+                var listaTemp = IVentasPresentacion!.Consultar();
 
-                // Admin y Empleado pueden modificar cualquiera
-                if (rol == "1" || rol == "3")
+                if (rol == "1")
+                    Venta = listaTemp!.FirstOrDefault(x => x.Id == data);
+                else if (rol == "2" && int.TryParse(entidadId, out int clienteId))
+                    Venta = listaTemp!.FirstOrDefault(x => x.Id == data && x.Clientes == clienteId);
+                else if (rol == "3" && int.TryParse(entidadId, out int empleadoId))
+                    Venta = listaTemp!.FirstOrDefault(x => x.Id == data && x.Empleados == empleadoId);
+                else if (rol == "4")
                 {
-                    Mantenimiento = listaTemp!.FirstOrDefault(x => x.Id == data);
-                }
-                // Dueño no puede modificar
-                else
-                {
-                    ViewData["Mensaje"] = "No tienes permiso para modificar mantenimientos.";
+                    ViewData["Mensaje"] = "No tienes permiso para modificar ventas.";
                     CargarListaFiltrada();
                     return;
                 }
 
-                if (Mantenimiento == null)
-                    ViewData["Mensaje"] = "Mantenimiento no encontrado.";
+                if (Venta == null)
+                    ViewData["Mensaje"] = "No tienes permiso para modificar esta venta.";
 
                 Lista = null;
                 Borrando = false;
@@ -138,27 +142,32 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
             try
             {
-                if (Mantenimiento == null) return;
+                if (Venta == null) return;
 
                 var rol = HttpContext.Session.GetString("RolId");
+                var entidadId = HttpContext.Session.GetString("EntidadId");
 
-                // Solo Admin y Empleado pueden guardar
-                if (rol != "1" && rol != "3")
+                if (rol == "4")
                 {
-                    ViewData["Mensaje"] = "No tienes permiso para guardar mantenimientos.";
+                    ViewData["Mensaje"] = "No tienes permiso para guardar ventas.";
                     CargarListaFiltrada();
                     return;
                 }
 
-                if (Mantenimiento.Id == 0)
-                    Mantenimiento = IMantenimientosPresentacion!.Guardar(Mantenimiento!);
-                else
-                    Mantenimiento = IMantenimientosPresentacion!.Modificar(Mantenimiento!);
+                if (rol == "2" && int.TryParse(entidadId, out int clienteId))
+                    Venta.Clientes = clienteId;
+                else if (rol == "3" && int.TryParse(entidadId, out int empleadoId))
+                    Venta.Empleados = empleadoId;
 
-                if (Mantenimiento.Id == 0) return;
+                if (Venta.Id == 0)
+                    Venta = IVentasPresentacion!.Guardar(Venta!);
+                else
+                    Venta = IVentasPresentacion!.Modificar(Venta!);
+
+                if (Venta.Id == 0) return;
 
                 CargarListaFiltrada();
-                Mantenimiento = null;
+                Venta = null;
                 Borrando = false;
                 ModelState.Clear();
             }
@@ -169,22 +178,32 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
             try
             {
-                if (Mantenimiento == null) return;
+                if (Venta == null) return;
 
                 var rol = HttpContext.Session.GetString("RolId");
+                var entidadId = HttpContext.Session.GetString("EntidadId");
 
-                // Solo Admin puede borrar
                 if (rol != "1")
                 {
-                    ViewData["Mensaje"] = "No tienes permiso para eliminar mantenimientos.";
+                    ViewData["Mensaje"] = "No tienes permiso para eliminar ventas.";
                     OnGet();
                     return;
                 }
 
-                Mantenimiento = IMantenimientosPresentacion!.Eliminar(Mantenimiento!);
+                var listaTemp = IVentasPresentacion!.Consultar();
+                var VentaPermitida = listaTemp!.FirstOrDefault(x => x.Id == Venta!.Id);
+
+                if (VentaPermitida == null)
+                {
+                    ViewData["Mensaje"] = "Venta no encontrada.";
+                    OnGet();
+                    return;
+                }
+
+                Venta = IVentasPresentacion!.Eliminar(Venta!);
 
                 CargarListaFiltrada();
-                Mantenimiento = null;
+                Venta = null;
                 Borrando = false;
                 ModelState.Clear();
             }
@@ -196,17 +215,15 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             try
             {
                 var rol = HttpContext.Session.GetString("RolId");
-
-                // Solo Admin ve el popup de borrar
                 if (rol != "1")
                 {
-                    ViewData["Mensaje"] = "No tienes permiso para eliminar mantenimientos.";
+                    ViewData["Mensaje"] = "No tienes permiso para eliminar ventas.";
                     CargarListaFiltrada();
                     return;
                 }
 
                 OnPostBtRefrescar();
-                Mantenimiento = Lista!.FirstOrDefault(x => x.Id == data);
+                Venta = Lista!.FirstOrDefault(x => x.Id == data);
                 Lista = null;
                 Borrando = true;
             }
@@ -219,4 +236,5 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             Borrando = false;
         }
     }
+}
 }

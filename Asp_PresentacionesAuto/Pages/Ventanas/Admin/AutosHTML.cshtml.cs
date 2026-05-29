@@ -30,10 +30,6 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             IInventariosPresentacion = new InventariosPresentacion();
         }
 
-        public void OnGet()
-        {
-            OnPostBtRefrescar();
-        }
         public List<Parqueaderos> ObtenerParqueaderos()
         {
             return ListaParqueadero = IParqueaderosPresentacion!.Consultar();
@@ -54,25 +50,38 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             return ListaInventario = IInventariosPresentacion!.Consultar();
         }
 
+        private void CargarListaFiltrada()
+        {
+            var rol = HttpContext.Session.GetString("RolId");
+            var entidadId = HttpContext.Session.GetString("EntidadId");
+
+            Lista = IAutosPresentacion!.Consultar();
+
+            if (rol == "4" && int.TryParse(entidadId, out int duenoId))
+                Lista = Lista!.Where(x => x.Duenos.HasValue && x.Duenos.Value == duenoId).ToList();
+        }
+
+        public void OnGet()
+        {
+            try
+            {
+                CargarListaFiltrada();
+                Auto = null;
+                Borrando = false;
+            }
+            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
+        }
+
         public void OnPostBtRefrescar()
         {
             try
             {
-                if (IAutosPresentacion == null)
-                    return;
-
-                Lista = IAutosPresentacion.Consultar();
-
+                CargarListaFiltrada();
                 Auto = null;
-
                 Borrando = false;
-
                 ModelState.Clear();
             }
-            catch (Exception ex)
-            {
-                ViewData["Mensaje"] = ex.Message;
-            }
+            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
         }
 
         public void OnPostBtNuevo()
@@ -86,50 +95,85 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
             try
             {
-                OnPostBtRefrescar();
-                Auto = Lista!.FirstOrDefault(x => x.Id == data);
+                var rol = HttpContext.Session.GetString("RolId");
+                var entidadId = HttpContext.Session.GetString("EntidadId");
+
+                var listaTemp = IAutosPresentacion!.Consultar();
+
+                if (rol == "1" || rol == "3")
+                    Auto = listaTemp!.FirstOrDefault(x => x.Id == data);
+                else if (rol == "4" && int.TryParse(entidadId, out int duenoId))
+                    Auto = listaTemp!.FirstOrDefault(x => x.Id == data && x.Duenos.HasValue && x.Duenos.Value == duenoId);
+
+                if (Auto == null)
+                    ViewData["Mensaje"] = "No tienes permiso para modificar este auto.";
+
                 Lista = null;
                 Borrando = false;
             }
-            catch (Exception ex)
-            {
-                ViewData["Mensaje"] = ex.Message;
-            }
+            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
         }
 
         public void OnPostBtGuardar()
         {
             try
             {
-                if (Auto == null)
-                    return;
+                if (Auto == null) return;
+
+                var rol = HttpContext.Session.GetString("RolId");
+                var entidadId = HttpContext.Session.GetString("EntidadId");
+
+                // Si es dueño, forzar su propio ID al guardar
+                if (rol == "4" && int.TryParse(entidadId, out int duenoId))
+                    Auto.Duenos = duenoId;
+
                 if (Auto.Id == 0)
                     Auto = IAutosPresentacion!.Guardar(Auto!);
                 else
                     Auto = IAutosPresentacion!.Modificar(Auto!);
-                if (Auto.Id == 0)
-                    return;
-                OnPostBtRefrescar();
+
+                if (Auto.Id == 0) return;
+
+                CargarListaFiltrada();
+                Auto = null;
+                Borrando = false;
+                ModelState.Clear();
             }
-            catch (Exception ex)
-            {
-                ViewData["Mensaje"] = ex.Message;
-            }
+            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
         }
 
         public void OnPostBtBorrar()
         {
             try
             {
-                if (Auto == null)
+                if (Auto == null) return;
+
+                var rol = HttpContext.Session.GetString("RolId");
+                var entidadId = HttpContext.Session.GetString("EntidadId");
+
+                var listaTemp = IAutosPresentacion!.Consultar();
+                Autos? AutoPermitido = null;
+
+                if (rol == "1" || rol == "3")
+                    AutoPermitido = listaTemp!.FirstOrDefault(x => x.Id == Auto!.Id);
+                else if (rol == "4" && int.TryParse(entidadId, out int duenoId))
+                    AutoPermitido = listaTemp!.FirstOrDefault(x => x.Id == Auto!.Id && x.Duenos.HasValue && x.Duenos.Value == duenoId);
+
+                if (AutoPermitido == null)
+                {
+                    ViewData["Mensaje"] = "No tienes permiso para eliminar este auto.";
+                    OnGet();
                     return;
+                }
+
                 Auto = IAutosPresentacion!.Eliminar(Auto!);
-                OnPostBtRefrescar();
+
+                CargarListaFiltrada();
+                Auto = null;
+                Borrando = false;
+                ModelState.Clear();
             }
-            catch (Exception ex)
-            {
-                ViewData["Mensaje"] = ex.Message;
-            }
+            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
         }
 
         public void OnPostBtBorrarVal(int data)

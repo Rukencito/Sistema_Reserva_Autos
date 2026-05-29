@@ -3,6 +3,17 @@
 @model Asp_PresentacionesAuto.Pages.Ventanas.Admin.DevolucionesHTMLModel;
 @{
     ViewData["Title"] = "Devoluciones";
+    string urlRegresar;
+    var rol = HttpContext.Session.GetString("RolId");
+
+    if (rol == "2")
+        urlRegresar = "/Ventanas/Cliente/IndexClientes";
+    else if (rol == "3")
+        urlRegresar = "/Ventanas/Empleado/IndexEmpleados";
+    else if (rol == "4")
+        urlRegresar = "/Ventanas/Dueno/IndexDuenos";
+    else
+        urlRegresar = "/Ventanas/Admin/IndexAdmin";
 }
 <center>
     <div>
@@ -15,8 +26,7 @@
             </div>
             
             <div>
-                <a href="/Ventanas/Admin/IndexAdmin"
-                   class="btn btn-danger">&#8592; Regresar</a>
+                <a href="@urlRegresar" class="btn btn-danger">&#8592; Regresar</a>
                 <input type="submit"
                        value="Refrescar"
                        class="btn btn-secondary"
@@ -122,6 +132,10 @@
                             <td>@elemento.NivelCombustible</td>
                             <td>@elemento.Observaciones</td>
                             <td>@elemento.Alquiler?.FechaInicio.ToString("dd/MM/yyyy")</td>
+                            
+                            @{
+                            var rol = HttpContext.Session.GetString("RolId");
+                            }
                             <td>
                                 <input type="submit"
                                        value="Modificar"
@@ -134,6 +148,21 @@
                                        class="btn btn-secondary"
                                        asp-route-data="@elemento.Id" />
                             </td>
+
+                            @if (rol == "1" || rol == "3")
+                            {
+                                <input type="submit" value="Modificar"
+                                       asp-page-handler="BtModificar"
+                                       class="btn btn-secondary"
+                                       asp-route-data="@elemento.Id" />
+                            }
+                            @if (rol == "1")
+                            {
+                                <input type="submit" value="Borrar"
+                                       asp-page-handler="BtBorrarVal"
+                                       class="btn btn-secondary"
+                                       asp-route-data="@elemento.Id" />
+                            }
                         </tr>
                     }
                 </table>

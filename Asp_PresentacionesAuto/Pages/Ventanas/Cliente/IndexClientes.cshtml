@@ -5,7 +5,6 @@
     ViewData["Title"] = "Mi Panel";
     var nombre = HttpContext.Session.GetString("UsuarioNombre") ?? "Cliente";
 }
-}
 
 <style>
     .cli-hero {
@@ -229,49 +228,49 @@
         <span class="cli-card-tag">Activos</span>
     </a>
 
-    <a asp-page="/Ventanas/Cliente/ReservasHTML" class="cli-card">
+    <a asp-page="/Ventanas/Admin/ReservasHTML" class="cli-card">
         <div class="cli-card-icon">📅</div>
         <div class="cli-card-title">Reservas</div>
         <div class="cli-card-desc">Crea nuevas reservas y consulta el estado de las existentes.</div>
         <span class="cli-card-tag">Pendientes</span>
     </a>
 
-    <a asp-page="/Ventanas/Cliente/ContratosHTML" class="cli-card">
+    <a asp-page="/Ventanas/Admin/ContratosHTML" class="cli-card">
         <div class="cli-card-icon">📝</div>
         <div class="cli-card-title">Contratos</div>
         <div class="cli-card-desc">Accede a los contratos firmados asociados a tus alquileres.</div>
         <span class="cli-card-tag">Documentos</span>
     </a>
 
-    <a asp-page="/Ventanas/Cliente/FacturasHTML" class="cli-card">
+    <a asp-page="/Ventanas/Admin/FacturasHTML" class="cli-card">
         <div class="cli-card-icon">🧾</div>
         <div class="cli-card-title">Facturas</div>
         <div class="cli-card-desc">Consulta y descarga las facturas generadas por tus servicios.</div>
         <span class="cli-card-tag">Finanzas</span>
     </a>
 
-    <a asp-page="/Ventanas/Cliente/DetallesFacturaHTML" class="cli-card">
+    <a asp-page="/Ventanas/Admin/DetallesFacturaHTML" class="cli-card">
         <div class="cli-card-icon">📑</div>
         <div class="cli-card-title">Detalles Factura</div>
         <div class="cli-card-desc">Ve el desglose completo de cada ítem en tus facturas.</div>
         <span class="cli-card-tag">Desglose</span>
     </a>
 
-    <a asp-page="/Ventanas/Cliente/PagosHTML" class="cli-card">
+    <a asp-page="/Ventanas/Admin/PagosHTML" class="cli-card">
         <div class="cli-card-icon">💳</div>
         <div class="cli-card-title">Pagos</div>
         <div class="cli-card-desc">Historial de pagos realizados y saldos pendientes.</div>
         <span class="cli-card-tag">Historial</span>
     </a>
 
-    <a asp-page="/Ventanas/Cliente/VentasHTML" class="cli-card">
+    <a asp-page="/Ventanas/Admin/VentasHTML" class="cli-card">
         <div class="cli-card-icon">🔧</div>
         <div class="cli-card-title">Compras</div>
         <div class="cli-card-desc">Consulta las compras realizadas.</div>
         <span class="cli-card-tag">Historial</span>
     </a>
 
-    <a asp-page="/Ventanas/Cliente/MisResenasHTML" class="cli-card">
+    <a asp-page="/Ventanas/Admin/ResenasHTML" class="cli-card">
         <div class="cli-card-icon">⭐</div>
         <div class="cli-card-title">Reseñas</div>
         <div class="cli-card-desc">Califica los servicios recibidos y deja tu opinión.</div>

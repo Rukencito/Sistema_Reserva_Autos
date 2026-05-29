@@ -29,12 +29,25 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             IEmpleadosPresentacion= new  EmpleadosPresentacion();
         }
 
+        public List<Autos> ObtenerAutos()
+        {
+            return ListaAuto = IAutosPresentacion!.Consultar();
+        }
+        public List<Clientes> ObtenerClientes()
+        {
+            return ListaCliente = IClientesPresentacion!.Consultar();
+        }
+
+        public List<Empleados> ObtenerEmpleados()
+        {
+            return ListaEmpleado = IEmpleadosPresentacion!.Consultar();
+        }
+
+
         private void CargarListaFiltrada()
         {
             var rol = HttpContext.Session.GetString("RolId");
             var usuarioId = HttpContext.Session.GetString("EntidadId");
-
-            ViewData["Debug"] = $"Rol='{rol}' | UsuarioId='{usuarioId}' | Presentacion={IAlquileresPresentacion != null}";
 
             Lista = IAlquileresPresentacion!.Consultar();
 
@@ -42,6 +55,15 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                 Lista = Lista!.Where(x => x.Clientes == clienteId).ToList();
             else if (rol == "3" && int.TryParse(usuarioId, out int empleadoId))
                 Lista = Lista!.Where(x => x.Empleados == empleadoId).ToList();
+            else if (rol == "4" && int.TryParse(usuarioId, out int duenoId))
+            {
+                var autosDueno = IAutosPresentacion!.Consultar()
+                    .Where(a => a.Duenos.HasValue && a.Duenos.Value == duenoId)
+                    .Select(a => a.Id)
+                    .ToList();
+
+                Lista = Lista!.Where(x => autosDueno.Contains(x.Autos)).ToList();
+            }
         }
 
         public void OnGet()
@@ -52,11 +74,9 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                 Alquiler = null;
                 Borrando = false;
             }
-            catch (Exception ex)
-            {
-                ViewData["Debug"] += $" | EXCEPCION: {ex.Message} | Inner: {ex.InnerException?.Message}";
-            }
+            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
         }
+
         public void OnPostBtRefrescar()
         {
             try
@@ -65,6 +85,47 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                 Alquiler = null;
                 Borrando = false;
                 ModelState.Clear();
+            }
+            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
+        }
+
+        public void OnPostBtNuevo()
+        {
+            Alquiler = new Alquileres();
+            Lista = null;
+            Borrando = false;
+        }
+
+        public void OnPostBtModificar(int data)
+        {
+            try
+            {
+                var rol = HttpContext.Session.GetString("RolId");
+                var usuarioId = HttpContext.Session.GetString("EntidadId");
+
+                var listaTemp = IAlquileresPresentacion!.Consultar();
+
+                if (rol == "1")
+                    Alquiler = listaTemp!.FirstOrDefault(x => x.Id == data);
+                else if (rol == "2" && int.TryParse(usuarioId, out int clienteId))
+                    Alquiler = listaTemp!.FirstOrDefault(x => x.Id == data && x.Clientes == clienteId);
+                else if (rol == "3" && int.TryParse(usuarioId, out int empleadoId))
+                    Alquiler = listaTemp!.FirstOrDefault(x => x.Id == data && x.Empleados == empleadoId);
+                else if (rol == "4" && int.TryParse(usuarioId, out int duenoId))
+                {
+                    var autosDueno = IAutosPresentacion!.Consultar()
+                        .Where(a => a.Duenos.HasValue && a.Duenos.Value == duenoId)
+                        .Select(a => a.Id)
+                        .ToList();
+
+                    Alquiler = listaTemp!.FirstOrDefault(x => x.Id == data && autosDueno.Contains(x.Autos));
+                }
+
+                if (Alquiler == null)
+                    ViewData["Mensaje"] = "No tienes permiso para modificar este alquiler.";
+
+                Lista = null;
+                Borrando = false;
             }
             catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
         }
@@ -98,71 +159,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             }
             catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
         }
-        public List<Autos> ObtenerAutos()
-        {
-            return ListaAuto = IAutosPresentacion!.Consultar();
-        }
-        public List<Clientes> ObtenerClientes()
-        {
-            return ListaCliente = IClientesPresentacion!.Consultar();
-        }
 
-        public List<Empleados> ObtenerEmpleados()
-        {
-            return ListaEmpleado = IEmpleadosPresentacion!.Consultar();
-        }
-
-
-        public void OnPostBtNuevo()
-        {
-            Alquiler = new Alquileres();
-            Lista = null;
-            Borrando = false;
-        }
-
-        public void OnPostBtModificar(int data)
-        {
-            try
-            {
-                var rol = HttpContext.Session.GetString("RolId");
-                var usuarioId = HttpContext.Session.GetString("EntidadId");
-
-                Lista = IAlquileresPresentacion!.Consultar();
-
-                //Admin
-                if (rol == "1")
-                {
-                    Alquiler = Lista!.FirstOrDefault(x => x.Id == data);
-                }
-                
-                //Cliente
-                else if (rol == "2")
-                {
-                    Alquiler = Lista!.FirstOrDefault(x => 
-                    x.Id == data && x.Clientes == int.Parse(usuarioId!));
-                }
-
-                //Empleado
-                else if (rol == "3")
-                {
-                    Alquiler = Lista!.FirstOrDefault(x =>
-                    x.Id == data && x.Empleados == int.Parse(usuarioId!));
-                }
-
-                if (Alquiler == null)
-                {
-                    ViewData["Mensaje"] = "No tienes permiso para modificar este alquiler.";
-                }
-
-                Lista = null;
-                Borrando = false;
-            }
-
-            catch (Exception ex)
-            {
-                ViewData["Mensaje"] = ex.Message;
-            }
-        }
 
         public void OnPostBtBorrar()
         {
@@ -171,33 +168,23 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                 var rol = HttpContext.Session.GetString("RolId");
                 var usuarioId = HttpContext.Session.GetString("EntidadId");
 
-                var Lista = IAlquileresPresentacion!.Consultar();
-
+                var listaTemp = IAlquileresPresentacion!.Consultar();
                 Alquileres? AlquilerPermitido = null;
 
-                //Admin
                 if (rol == "1")
+                    AlquilerPermitido = listaTemp!.FirstOrDefault(x => x.Id == Alquiler!.Id);
+                else if (rol == "2" && int.TryParse(usuarioId, out int clienteId))
+                    AlquilerPermitido = listaTemp!.FirstOrDefault(x => x.Id == Alquiler!.Id && x.Clientes == clienteId);
+                else if (rol == "3" && int.TryParse(usuarioId, out int empleadoId))
+                    AlquilerPermitido = listaTemp!.FirstOrDefault(x => x.Id == Alquiler!.Id && x.Empleados == empleadoId);
+                else if (rol == "4" && int.TryParse(usuarioId, out int duenoId))
                 {
-                    AlquilerPermitido = Lista!.FirstOrDefault(x => x.Id == Alquiler!.Id);
-                }
+                    var autosDueno = IAutosPresentacion!.Consultar()
+                        .Where(a => a.Duenos.HasValue && a.Duenos.Value == duenoId)
+                        .Select(a => a.Id)
+                        .ToList();
 
-                //Cliente
-                else if (rol == "2")
-                {
-                    AlquilerPermitido = Lista!.FirstOrDefault(x =>
-                    x.Id == Alquiler!.Id && x.Clientes.ToString() == usuarioId!);
-                }
-
-                //Empleado
-                else if (rol == "3")
-                {
-                    AlquilerPermitido = Lista!.FirstOrDefault(x =>
-                    x.Id == Alquiler!.Id && x.Empleados.ToString() == usuarioId!);
-                }
-
-                if (Alquiler == null)
-                {
-                    ViewData["Mensaje"] = "No tienes permiso para modificar este alquiler.";
+                    AlquilerPermitido = listaTemp!.FirstOrDefault(x => x.Id == Alquiler!.Id && autosDueno.Contains(x.Autos));
                 }
 
                 if (AlquilerPermitido == null)
@@ -209,16 +196,12 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
                 Alquiler = IAlquileresPresentacion!.Eliminar(Alquiler!);
 
-                OnGet();
-
-                Lista = null;
+                CargarListaFiltrada();
+                Alquiler = null;
                 Borrando = false;
-                OnPostBtRefrescar();
+                ModelState.Clear();
             }
-            catch (Exception ex)
-            {
-                ViewData["Mensaje"] = ex.Message;
-            }
+            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
         }
 
         public void OnPostBtBorrarVal(int data)

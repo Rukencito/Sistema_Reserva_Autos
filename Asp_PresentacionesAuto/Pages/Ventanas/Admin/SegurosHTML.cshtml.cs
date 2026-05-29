@@ -1,25 +1,24 @@
-
 using Lib_Negocio_Autos.modelo;
-using Lib_Presentacion_Autos.Interfaces;
 using Lib_Presentacion_Autos.Implementaciones;
+using Lib_Presentacion_Autos.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 {
-    public class GarantiasHTMLModel : PageModel
+    public class SegurosHTMLModel : PageModel
     {
-        private IGarantiasPresentacion? IGarantiasPresentacion;
+        private ISegurosPresentacion? ISegurosPresentacion;
         private IAutosPresentacion? IAutosPresentacion;
-        [BindProperty] public List<Garantias>? Lista { get; set; }
+        [BindProperty] public List<Seguros>? Lista { get; set; }
         [BindProperty] public List<Autos>? ListaAuto { get; set; }
-        [BindProperty] public Garantias? Garantia { get; set; }
+        [BindProperty] public Seguros? Seguro { get; set; }
         [BindProperty] public bool Borrando { get; set; }
 
-        public GarantiasHTMLModel()
+        public SegurosHTMLModel()
         {
-            IGarantiasPresentacion = new GarantiasPresentacion();
-            IAutosPresentacion = new AutosPresentacion(); 
+            ISegurosPresentacion = new SegurosPresentacion();
+            IAutosPresentacion = new AutosPresentacion();
         }
 
         private void CargarListaFiltrada()
@@ -27,7 +26,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             var rol = HttpContext.Session.GetString("RolId");
             var entidadId = HttpContext.Session.GetString("EntidadId");
 
-            Lista = IGarantiasPresentacion!.Consultar();
+            Lista = ISegurosPresentacion!.Consultar();
 
             if (rol == "4" && int.TryParse(entidadId, out int duenoId))
             {
@@ -36,7 +35,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                     .Select(a => a.Id)
                     .ToList();
 
-                Lista = Lista!.Where(x => autosDueno.Contains(x.Autos)).ToList();
+                Lista = Lista!.Where(x => x.Autos.HasValue && autosDueno.Contains(x.Autos.Value)).ToList();
             }
         }
 
@@ -45,10 +44,24 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             try
             {
                 CargarListaFiltrada();
-                Garantia = null;
+                Seguro = null;
                 Borrando = false;
             }
             catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
+        }
+
+        public List<Autos> ObtenerAutos()
+        {
+            var rol = HttpContext.Session.GetString("RolId");
+            var entidadId = HttpContext.Session.GetString("EntidadId");
+
+            var todos = IAutosPresentacion!.Consultar();
+
+            // Dueño solo ve sus autos en el select
+            if (rol == "4" && int.TryParse(entidadId, out int duenoId))
+                return ListaAuto = todos.Where(a => a.Duenos.HasValue && a.Duenos.Value == duenoId).ToList();
+
+            return ListaAuto = todos;
         }
 
         public void OnPostBtRefrescar()
@@ -56,7 +69,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             try
             {
                 CargarListaFiltrada();
-                Garantia = null;
+                Seguro = null;
                 Borrando = false;
                 ModelState.Clear();
             }
@@ -65,7 +78,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtNuevo()
         {
-            Garantia = new Garantias();
+            Seguro = new Seguros();
             Lista = null;
             Borrando = false;
         }
@@ -77,11 +90,11 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                 var rol = HttpContext.Session.GetString("RolId");
                 var entidadId = HttpContext.Session.GetString("EntidadId");
 
-                var listaTemp = IGarantiasPresentacion!.Consultar();
+                var listaTemp = ISegurosPresentacion!.Consultar();
 
                 if (rol == "1")
                 {
-                    Garantia = listaTemp!.FirstOrDefault(x => x.Id == data);
+                    Seguro = listaTemp!.FirstOrDefault(x => x.Id == data);
                 }
                 else if (rol == "4" && int.TryParse(entidadId, out int duenoId))
                 {
@@ -90,12 +103,12 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                         .Select(a => a.Id)
                         .ToList();
 
-                    Garantia = listaTemp!.FirstOrDefault(x =>
-                        x.Id == data && autosDueno.Contains(x.Autos));
+                    Seguro = listaTemp!.FirstOrDefault(x =>
+                        x.Id == data && x.Autos.HasValue && autosDueno.Contains(x.Autos.Value));
                 }
 
-                if (Garantia == null)
-                    ViewData["Mensaje"] = "No tienes permiso para modificar esta garantía.";
+                if (Seguro == null)
+                    ViewData["Mensaje"] = "No tienes permiso para modificar este seguro.";
 
                 Lista = null;
                 Borrando = false;
@@ -107,17 +120,17 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
             try
             {
-                if (Garantia == null) return;
+                if (Seguro == null) return;
 
-                if (Garantia.Id == 0)
-                    Garantia = IGarantiasPresentacion!.Guardar(Garantia!);
+                if (Seguro.Id == 0)
+                    Seguro = ISegurosPresentacion!.Guardar(Seguro!);
                 else
-                    Garantia = IGarantiasPresentacion!.Modificar(Garantia!);
+                    Seguro = ISegurosPresentacion!.Modificar(Seguro!);
 
-                if (Garantia.Id == 0) return;
+                if (Seguro.Id == 0) return;
 
                 CargarListaFiltrada();
-                Garantia = null;
+                Seguro = null;
                 Borrando = false;
                 ModelState.Clear();
             }
@@ -128,17 +141,17 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
             try
             {
-                if (Garantia == null) return;
+                if (Seguro == null) return;
 
                 var rol = HttpContext.Session.GetString("RolId");
                 var entidadId = HttpContext.Session.GetString("EntidadId");
 
-                var listaTemp = IGarantiasPresentacion!.Consultar();
-                Garantias? GarantiaPermitida = null;
+                var listaTemp = ISegurosPresentacion!.Consultar();
+                Seguros? SeguroPermitido = null;
 
                 if (rol == "1")
                 {
-                    GarantiaPermitida = listaTemp!.FirstOrDefault(x => x.Id == Garantia!.Id);
+                    SeguroPermitido = listaTemp!.FirstOrDefault(x => x.Id == Seguro!.Id);
                 }
                 else if (rol == "4" && int.TryParse(entidadId, out int duenoId))
                 {
@@ -147,21 +160,21 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                         .Select(a => a.Id)
                         .ToList();
 
-                    GarantiaPermitida = listaTemp!.FirstOrDefault(x =>
-                        x.Id == Garantia!.Id && autosDueno.Contains(x.Autos));
+                    SeguroPermitido = listaTemp!.FirstOrDefault(x =>
+                        x.Id == Seguro!.Id && x.Autos.HasValue && autosDueno.Contains(x.Autos.Value));
                 }
 
-                if (GarantiaPermitida == null)
+                if (SeguroPermitido == null)
                 {
-                    ViewData["Mensaje"] = "No tienes permiso para eliminar esta garantía.";
+                    ViewData["Mensaje"] = "No tienes permiso para eliminar este seguro.";
                     OnGet();
                     return;
                 }
 
-                Garantia = IGarantiasPresentacion!.Eliminar(Garantia!);
+                Seguro = ISegurosPresentacion!.Eliminar(Seguro!);
 
                 CargarListaFiltrada();
-                Garantia = null;
+                Seguro = null;
                 Borrando = false;
                 ModelState.Clear();
             }
@@ -175,13 +188,13 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                 var rol = HttpContext.Session.GetString("RolId");
                 var entidadId = HttpContext.Session.GetString("EntidadId");
 
-                var listaTemp = IGarantiasPresentacion!.Consultar();
+                var listaTemp = ISegurosPresentacion!.Consultar();
 
                 OnPostBtRefrescar();
 
                 if (rol == "1")
                 {
-                    Garantia = listaTemp!.FirstOrDefault(x => x.Id == data);
+                    Seguro = listaTemp!.FirstOrDefault(x => x.Id == data);
                 }
                 else if (rol == "4" && int.TryParse(entidadId, out int duenoId))
                 {
@@ -190,13 +203,13 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                         .Select(a => a.Id)
                         .ToList();
 
-                    Garantia = listaTemp!.FirstOrDefault(x =>
-                        x.Id == data && autosDueno.Contains(x.Autos));
+                    Seguro = listaTemp!.FirstOrDefault(x =>
+                        x.Id == data && x.Autos.HasValue && autosDueno.Contains(x.Autos.Value));
                 }
 
-                if (Garantia == null)
+                if (Seguro == null)
                 {
-                    ViewData["Mensaje"] = "No tienes permiso para eliminar esta garantía.";
+                    ViewData["Mensaje"] = "No tienes permiso para eliminar este seguro.";
                     CargarListaFiltrada();
                     return;
                 }

@@ -4,6 +4,7 @@ using Lib_Presentacion_Autos.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
+
 namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 {
     public class ClientesHTMLModel : PageModel
@@ -18,28 +19,44 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             IClientesPresentacion = new ClientesPresentacion();
         }
 
+        private void CargarListaFiltrada()
+        {
+            Lista = IClientesPresentacion!.Consultar();
+        }
+
         public void OnGet()
         {
-            OnPostBtRefrescar();
+            try
+            {
+                CargarListaFiltrada();
+                Cliente = null;
+                Borrando = false;
+            }
+            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
         }
 
         public void OnPostBtRefrescar()
         {
             try
             {
-                if (IClientesPresentacion == null)
-                    return;
-                Lista = IClientesPresentacion.Consultar();
+                CargarListaFiltrada();
                 Cliente = null;
+                Borrando = false;
+                ModelState.Clear();
             }
-            catch (Exception ex)
-            {
-                ViewData["Mensaje"] = ex.Message;
-            }
+            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
         }
 
         public void OnPostBtNuevo()
         {
+            // Solo Admin puede crear clientes
+            var rol = HttpContext.Session.GetString("RolId");
+            if (rol != "1")
+            {
+                ViewData["Mensaje"] = "No tienes permiso para crear clientes.";
+                CargarListaFiltrada();
+                return;
+            }
             Cliente = new Clientes();
             Lista = null;
             Borrando = false;
@@ -49,65 +66,103 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
             try
             {
-                OnPostBtRefrescar();
-                Cliente = Lista!.FirstOrDefault(x => x.Id == data);
+                var rol = HttpContext.Session.GetString("RolId");
+
+                if (rol == "1" || rol == "3")
+                {
+                    var listaTemp = IClientesPresentacion!.Consultar();
+                    Cliente = listaTemp!.FirstOrDefault(x => x.Id == data);
+                }
+                else
+                {
+                    ViewData["Mensaje"] = "No tienes permiso para modificar clientes.";
+                    CargarListaFiltrada();
+                    return;
+                }
+
+                if (Cliente == null)
+                    ViewData["Mensaje"] = "Cliente no encontrado.";
+
                 Lista = null;
                 Borrando = false;
             }
-            catch (Exception ex)
-            {
-                ViewData["Mensaje"] = ex.Message;
-            }
+            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
         }
 
         public void OnPostBtGuardar()
         {
             try
             {
-                if (Cliente == null)
+                if (Cliente == null) return;
+
+                var rol = HttpContext.Session.GetString("RolId");
+
+                if (rol != "1" && rol != "3")
+                {
+                    ViewData["Mensaje"] = "No tienes permiso para guardar clientes.";
+                    CargarListaFiltrada();
                     return;
+                }
+
                 if (Cliente.Id == 0)
                     Cliente = IClientesPresentacion!.Guardar(Cliente!);
                 else
                     Cliente = IClientesPresentacion!.Modificar(Cliente!);
-                if (Cliente.Id == 0)
-                    return;
-                OnPostBtRefrescar();
+
+                if (Cliente.Id == 0) return;
+
+                CargarListaFiltrada();
+                Cliente = null;
+                Borrando = false;
+                ModelState.Clear();
             }
-            catch (Exception ex)
-            {
-                ViewData["Mensaje"] = ex.Message;
-            }
+            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
         }
 
         public void OnPostBtBorrar()
         {
             try
             {
-                if (Cliente == null)
+                if (Cliente == null) return;
+
+                var rol = HttpContext.Session.GetString("RolId");
+
+                if (rol != "1")
+                {
+                    ViewData["Mensaje"] = "No tienes permiso para eliminar clientes.";
+                    OnGet();
                     return;
+                }
+
                 Cliente = IClientesPresentacion!.Eliminar(Cliente!);
-                OnPostBtRefrescar();
+
+                CargarListaFiltrada();
+                Cliente = null;
+                Borrando = false;
+                ModelState.Clear();
             }
-            catch (Exception ex)
-            {
-                ViewData["Mensaje"] = ex.Message;
-            }
+            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
         }
 
         public void OnPostBtBorrarVal(int data)
         {
             try
             {
+                var rol = HttpContext.Session.GetString("RolId");
+
+                if (rol != "1")
+                {
+                    ViewData["Mensaje"] = "No tienes permiso para eliminar clientes.";
+                    CargarListaFiltrada();
+                    return;
+                }
+
                 OnPostBtRefrescar();
                 Cliente = Lista!.FirstOrDefault(x => x.Id == data);
                 Lista = null;
                 Borrando = true;
             }
-            catch (Exception ex)
-            {
-                ViewData["Mensaje"] = ex.Message;
-            }
+            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
         }
 
         public void OnPostBtCerrar()

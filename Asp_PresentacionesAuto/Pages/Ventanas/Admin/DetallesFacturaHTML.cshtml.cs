@@ -21,29 +21,52 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             IFacturasPresentacion = new FacturasPresentacion();
         }
 
-        public void OnGet()
-        {
-            OnPostBtRefrescar();
-        }
-
         public List<Facturas> ObtenerFacturas()
         {
             return ListaFactura = IFacturasPresentacion!.Consultar();
+        }
+
+        private void CargarListaFiltrada()
+        {
+            var rol = HttpContext.Session.GetString("RolId");
+            var entidadId = HttpContext.Session.GetString("EntidadId");
+
+            Lista = IDetallesFacturaPresentacion!.Consultar();
+
+            // Solo clientes tienen filtro, empleados y admin ven todo
+            if (rol == "2" && int.TryParse(entidadId, out int clienteId))
+            {
+                var facturasCliente = IFacturasPresentacion!.Consultar()
+                    .Where(f => f.Clientes == clienteId)
+                    .Select(f => f.Id)
+                    .ToList();
+
+                Lista = Lista!.Where(x => facturasCliente.Contains(x.Facturas)).ToList();
+            }
+        }
+
+
+        public void OnGet()
+        {
+            try
+            {
+                CargarListaFiltrada();
+                DetallesFactura = null;
+                Borrando = false;
+            }
+            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
         }
 
         public void OnPostBtRefrescar()
         {
             try
             {
-                if (IDetallesFacturaPresentacion == null)
-                    return;
-                Lista = IDetallesFacturaPresentacion.Consultar();
+                CargarListaFiltrada();
                 DetallesFactura = null;
+                Borrando = false;
+                ModelState.Clear();
             }
-            catch (Exception ex)
-            {
-                ViewData["Mensaje"] = ex.Message;
-            }
+            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
         }
 
         public void OnPostBtNuevo()
@@ -57,16 +80,35 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
             try
             {
-                OnPostBtRefrescar();
-                DetallesFactura = Lista!.FirstOrDefault(x => x.Id == data);
+                var rol = HttpContext.Session.GetString("RolId");
+                var entidadId = HttpContext.Session.GetString("EntidadId");
+
+                var listaTemp = IDetallesFacturaPresentacion!.Consultar();
+
+                if (rol == "1")
+                {
+                    DetallesFactura = listaTemp!.FirstOrDefault(x => x.Id == data);
+                }
+                else if (rol == "2" && int.TryParse(entidadId, out int clienteId))
+                {
+                    var facturasCliente = IFacturasPresentacion!.Consultar()
+                        .Where(f => f.Clientes == clienteId)
+                        .Select(f => f.Id)
+                        .ToList();
+
+                    DetallesFactura = listaTemp!.FirstOrDefault(x =>
+                        x.Id == data && facturasCliente.Contains(x.Facturas));
+                }
+
+                if (DetallesFactura == null)
+                    ViewData["Mensaje"] = "No tienes permiso para modificar este detalle.";
+
                 Lista = null;
                 Borrando = false;
             }
-            catch (Exception ex)
-            {
-                ViewData["Mensaje"] = ex.Message;
-            }
+            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
         }
+
 
         public void OnPostBtGuardar()
         {
@@ -92,15 +134,44 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
             try
             {
-                if (DetallesFactura == null)
+                if (DetallesFactura == null) return;
+
+                var rol = HttpContext.Session.GetString("RolId");
+                var entidadId = HttpContext.Session.GetString("EntidadId");
+
+                var listaTemp = IDetallesFacturaPresentacion!.Consultar();
+                DetallesFactura? DetallePermitido = null;
+
+                if (rol == "1")
+                {
+                    DetallePermitido = listaTemp!.FirstOrDefault(x => x.Id == DetallesFactura!.Id);
+                }
+                else if (rol == "2" && int.TryParse(entidadId, out int clienteId))
+                {
+                    var facturasCliente = IFacturasPresentacion!.Consultar()
+                        .Where(f => f.Clientes == clienteId)
+                        .Select(f => f.Id)
+                        .ToList();
+
+                    DetallePermitido = listaTemp!.FirstOrDefault(x =>
+                        x.Id == DetallesFactura!.Id && facturasCliente.Contains(x.Facturas));
+                }
+
+                if (DetallePermitido == null)
+                {
+                    ViewData["Mensaje"] = "No tienes permiso para eliminar este detalle.";
+                    OnGet();
                     return;
+                }
+
                 DetallesFactura = IDetallesFacturaPresentacion!.Eliminar(DetallesFactura!);
-                OnPostBtRefrescar();
+
+                CargarListaFiltrada();
+                DetallesFactura = null;
+                Borrando = false;
+                ModelState.Clear();
             }
-            catch (Exception ex)
-            {
-                ViewData["Mensaje"] = ex.Message;
-            }
+            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
         }
 
         public void OnPostBtBorrarVal(int data)

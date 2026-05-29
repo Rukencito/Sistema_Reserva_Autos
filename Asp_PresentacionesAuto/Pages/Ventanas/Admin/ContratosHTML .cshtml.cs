@@ -21,28 +21,61 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             IAlquileresPresentacion = new AlquileresPresentacion();
         }
 
-        public void OnGet()
-        {
-            OnPostBtRefrescar();
-        }
         public List<Alquileres> ObtenerAlquileres()
         {
             return ListaAlquiler = IAlquileresPresentacion!.Consultar();
         }
 
+        private void CargarListaFiltrada()
+        {
+            var rol = HttpContext.Session.GetString("RolId");
+            var entidadId = HttpContext.Session.GetString("EntidadId");
+
+            Lista = IContratosPresentacion!.Consultar();
+
+            if (rol == "2" && int.TryParse(entidadId, out int clienteId))
+            {
+                var alquileresCliente = IAlquileresPresentacion!.Consultar()
+                    .Where(a => a.Clientes == clienteId)
+                    .Select(a => a.Id)
+                    .ToList();
+
+                Lista = Lista!.Where(x => alquileresCliente.Contains(x.Alquileres)).ToList();
+            }
+            else if (rol == "3" && int.TryParse(entidadId, out int empleadoId))
+            {
+                var alquileresEmpleado = IAlquileresPresentacion!.Consultar()
+                    .Where(a => a.Empleados == empleadoId)
+                    .Select(a => a.Id)
+                    .ToList();
+
+                Lista = Lista!.Where(x => alquileresEmpleado.Contains(x.Alquileres)).ToList();
+            }
+        }
+
+
+        public void OnGet()
+        {
+            try
+            {
+                CargarListaFiltrada();
+                Contrato = null;
+                Borrando = false;
+            }
+            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
+        }
+
+
         public void OnPostBtRefrescar()
         {
             try
             {
-                if (IContratosPresentacion == null)
-                    return;
-                Lista = IContratosPresentacion.Consultar();
+                CargarListaFiltrada();
                 Contrato = null;
+                Borrando = false;
+                ModelState.Clear();
             }
-            catch (Exception ex)
-            {
-                ViewData["Mensaje"] = ex.Message;
-            }
+            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
         }
 
         public void OnPostBtNuevo()
@@ -56,50 +89,124 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
             try
             {
-                OnPostBtRefrescar();
-                Contrato = Lista!.FirstOrDefault(x => x.Id == data);
+                var rol = HttpContext.Session.GetString("RolId");
+                var entidadId = HttpContext.Session.GetString("EntidadId");
+
+                var listaTemp = IContratosPresentacion!.Consultar();
+
+                // Admin 
+                if (rol == "1")
+                {
+                    Contrato = listaTemp!.FirstOrDefault(x => x.Id == data);
+                }
+                // Cliente 
+                else if (rol == "2" && int.TryParse(entidadId, out int clienteId))
+                {
+                    var alquileresCliente = IAlquileresPresentacion!.Consultar()
+                        .Where(a => a.Clientes == clienteId)
+                        .Select(a => a.Id)
+                        .ToList();
+
+                    Contrato = listaTemp!.FirstOrDefault(x =>
+                        x.Id == data && alquileresCliente.Contains(x.Alquileres));
+                }
+                // Empleado 
+                else if (rol == "3" && int.TryParse(entidadId, out int empleadoId))
+                {
+                    var alquileresEmpleado = IAlquileresPresentacion!.Consultar()
+                        .Where(a => a.Empleados == empleadoId)
+                        .Select(a => a.Id)
+                        .ToList();
+
+                    Contrato = listaTemp!.FirstOrDefault(x =>
+                        x.Id == data && alquileresEmpleado.Contains(x.Alquileres));
+                }
+
+                if (Contrato == null)
+                    ViewData["Mensaje"] = "No tienes permiso para modificar este contrato.";
+
                 Lista = null;
                 Borrando = false;
             }
-            catch (Exception ex)
-            {
-                ViewData["Mensaje"] = ex.Message;
-            }
+            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
         }
 
         public void OnPostBtGuardar()
         {
             try
             {
-                if (Contrato == null)
-                    return;
+                if (Contrato == null) return;
+
                 if (Contrato.Id == 0)
                     Contrato = IContratosPresentacion!.Guardar(Contrato!);
                 else
                     Contrato = IContratosPresentacion!.Modificar(Contrato!);
-                if (Contrato.Id == 0)
-                    return;
-                OnPostBtRefrescar();
+
+                if (Contrato.Id == 0) return;
+
+                CargarListaFiltrada();
+                Contrato = null;
+                Borrando = false;
+                ModelState.Clear();
             }
-            catch (Exception ex)
-            {
-                ViewData["Mensaje"] = ex.Message;
-            }
+            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
         }
 
         public void OnPostBtBorrar()
         {
             try
             {
-                if (Contrato == null)
+                if (Contrato == null) return;
+
+                var rol = HttpContext.Session.GetString("RolId");
+                var entidadId = HttpContext.Session.GetString("EntidadId");
+
+                var listaTemp = IContratosPresentacion!.Consultar();
+                Contratos? ContratoPermitido = null;
+
+                // Admin 
+                if (rol == "1")
+                {
+                    ContratoPermitido = listaTemp!.FirstOrDefault(x => x.Id == Contrato!.Id);
+                }
+                // Cliente 
+                else if (rol == "2" && int.TryParse(entidadId, out int clienteId))
+                {
+                    var alquileresCliente = IAlquileresPresentacion!.Consultar()
+                        .Where(a => a.Clientes == clienteId)
+                        .Select(a => a.Id)
+                        .ToList();
+
+                    ContratoPermitido = listaTemp!.FirstOrDefault(x =>
+                        x.Id == Contrato!.Id && alquileresCliente.Contains(x.Alquileres));
+                }
+                // Empleado 
+                else if (rol == "3" && int.TryParse(entidadId, out int empleadoId))
+                {
+                    var alquileresEmpleado = IAlquileresPresentacion!.Consultar()
+                        .Where(a => a.Empleados == empleadoId)
+                        .Select(a => a.Id)
+                        .ToList();
+
+                    ContratoPermitido = listaTemp!.FirstOrDefault(x =>
+                        x.Id == Contrato!.Id && alquileresEmpleado.Contains(x.Alquileres));
+                }
+
+                if (ContratoPermitido == null)
+                {
+                    ViewData["Mensaje"] = "No tienes permiso para eliminar este contrato.";
+                    OnGet();
                     return;
+                }
+
                 Contrato = IContratosPresentacion!.Eliminar(Contrato!);
-                OnPostBtRefrescar();
+
+                CargarListaFiltrada();
+                Contrato = null;
+                Borrando = false;
+                ModelState.Clear();
             }
-            catch (Exception ex)
-            {
-                ViewData["Mensaje"] = ex.Message;
-            }
+            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
         }
 
         public void OnPostBtBorrarVal(int data)

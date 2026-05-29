@@ -1,22 +1,29 @@
-
 using Lib_Negocio_Autos.modelo;
-using Lib_Presentacion_Autos.Interfaces;
 using Lib_Presentacion_Autos.Implementaciones;
+using Lib_Presentacion_Autos.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 {
-    public class FacturasHTMLModel : PageModel
+    public class ResenasHTMLModel : PageModel
     {
-        private IFacturasPresentacion? IFacturasPresentacion;
-        [BindProperty] public List<Facturas>? Lista { get; set; }
-        [BindProperty] public Facturas? Factura { get; set; }
+        private IResenasPresentacion? IResenasPresentacion;
+        private IClientesPresentacion? IClientesPresentacion;
+        [BindProperty] public List<Resenas>? Lista { get; set; }
+        [BindProperty] public List<Clientes>? ListaCliente { get; set; }
+        [BindProperty] public Resenas? Resena { get; set; }
         [BindProperty] public bool Borrando { get; set; }
 
-        public FacturasHTMLModel()
+        public ResenasHTMLModel()
         {
-            IFacturasPresentacion = new FacturasPresentacion();
+          IResenasPresentacion = new  ResenasPresentacion();
+            IClientesPresentacion = new ClientesPresentacion();
+        }
+
+        public List<Clientes> ObtenerClientes()
+        {
+            return ListaCliente = IClientesPresentacion!.Consultar();
         }
 
         private void CargarListaFiltrada()
@@ -24,7 +31,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             var rol = HttpContext.Session.GetString("RolId");
             var usuarioId = HttpContext.Session.GetString("EntidadId");
 
-            Lista = IFacturasPresentacion!.Consultar();
+            Lista = IResenasPresentacion!.Consultar();
 
             if (rol == "2" && int.TryParse(usuarioId, out int clienteId))
                 Lista = Lista!.Where(x => x.Clientes == clienteId).ToList();
@@ -35,12 +42,11 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             try
             {
                 CargarListaFiltrada();
-                Factura = null;
+                Resena = null;
                 Borrando = false;
             }
             catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
         }
-
 
 
         public void OnPostBtRefrescar()
@@ -48,7 +54,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             try
             {
                 CargarListaFiltrada();
-                Factura = null;
+                Resena = null;
                 Borrando = false;
                 ModelState.Clear();
             }
@@ -57,7 +63,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtNuevo()
         {
-            Factura = new Facturas();
+            Resena = new Resenas();
             Lista = null;
             Borrando = false;
         }
@@ -69,24 +75,24 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                 var rol = HttpContext.Session.GetString("RolId");
                 var usuarioId = HttpContext.Session.GetString("EntidadId");
 
-                Lista = IFacturasPresentacion!.Consultar();
+                Lista = IResenasPresentacion!.Consultar();
 
                 //Admin
                 if (rol == "1")
                 {
-                    Factura = Lista!.FirstOrDefault(x => x.Id == data);
+                    Resena = Lista!.FirstOrDefault(x => x.Id == data);
                 }
 
                 //Cliente
                 else if (rol == "2")
                 {
-                    Factura = Lista!.FirstOrDefault(x =>
+                    Resena = Lista!.FirstOrDefault(x =>
                     x.Id == data && x.Clientes == int.Parse(usuarioId!));
                 }
 
-                if (Factura == null)
+                if (Resena == null)
                 {
-                    ViewData["Mensaje"] = "No tienes permiso para modificar este Factura.";
+                    ViewData["Mensaje"] = "No tienes permiso para modificar este Resena.";
                 }
 
                 Lista = null;
@@ -103,24 +109,24 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
             try
             {
-                if (Factura == null) return;
+                if (Resena == null) return;
 
                 var rol = HttpContext.Session.GetString("RolId");
                 var usuarioId = HttpContext.Session.GetString("EntidadId");
 
                 // Si es cliente o empleado, forzar su propio ID al guardar
                 if (rol == "2" && int.TryParse(usuarioId, out int clienteId))
-                    Factura.Clientes = clienteId;
+                    Resena.Clientes = clienteId;
 
-                if (Factura.Id == 0)
-                    Factura = IFacturasPresentacion!.Guardar(Factura!);
+                if (Resena.Id == 0)
+                    Resena = IResenasPresentacion!.Guardar(Resena!);
                 else
-                    Factura = IFacturasPresentacion!.Modificar(Factura!);
+                    Resena = IResenasPresentacion!.Modificar(Resena!);
 
-                if (Factura.Id == 0) return;
+                if (Resena.Id == 0) return;
 
                 CargarListaFiltrada();
-                Factura = null;
+                Resena = null;
                 Borrando = false;
                 ModelState.Clear();
             }
@@ -134,36 +140,36 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                 var rol = HttpContext.Session.GetString("RolId");
                 var usuarioId = HttpContext.Session.GetString("EntidadId");
 
-                var Lista = IFacturasPresentacion!.Consultar();
+                var Lista = IResenasPresentacion!.Consultar();
 
-                Facturas? FacturaPermitido = null;
+                Resenas? ResenaPermitido = null;
 
                 //Admin
                 if (rol == "1")
                 {
-                    FacturaPermitido = Lista!.FirstOrDefault(x => x.Id == Factura!.Id);
+                    ResenaPermitido = Lista!.FirstOrDefault(x => x.Id == Resena!.Id);
                 }
 
                 //Cliente
                 else if (rol == "2")
                 {
-                    FacturaPermitido = Lista!.FirstOrDefault(x =>
-                    x.Id == Factura!.Id && x.Clientes.ToString() == usuarioId!);
+                    ResenaPermitido = Lista!.FirstOrDefault(x =>
+                    x.Id == Resena!.Id && x.Clientes.ToString() == usuarioId!);
                 }
 
-                if (Factura == null)
+                if (Resena == null)
                 {
-                    ViewData["Mensaje"] = "No tienes permiso para modificar este Factura.";
+                    ViewData["Mensaje"] = "No tienes permiso para modificar este Resena.";
                 }
 
-                if (FacturaPermitido == null)
+                if (ResenaPermitido == null)
                 {
-                    ViewData["Mensaje"] = "No tienes permiso para eliminar este Factura.";
+                    ViewData["Mensaje"] = "No tienes permiso para eliminar este Resena.";
                     OnGet();
                     return;
                 }
 
-                Factura = IFacturasPresentacion!.Eliminar(Factura!);
+                Resena = IResenasPresentacion!.Eliminar(Resena!);
 
                 OnGet();
 
@@ -182,7 +188,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             try
             {
                 OnPostBtRefrescar();
-                Factura = Lista!.FirstOrDefault(x => x.Id == data);
+                Resena = Lista!.FirstOrDefault(x => x.Id == data);
                 Lista = null;
                 Borrando = true;
             }

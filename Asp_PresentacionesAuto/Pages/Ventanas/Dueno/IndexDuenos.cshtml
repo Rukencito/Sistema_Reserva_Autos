@@ -238,7 +238,7 @@
 
 <div class="duo-grid">
 
-    <a asp-page="/Ventanas/Dueno/MisAutosHTML" class="duo-card duo-card-featured">
+    <a asp-page="/Ventanas/Admin/AutosHTML" class="duo-card duo-card-featured">
         <div class="duo-card-icon">🚗</div>
         <div class="duo-card-title">Mis Autos</div>
         <div class="duo-card-desc">
@@ -247,25 +247,16 @@
         <span class="duo-card-tag">Principal</span>
     </a>
 
-    <a asp-page="/Ventanas/Dueno/MisReservasHTML" class="duo-card">
-        <div class="duo-card-icon">📅</div>
-        <div class="duo-card-title">Reservas</div>
+    <a asp-page="/Ventanas/Admin/VentasHTML" class="duo-card duo-card-featured">
+        <div class="duo-card-icon">$</div>
+        <div class="duo-card-title">Mis Ventas</div>
         <div class="duo-card-desc">
-            Ve las reservas activas y pendientes de los autos de tu propiedad.
+            Consulta, registra y gestiona todas las ventas de tus vehículos.
         </div>
-        <span class="duo-card-tag">Activas</span>
+        <span class="duo-card-tag">Principal</span>
     </a>
 
-    <a asp-page="/Ventanas/Dueno/MisPagosHTML" class="duo-card">
-        <div class="duo-card-icon">💳</div>
-        <div class="duo-card-title">Pagos</div>
-        <div class="duo-card-desc">
-            Historial de pagos generados por los alquileres de tus vehículos.
-        </div>
-        <span class="duo-card-tag">Historial</span>
-    </a>
-
-    <a asp-page="/Ventanas/Dueno/MisMantenimientosHTML" class="duo-card">
+    <a asp-page="/Ventanas/Admin/MantenimientosHTML" class="duo-card">
         <div class="duo-card-icon">🔧</div>
         <div class="duo-card-title">Mantenimientos</div>
         <div class="duo-card-desc">
@@ -274,14 +265,25 @@
         <span class="duo-card-tag">Historial</span>
     </a>
 
-    <a asp-page="/Ventanas/Dueno/MisResenasHTML" class="duo-card">
-        <div class="duo-card-icon">⭐</div>
-        <div class="duo-card-title">Reseñas</div>
+    <a asp-page="/Ventanas/Admin/GarantiasHTML" class="duo-card">
+        <div class="duo-card-icon">🔄</div>
+        <div class="duo-card-title">Garantías</div>
         <div class="duo-card-desc">
-            Consulta las opiniones y calificaciones que dejaron los clientes sobre tus autos.
+            Ve las garantías activas de los autos de tu propiedad.
         </div>
-        <span class="duo-card-tag">Opiniones</span>
+        <span class="duo-card-tag">Activas</span>
     </a>
+
+    <a asp-page="/Ventanas/Admin/SegurosHTML" class="duo-card">
+        <div class="duo-card-icon">🛡️</div>
+        <div class="duo-card-title">Seguros</div>
+        <div class="duo-card-desc">
+            Historial de seguros de los autos de tu propiedad.
+        </div>
+        <span class="duo-card-tag">Historial</span>
+    </a>
+
+    
 
 </div>
 
