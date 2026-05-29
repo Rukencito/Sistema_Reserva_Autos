@@ -118,7 +118,7 @@ namespace Lib_Negocio_Autos.Implementaciones
             }
 
             return iConexion!.Devoluciones!
-                .Any(d => d.Alquiler!= null && d.Alquiler.Id == alquilerId);
+                .Any(d => d.Alquileres == alquilerId);
         }
 
         public Devoluciones ConsultarPorAlquiler(int alquilerId)
@@ -126,7 +126,7 @@ namespace Lib_Negocio_Autos.Implementaciones
             AbrirConexion();
 
             var devolucion = iConexion!.Devoluciones!
-                .FirstOrDefault(d => d.Alquiler != null && d.Alquiler.Id == alquilerId);
+                .FirstOrDefault(d => d.Alquileres == alquilerId);
 
             if (devolucion == null)
             {
@@ -180,7 +180,7 @@ namespace Lib_Negocio_Autos.Implementaciones
             if (entidad == null)
                 throw new Exception("La información de la devolución es obligatoria");
 
-            if (entidad.Alquiler == null)
+            if (entidad.Alquileres == 0)
                 throw new Exception("La devolución debe estar asociada a un alquiler");
 
             if (entidad.FechaEntrega == DateTime.MinValue)

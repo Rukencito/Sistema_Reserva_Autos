@@ -9,13 +9,20 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
     public class EmpleadosHTMLModel : PageModel
     {
         private IEmpleadosPresentacion? IEmpleadosPresentacion;
+        private ISucursalesPresentacion? ISucursalesPresentacion;
         [BindProperty] public List<Empleados>? Lista { get; set; }
+        [BindProperty] public List<Sucursales>? ListaSucursal { get; set; }
         [BindProperty] public Empleados? Empleado { get; set; }
         [BindProperty] public bool Borrando { get; set; }
 
         public EmpleadosHTMLModel()
         {
             IEmpleadosPresentacion = new EmpleadosPresentacion();
+            ISucursalesPresentacion = new SucursalesPresentacion();
+        }
+        public List<Sucursales> ObtenerSucursales()
+        {
+            return ListaSucursal = ISucursalesPresentacion!.Consultar();
         }
 
         public void OnGet()
@@ -66,17 +73,38 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             {
                 if (Empleado == null)
                     return;
+
+                if ((Empleado.Sucursales ?? 0) == 0)
+                {
+                    ViewData["Mensaje"] = "Debe seleccionar una sucursal.";
+                    return;
+                }
+
                 if (Empleado.Id == 0)
                     Empleado = IEmpleadosPresentacion!.Guardar(Empleado!);
                 else
                     Empleado = IEmpleadosPresentacion!.Modificar(Empleado!);
+
                 if (Empleado.Id == 0)
+                {
+                    ViewData["Mensaje"] = "No fue posible guardar el empleado.";
                     return;
+                }
+
+                ViewData["Mensaje"] = "Empleado guardado correctamente.";
+
                 OnPostBtRefrescar();
             }
             catch (Exception ex)
             {
-                ViewData["Mensaje"] = ex.Message;
+                Exception errorReal = ex;
+
+                while (errorReal.InnerException != null)
+                    errorReal = errorReal.InnerException;
+
+                ViewData["Mensaje"] = errorReal.Message;
+
+                OnPostBtRefrescar();
             }
         }
 

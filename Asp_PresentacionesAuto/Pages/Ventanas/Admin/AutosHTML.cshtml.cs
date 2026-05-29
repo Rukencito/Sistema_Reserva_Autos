@@ -118,12 +118,36 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
             try
             {
-                if (Auto == null) return;
+                if (Auto == null)
+                    return;
+
+                if (!Auto.Duenos.HasValue || Auto.Duenos.Value == 0)
+                {
+                    ViewData["Mensaje"] = "Debe seleccionar un dueño.";
+                    return;
+                }
+                
+                if (!Auto.Parqueaderos.HasValue || Auto.Parqueaderos.Value == 0)
+                {
+                    ViewData["Mensaje"] = "Debe seleccionar un parqueadero.";
+                    return;
+                }
+
+                if (!Auto.Sucursales.HasValue || Auto.Sucursales.Value == 0)
+                {
+                    ViewData["Mensaje"] = "Debe seleccionar una sucursal.";
+                    return;
+                }
+
+                if (!Auto.Inventarios.HasValue || Auto.Inventarios.Value == 0)
+                {
+                    ViewData["Mensaje"] = "Debe seleccionar un inventario.";
+                    return;
+                }
 
                 var rol = HttpContext.Session.GetString("RolId");
                 var entidadId = HttpContext.Session.GetString("EntidadId");
 
-                // Si es dueño, forzar su propio ID al guardar
                 if (rol == "4" && int.TryParse(entidadId, out int duenoId))
                     Auto.Duenos = duenoId;
 
@@ -132,14 +156,30 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                 else
                     Auto = IAutosPresentacion!.Modificar(Auto!);
 
-                if (Auto.Id == 0) return;
+                if (Auto.Id == 0)
+                {
+                    ViewData["Mensaje"] = "No fue posible guardar el auto.";
+                    return;
+                }
+
+                ViewData["Mensaje"] = "Auto guardado correctamente.";
 
                 CargarListaFiltrada();
                 Auto = null;
                 Borrando = false;
                 ModelState.Clear();
             }
-            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
+            catch (Exception ex)
+            {
+                Exception errorReal = ex;
+
+                while (errorReal.InnerException != null)
+                    errorReal = errorReal.InnerException;
+
+                ViewData["Mensaje"] = errorReal.Message;
+
+                CargarListaFiltrada();
+            }
         }
 
         public void OnPostBtBorrar()

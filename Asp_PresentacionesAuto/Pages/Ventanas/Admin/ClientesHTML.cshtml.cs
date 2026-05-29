@@ -93,7 +93,8 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
             try
             {
-                if (Cliente == null) return;
+                if (Cliente == null)
+                    return;
 
                 var rol = HttpContext.Session.GetString("RolId");
 
@@ -109,14 +110,30 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                 else
                     Cliente = IClientesPresentacion!.Modificar(Cliente!);
 
-                if (Cliente.Id == 0) return;
+                if (Cliente.Id == 0)
+                {
+                    ViewData["Mensaje"] = "No fue posible guardar el cliente.";
+                    return;
+                }
+
+                ViewData["Mensaje"] = "Cliente guardado correctamente.";
 
                 CargarListaFiltrada();
                 Cliente = null;
                 Borrando = false;
                 ModelState.Clear();
             }
-            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
+            catch (Exception ex)
+            {
+                Exception errorReal = ex;
+
+                while (errorReal.InnerException != null)
+                    errorReal = errorReal.InnerException;
+
+                ViewData["Mensaje"] = errorReal.Message;
+
+                CargarListaFiltrada();
+            }
         }
 
         public void OnPostBtBorrar()

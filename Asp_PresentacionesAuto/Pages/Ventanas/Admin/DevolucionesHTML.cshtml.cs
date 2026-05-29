@@ -121,21 +121,44 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
             try
             {
-                if (Devolucion == null) return;
+                if (Devolucion == null)
+                    return;
+
+                if (Devolucion.Alquileres == 0)
+                {
+                    ViewData["Mensaje"] = "Debe seleccionar un alquiler.";
+                    return;
+                }
 
                 if (Devolucion.Id == 0)
                     Devolucion = IDevolucionesPresentacion!.Guardar(Devolucion!);
                 else
                     Devolucion = IDevolucionesPresentacion!.Modificar(Devolucion!);
 
-                if (Devolucion.Id == 0) return;
+                if (Devolucion.Id == 0)
+                {
+                    ViewData["Mensaje"] = "No fue posible guardar la devolución.";
+                    return;
+                }
+
+                ViewData["Mensaje"] = "Devolución guardada correctamente.";
 
                 CargarListaFiltrada();
                 Devolucion = null;
                 Borrando = false;
                 ModelState.Clear();
             }
-            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
+            catch (Exception ex)
+            {
+                Exception errorReal = ex;
+
+                while (errorReal.InnerException != null)
+                    errorReal = errorReal.InnerException;
+
+                ViewData["Mensaje"] = errorReal.Message;
+
+                CargarListaFiltrada();
+            }
         }
 
         public void OnPostBtBorrar()

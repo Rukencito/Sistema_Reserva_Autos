@@ -24,7 +24,7 @@
             <div align="left">
                 <h3>Devoluciones</h3>
             </div>
-            
+
             <div>
                 <a href="@urlRegresar" class="btn btn-danger">&#8592; Regresar</a>
                 <input type="submit"
@@ -86,7 +86,7 @@
                     </div>
                 </div>
             }
-            
+
             @if (ViewData.ContainsKey("Mensaje"))
             {
                 @await Html.PartialAsync("/Pages/Emergentes/Mensajes.cshtml")
@@ -101,7 +101,7 @@
                             <h2 align="left">Mensaje</h2>
                             <h6 align="left">Desea borrar el Devolucion?</h6>
                             <h6 align="left">@Model.Devolucion!.FechaEntrega</h6>
-                            
+
                             <input type="submit"
                                    value="Cerrar"
                                    asp-page-handler="BtCerrar"
@@ -123,8 +123,9 @@
                         <th>NivelCombustible</th>
                         <th>Observaciones</th>
                         <th>Alquileres</th>
+                        <th></th>
                     </tr>
-                
+
                     @foreach (var elemento in Model.Lista)
                     {
                         <tr>
@@ -132,37 +133,22 @@
                             <td>@elemento.NivelCombustible</td>
                             <td>@elemento.Observaciones</td>
                             <td>@elemento.Alquiler?.FechaInicio.ToString("dd/MM/yyyy")</td>
-                            
-                            @{
-                            var rol = HttpContext.Session.GetString("RolId");
-                            }
                             <td>
-                                <input type="submit"
-                                       value="Modificar"
-                                       asp-page-handler="BtModificar"
-                                       class="btn btn-secondary"
-                                       asp-route-data="@elemento.Id" />
-                                <input type="submit"
-                                       value="Borrar"
-                                       asp-page-handler="BtBorrarVal"
-                                       class="btn btn-secondary"
-                                       asp-route-data="@elemento.Id" />
+                                @if (rol == "1" || rol == "3")
+                                {
+                                    <input type="submit" value="Modificar"
+                                           asp-page-handler="BtModificar"
+                                           class="btn btn-secondary"
+                                           asp-route-data="@elemento.Id" />
+                                }
+                                @if (rol == "1")
+                                {
+                                    <input type="submit" value="Borrar"
+                                           asp-page-handler="BtBorrarVal"
+                                           class="btn btn-secondary"
+                                           asp-route-data="@elemento.Id" />
+                                }
                             </td>
-
-                            @if (rol == "1" || rol == "3")
-                            {
-                                <input type="submit" value="Modificar"
-                                       asp-page-handler="BtModificar"
-                                       class="btn btn-secondary"
-                                       asp-route-data="@elemento.Id" />
-                            }
-                            @if (rol == "1")
-                            {
-                                <input type="submit" value="Borrar"
-                                       asp-page-handler="BtBorrarVal"
-                                       class="btn btn-secondary"
-                                       asp-route-data="@elemento.Id" />
-                            }
                         </tr>
                     }
                 </table>

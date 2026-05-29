@@ -134,7 +134,26 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
             try
             {
-                if (Alquiler == null) return;
+                if (Alquiler == null)
+                    return;
+
+                if (Alquiler.Clientes == 0)
+                {
+                    ViewData["Mensaje"] = "Debe seleccionar un cliente.";
+                    return;
+                }
+
+                if (Alquiler.Autos == 0)
+                {
+                    ViewData["Mensaje"] = "Debe seleccionar un auto.";
+                    return;
+                }
+
+                if (Alquiler.Empleados == 0)
+                {
+                    ViewData["Mensaje"] = "Debe seleccionar un empleado.";
+                    return;
+                }
 
                 var rol = HttpContext.Session.GetString("RolId");
                 var usuarioId = HttpContext.Session.GetString("EntidadId");
@@ -150,14 +169,30 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                 else
                     Alquiler = IAlquileresPresentacion!.Modificar(Alquiler!);
 
-                if (Alquiler.Id == 0) return;
+                if (Alquiler.Id == 0)
+                {
+                    ViewData["Mensaje"] = "No fue posible guardar el alquiler.";
+                    return;
+                }
+
+                ViewData["Mensaje"] = "Alquiler guardado correctamente.";
 
                 CargarListaFiltrada();
                 Alquiler = null;
                 Borrando = false;
                 ModelState.Clear();
             }
-            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
+            catch (Exception ex)
+            {
+                Exception errorReal = ex;
+
+                while (errorReal.InnerException != null)
+                    errorReal = errorReal.InnerException;
+
+                ViewData["Mensaje"] = "Error al guardar el alquiler: " + errorReal.Message;
+
+                CargarListaFiltrada();
+            }
         }
 
 

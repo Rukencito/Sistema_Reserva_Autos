@@ -115,17 +115,32 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             {
                 if (DetallesFactura == null)
                     return;
+
                 if (DetallesFactura.Id == 0)
                     DetallesFactura = IDetallesFacturaPresentacion!.Guardar(DetallesFactura!);
                 else
                     DetallesFactura = IDetallesFacturaPresentacion!.Modificar(DetallesFactura!);
+
                 if (DetallesFactura.Id == 0)
+                {
+                    ViewData["Mensaje"] = "No fue posible guardar el detalle de factura.";
                     return;
+                }
+
+                ViewData["Mensaje"] = "Detalle de factura guardado correctamente.";
+
                 OnPostBtRefrescar();
             }
             catch (Exception ex)
             {
-                ViewData["Mensaje"] = ex.Message;
+                Exception errorReal = ex;
+
+                while (errorReal.InnerException != null)
+                    errorReal = errorReal.InnerException;
+
+                ViewData["Mensaje"] = errorReal.Message;
+
+                OnPostBtRefrescar();
             }
         }
 

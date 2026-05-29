@@ -66,17 +66,32 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             {
                 if (Dueno == null)
                     return;
+
                 if (Dueno.Id == 0)
                     Dueno = IDuenosPresentacion!.Guardar(Dueno!);
                 else
                     Dueno = IDuenosPresentacion!.Modificar(Dueno!);
+
                 if (Dueno.Id == 0)
+                {
+                    ViewData["Mensaje"] = "No fue posible guardar el dueño.";
                     return;
+                }
+
+                ViewData["Mensaje"] = "Dueño guardado correctamente.";
+
                 OnPostBtRefrescar();
             }
             catch (Exception ex)
             {
-                ViewData["Mensaje"] = ex.Message;
+                Exception errorReal = ex;
+
+                while (errorReal.InnerException != null)
+                    errorReal = errorReal.InnerException;
+
+                ViewData["Mensaje"] = errorReal.Message;
+
+                OnPostBtRefrescar();
             }
         }
 

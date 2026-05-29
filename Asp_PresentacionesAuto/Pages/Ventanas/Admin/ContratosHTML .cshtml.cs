@@ -135,21 +135,44 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
             try
             {
-                if (Contrato == null) return;
+                if (Contrato == null)
+                    return;
+
+                if (Contrato.Alquileres == 0)
+                {
+                    ViewData["Mensaje"] = "Debe seleccionar un alquiler.";
+                    return;
+                }
 
                 if (Contrato.Id == 0)
                     Contrato = IContratosPresentacion!.Guardar(Contrato!);
                 else
                     Contrato = IContratosPresentacion!.Modificar(Contrato!);
 
-                if (Contrato.Id == 0) return;
+                if (Contrato.Id == 0)
+                {
+                    ViewData["Mensaje"] = "No fue posible guardar el contrato.";
+                    return;
+                }
+
+                ViewData["Mensaje"] = "Contrato guardado correctamente.";
 
                 CargarListaFiltrada();
                 Contrato = null;
                 Borrando = false;
                 ModelState.Clear();
             }
-            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
+            catch (Exception ex)
+            {
+                Exception errorReal = ex;
+
+                while (errorReal.InnerException != null)
+                    errorReal = errorReal.InnerException;
+
+                ViewData["Mensaje"] = errorReal.Message;
+
+                CargarListaFiltrada();
+            }
         }
 
         public void OnPostBtBorrar()
