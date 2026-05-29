@@ -1,4 +1,3 @@
-
 using Lib_Negocio_Autos.modelo;
 using Lib_Presentacion_Autos.Implementaciones;
 using Lib_Presentacion_Autos.Interfaces;
@@ -28,7 +27,7 @@ namespace Asp_PresentacionesAuto.Pages
 
         public void OnGet() { }
 
-        public void OnPostBtRegistrar()
+        public IActionResult OnPostBtRegistrar()
         {
             try
             {
@@ -36,13 +35,13 @@ namespace Asp_PresentacionesAuto.Pages
                     string.IsNullOrEmpty(Contrasena) || string.IsNullOrEmpty(ConfirmarContrasena))
                 {
                     MensajeError = "Todos los campos obligatorios deben completarse.";
-                    return;
+                    return Page();
                 }
 
                 if (Contrasena != ConfirmarContrasena)
                 {
                     MensajeError = "Las contraseñas no coinciden.";
-                    return;
+                    return Page();
                 }
 
                 // Verificar que el correo no exista
@@ -50,7 +49,7 @@ namespace Asp_PresentacionesAuto.Pages
                 if (lista.Any(u => u.Correo == Correo))
                 {
                     MensajeError = "Ya existe un usuario registrado con ese correo.";
-                    return;
+                    return Page();
                 }
 
                 var nuevoUsuario = new Usuarios
@@ -60,19 +59,26 @@ namespace Asp_PresentacionesAuto.Pages
                     Telefono = Telefono ?? "",
                     Correo = Correo,
                     Contraseña = Contrasena,
-                    Roles = 2  // Cliente por defecto
+                    Roles = 2,       
+                    Clientes = null 
                 };
 
-                iUsuarios.Guardar(nuevoUsuario);
+                var usuarioGuardado = iUsuarios.Guardar(nuevoUsuario);
 
-                MensajeExito = "¡Registro exitoso! Ya podés iniciar sesión.";
+                TempData["NuevoUsuarioId"] = usuarioGuardado.Id;
+                TempData["NombreUsuario"] = usuarioGuardado.Nombre;
+                TempData["CorreoUsuario"] = usuarioGuardado.Correo;
+                TempData["TelefonoUsuario"] = usuarioGuardado.Telefono;
+                TempData["ApellidoUsuario"] = usuarioGuardado.Apellido;
 
-                // Limpiar campos
-                Nombre = Apellido = Telefono = Correo = Contrasena = ConfirmarContrasena = string.Empty;
+                MensajeExito = "Registro exitoso. Por favor, completa tu perfil.";
+
+                return RedirectToPage("/CompletarPerfil");
             }
             catch (Exception ex)
             {
                 MensajeError = ex.Message;
+                return Page();
             }
         }
     }
