@@ -142,7 +142,8 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
             try
             {
-                if (Venta == null) return;
+                if (Venta == null)
+                    return;
 
                 var rol = HttpContext.Session.GetString("RolId");
                 var entidadId = HttpContext.Session.GetString("EntidadId");
@@ -159,19 +160,56 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                 else if (rol == "3" && int.TryParse(entidadId, out int empleadoId))
                     Venta.Empleados = empleadoId;
 
+               
+                if ((Venta.Clientes ?? 0) == 0)
+                {
+                    ViewData["Mensaje"] = "Debe seleccionar un cliente.";
+                    return;
+                }
+
+               
+                if ((Venta.Empleados ?? 0) == 0)
+                {
+                    ViewData["Mensaje"] = "Debe seleccionar un empleado.";
+                    return;
+                }
+
+               
+                if ((Venta.Autos ?? 0) == 0)
+                {
+                    ViewData["Mensaje"] = "Debe seleccionar un auto.";
+                    return;
+                }
+
                 if (Venta.Id == 0)
                     Venta = IVentasPresentacion!.Guardar(Venta!);
                 else
                     Venta = IVentasPresentacion!.Modificar(Venta!);
 
-                if (Venta.Id == 0) return;
+                if (Venta.Id == 0)
+                {
+                    ViewData["Mensaje"] = "No fue posible guardar la venta.";
+                    return;
+                }
+
+                ViewData["Mensaje"] = "Venta guardada correctamente.";
 
                 CargarListaFiltrada();
                 Venta = null;
                 Borrando = false;
                 ModelState.Clear();
             }
-            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
+            catch (Exception ex)
+            {
+                Exception errorReal = ex;
+
+                while (errorReal.InnerException != null)
+                    errorReal = errorReal.InnerException;
+
+                ViewData["Mensaje"] = errorReal.Message;
+
+                CargarListaFiltrada();
+            }
         }
 
         public void OnPostBtBorrar()

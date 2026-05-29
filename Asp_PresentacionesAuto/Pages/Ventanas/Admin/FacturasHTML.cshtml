@@ -70,6 +70,17 @@
                     <label>Estado</label>
                        <input type="checkbox" asp-for="@Model.Factura!.Estado" />
                     </div>
+                <div class="form-group">
+                    <label>Cliente</label>
+                    <div class="col-6">
+                        <select id="Clientes"
+                                class="cts_forms form-control"
+                                asp-for="@Model.Factura!.Clientes"
+                                asp-items="@(new SelectList(Model.ObtenerClientes(), "Id", "Nombre"))">
+                            <option value="">Seleccione el Cliente</option>
+                        </select>
+                    </div>
+                </div>
             }
             
             @if (ViewData.ContainsKey("Mensaje"))
@@ -107,6 +118,7 @@
                         <th>Total</th>
                         <th>FechaEmision</th>
                         <th>Estado</th>
+                        <th>Clientes</th>
                     </tr>
                 
                     @foreach (var elemento in Model.Lista)
@@ -115,6 +127,7 @@
                             <td>@elemento.Total</td>
                             <td>@elemento.FechaEmision</td>
                             <td>@elemento.Estado</td>
+                            <td>@elemento.Cliente?.Nombre</td>
                             <td>
                                 <input type="submit"
                                        value="Modificar"

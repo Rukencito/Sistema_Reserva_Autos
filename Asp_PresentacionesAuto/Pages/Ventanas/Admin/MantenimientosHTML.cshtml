@@ -24,7 +24,7 @@
             <div align="left">
                 <h3>Mantenimientos</h3>
             </div>
-            
+
             <div>
                 <a href="@urlRegresar" class="btn btn-danger">&#8592; Regresar</a>
                 <input type="submit"
@@ -104,9 +104,8 @@
                         </select>
                     </div>
                 </div>
-                
             }
-            
+
             @if (ViewData.ContainsKey("Mensaje"))
             {
                 @await Html.PartialAsync("/Pages/Emergentes/Mensajes.cshtml")
@@ -121,7 +120,7 @@
                             <h2 align="left">Mensaje</h2>
                             <h6 align="left">Desea borrar el Mantenimiento?</h6>
                             <h6 align="left">@Model.Mantenimiento!.Fecha</h6>
-                            
+
                             <input type="submit"
                                    value="Cerrar"
                                    asp-page-handler="BtCerrar"
@@ -130,7 +129,6 @@
                                    value="Borrar"
                                    asp-page-handler="BtBorrar"
                                    class="btn btn-secondary" />
-
                         </div>
                     </div>
                 </div>
@@ -146,9 +144,9 @@
                         <th>Costo</th>
                         <th>Autos</th>
                         <th>Talleres</th>
-
+                        <th></th>
                     </tr>
-                
+
                     @foreach (var elemento in Model.Lista)
                     {
                         <tr>
@@ -159,20 +157,6 @@
                             <td>@elemento.Auto?.Placa</td>
                             <td>@elemento.Taller?.Nombre</td>
                             <td>
-                                <input type="submit"
-                                       value="Modificar"
-                                       asp-page-handler="BtModificar"
-                                       class="btn btn-secondary"
-                                       asp-route-data="@elemento.Id" />
-                                <input type="submit"
-                                       value="Borrar"
-                                       asp-page-handler="BtBorrarVal"
-                                       class="btn btn-secondary"
-                                       asp-route-data="@elemento.Id" />
-                                @{
-                                    var rol = HttpContext.Session.GetString("RolId");
-                                }
-
                                 @if (rol == "1" || rol == "3")
                                 {
                                     <input type="submit" value="Modificar"

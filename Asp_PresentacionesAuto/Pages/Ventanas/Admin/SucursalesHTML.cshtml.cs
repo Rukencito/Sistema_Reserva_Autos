@@ -66,17 +66,32 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             {
                 if (Sucursal == null)
                     return;
+
                 if (Sucursal.Id == 0)
                     Sucursal = ISucursalesPresentacion!.Guardar(Sucursal!);
                 else
                     Sucursal = ISucursalesPresentacion!.Modificar(Sucursal!);
+
                 if (Sucursal.Id == 0)
+                {
+                    ViewData["Mensaje"] = "No fue posible guardar la sucursal.";
                     return;
+                }
+
+                ViewData["Mensaje"] = "Sucursal guardada correctamente.";
+
                 OnPostBtRefrescar();
             }
             catch (Exception ex)
             {
-                ViewData["Mensaje"] = ex.Message;
+                Exception errorReal = ex;
+
+                while (errorReal.InnerException != null)
+                    errorReal = errorReal.InnerException;
+
+                ViewData["Mensaje"] = errorReal.Message;
+
+                OnPostBtRefrescar();
             }
         }
 

@@ -21,6 +21,10 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             IGarantiasPresentacion = new GarantiasPresentacion();
             IAutosPresentacion = new AutosPresentacion(); 
         }
+        public List<Autos> ObtenerAutos()
+        {
+            return ListaAuto = IAutosPresentacion!.Consultar();
+        }
 
         private void CargarListaFiltrada()
         {
@@ -107,21 +111,44 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
             try
             {
-                if (Garantia == null) return;
+                if (Garantia == null)
+                    return;
+
+                if (Garantia.Autos == 0)
+                {
+                    ViewData["Mensaje"] = "Debe seleccionar un auto.";
+                    return;
+                }
 
                 if (Garantia.Id == 0)
                     Garantia = IGarantiasPresentacion!.Guardar(Garantia!);
                 else
                     Garantia = IGarantiasPresentacion!.Modificar(Garantia!);
 
-                if (Garantia.Id == 0) return;
+                if (Garantia.Id == 0)
+                {
+                    ViewData["Mensaje"] = "No fue posible guardar la garantía.";
+                    return;
+                }
+
+                ViewData["Mensaje"] = "Garantía guardada correctamente.";
 
                 CargarListaFiltrada();
                 Garantia = null;
                 Borrando = false;
                 ModelState.Clear();
             }
-            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
+            catch (Exception ex)
+            {
+                Exception errorReal = ex;
+
+                while (errorReal.InnerException != null)
+                    errorReal = errorReal.InnerException;
+
+                ViewData["Mensaje"] = errorReal.Message;
+
+                CargarListaFiltrada();
+            }
         }
 
         public void OnPostBtBorrar()

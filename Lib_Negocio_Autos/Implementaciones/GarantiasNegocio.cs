@@ -32,7 +32,9 @@ namespace Lib_Negocio_Autos.Implementaciones
         public List<Garantias> Consultar()
         {
             AbrirConexion();
-            var lista = iConexion!.Garantias!.ToList();
+            var lista = iConexion!.Garantias!
+                .Include(g => g.Auto)  
+                .ToList();
             RegistrarAuditoria("Se realizó una consulta en Garantias", "Consulta");
             return lista;
         }
@@ -40,16 +42,13 @@ namespace Lib_Negocio_Autos.Implementaciones
         public Garantias Guardar(Garantias entidad)
         {
             AbrirConexion();
-
             ValidarDatos(entidad);
-
             iConexion!.Garantias!.Add(entidad);
             iConexion.SaveChanges();
 
             RegistrarAuditoria(
-                "Se guardó una garantía para el auto ID " + entidad.Auto!.Id,
+                "Se guardó una garantía para el auto ID " + entidad.Autos,  
                 "Guardado");
-
             return entidad;
         }
 
@@ -120,32 +119,21 @@ namespace Lib_Negocio_Autos.Implementaciones
         public List<Garantias> ConsultarPorAuto(int autoId)
         {
             AbrirConexion();
-
             var lista = iConexion!.Garantias!
-                .Where(g => g.Auto!= null && g.Auto.Id == autoId)
+                .Where(g => g.Autos == autoId)  
                 .ToList();
-
-            RegistrarAuditoria(
-                $"Se consultaron garantías del auto con ID: {autoId}",
-                "Consulta por Auto");
-
+            RegistrarAuditoria($"Se consultaron garantías del auto con ID: {autoId}", "Consulta por Auto");
             return lista;
         }
         public bool TieneGarantiaVigente(int autoId)
         {
             AbrirConexion();
-
             var ahora = DateTime.Now;
             bool vigente = iConexion!.Garantias!.Any(g =>
-                g.Auto!= null &&
-                g.Auto.Id == autoId &&
+                g.Autos == autoId &&  
                 g.FechaInicio <= ahora &&
                 g.FechaFin >= ahora);
-
-            RegistrarAuditoria(
-                "Se verificó garantía vigente del auto ID: " + autoId,
-                "Verificacion Garantia Vigente");
-
+            RegistrarAuditoria("Se verificó garantía vigente del auto ID: " + autoId, "Verificacion Garantia Vigente");
             return vigente;
         }
 
@@ -154,7 +142,7 @@ namespace Lib_Negocio_Autos.Implementaciones
             if (entidad == null)
                 throw new Exception("La información de la garantía es obligatoria");
 
-            if (entidad.Auto == null)
+            if (entidad.Autos == 0) 
                 throw new Exception("La garantía debe estar asociada a un auto");
 
             if (entidad.FechaInicio == DateTime.MinValue)

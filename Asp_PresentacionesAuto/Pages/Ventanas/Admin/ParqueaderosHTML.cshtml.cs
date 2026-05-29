@@ -66,17 +66,32 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             {
                 if (Parqueadero == null)
                     return;
+
                 if (Parqueadero.Id == 0)
                     Parqueadero = IParqueaderosPresentacion!.Guardar(Parqueadero!);
                 else
                     Parqueadero = IParqueaderosPresentacion!.Modificar(Parqueadero!);
+
                 if (Parqueadero.Id == 0)
+                {
+                    ViewData["Mensaje"] = "No fue posible guardar el parqueadero.";
                     return;
+                }
+
+                ViewData["Mensaje"] = "Parqueadero guardado correctamente.";
+
                 OnPostBtRefrescar();
             }
             catch (Exception ex)
             {
-                ViewData["Mensaje"] = ex.Message;
+                Exception errorReal = ex;
+
+                while (errorReal.InnerException != null)
+                    errorReal = errorReal.InnerException;
+
+                ViewData["Mensaje"] = errorReal.Message;
+
+                OnPostBtRefrescar();
             }
         }
 

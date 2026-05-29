@@ -10,13 +10,21 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
     public class FacturasHTMLModel : PageModel
     {
         private IFacturasPresentacion? IFacturasPresentacion;
+        private IClientesPresentacion? IClientesPresentacion;
         [BindProperty] public List<Facturas>? Lista { get; set; }
+        [BindProperty] public List<Clientes>? ListaCliente { get; set; }
         [BindProperty] public Facturas? Factura { get; set; }
         [BindProperty] public bool Borrando { get; set; }
 
         public FacturasHTMLModel()
         {
             IFacturasPresentacion = new FacturasPresentacion();
+            IClientesPresentacion = new ClientesPresentacion();
+        }
+
+        public List<Clientes> ObtenerClientes()
+        {
+            return ListaCliente = IClientesPresentacion!.Consultar();
         }
 
         private void CargarListaFiltrada()

@@ -1,6 +1,7 @@
 ﻿using Lib_Negocio_Autos.Interfaces;
 using Lib_Negocio_Autos.modelo;
 using Lib_Negocio_Autos.nucleo;
+using Microsoft.EntityFrameworkCore;
 
 namespace Lib_Negocio_Autos.Implementaciones
 {
@@ -30,7 +31,9 @@ namespace Lib_Negocio_Autos.Implementaciones
         public List<Permisos> Consultar()
         {
             AbrirConexion();
-            var lista = iConexion!.Permisos!.ToList();
+            var lista = iConexion!.Permisos!
+                .Include(p => p.Rol)  
+                .ToList();
             RegistrarAuditoria("Se realizó una consulta en Permisos", "Consulta");
             return lista;
         }
@@ -40,17 +43,14 @@ namespace Lib_Negocio_Autos.Implementaciones
             AbrirConexion();
             ValidarDatos(entidad);
 
-            if (PermisoExisteEnRol(entidad.Nombre!, entidad.Rol!.Id))
+            if (PermisoExisteEnRol(entidad.Nombre!, entidad.Roles))
                 throw new Exception(
                     "El rol ya tiene un permiso llamado '" + entidad.Nombre + "'");
 
             iConexion!.Permisos!.Add(entidad);
             iConexion.SaveChanges();
 
-            RegistrarAuditoria(
-                "Se guardó el permiso '" + entidad.Nombre + "' para el rol ID " + entidad.Rol!.Id,
-                "Guardado");
-
+            RegistrarAuditoria("...rol ID " + entidad.Roles, "Guardado");
             return entidad;
         }
 
@@ -82,8 +82,7 @@ namespace Lib_Negocio_Autos.Implementaciones
 
             bool nombreDuplicado = iConexion!.Permisos!.Any(p =>
                 p.Nombre == entidad.Nombre &&
-                p.Rol!= null &&
-                p.Rol.Id == entidad.Rol!.Id &&
+                p.Roles == entidad.Roles &&
                 p.Id != entidad.Id);
 
             if (nombreDuplicado)
@@ -155,8 +154,7 @@ namespace Lib_Negocio_Autos.Implementaciones
             if (iConexion == null) AbrirConexion();
             return iConexion!.Permisos!.Any(p =>
                 p.Nombre!.ToLower() == nombrePermiso.ToLower() &&
-                p.Rol!= null &&
-                p.Rol.Id == rolId);
+                p.Roles == rolId);
         }
         public void ValidarDatos(Permisos entidad)
         {
@@ -169,7 +167,7 @@ namespace Lib_Negocio_Autos.Implementaciones
             if (entidad.Nombre.Length < 3)
                 throw new Exception("El nombre del permiso debe tener al menos 3 caracteres");
 
-            if (entidad.Rol == null)
+            if (entidad.Roles == 0)
                 throw new Exception("El permiso debe estar asociado a un rol");
         }
         public bool ValidarId(int id)

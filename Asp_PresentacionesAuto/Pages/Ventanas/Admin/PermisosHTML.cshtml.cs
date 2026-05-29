@@ -9,13 +9,21 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
     public class PermisosHTMLModel : PageModel
     {
         private IPermisosPresentacion? IPermisosPresentacion;
+        private IRolesPresentacion? IRolesPresentacion;
         [BindProperty] public List<Permisos>? Lista { get; set; }
+        [BindProperty] public List<Roles>? ListaRoles { get; set; }
         [BindProperty] public Permisos? Permiso { get; set; }
         [BindProperty] public bool Borrando { get; set; }
 
         public PermisosHTMLModel()
         {
-           IPermisosPresentacion = new  PermisosPresentacion();
+            IPermisosPresentacion = new PermisosPresentacion();
+            IRolesPresentacion = new RolesPresentacion();
+        }
+
+        public List<Roles> ObtenerRoles()
+        {
+            return ListaRoles = IRolesPresentacion!.Consultar();
         }
 
         public void OnGet()
@@ -66,6 +74,11 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             {
                 if (Permiso == null)
                     return;
+                if (Permiso.Roles == 0)
+                {
+                    ViewData["Mensaje"] = "Debe seleccionar un rol.";
+                    return;
+                }
                 if (Permiso.Id == 0)
                     Permiso = IPermisosPresentacion!.Guardar(Permiso!);
                 else

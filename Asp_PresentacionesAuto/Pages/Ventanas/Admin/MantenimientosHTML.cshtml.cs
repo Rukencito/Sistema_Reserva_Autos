@@ -138,7 +138,8 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
             try
             {
-                if (Mantenimiento == null) return;
+                if (Mantenimiento == null)
+                    return;
 
                 var rol = HttpContext.Session.GetString("RolId");
 
@@ -149,20 +150,48 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                     CargarListaFiltrada();
                     return;
                 }
+                
+                if ((Mantenimiento.Autos ?? 0) == 0)
+                {
+                    ViewData["Mensaje"] = "Debe seleccionar un auto.";
+                    return;
+                }
+
+                if ((Mantenimiento.Talleres ?? 0) == 0)
+                {
+                    ViewData["Mensaje"] = "Debe seleccionar un taller.";
+                    return;
+                }
 
                 if (Mantenimiento.Id == 0)
                     Mantenimiento = IMantenimientosPresentacion!.Guardar(Mantenimiento!);
                 else
                     Mantenimiento = IMantenimientosPresentacion!.Modificar(Mantenimiento!);
 
-                if (Mantenimiento.Id == 0) return;
+                if (Mantenimiento.Id == 0)
+                {
+                    ViewData["Mensaje"] = "No fue posible guardar el mantenimiento.";
+                    return;
+                }
+
+                ViewData["Mensaje"] = "Mantenimiento guardado correctamente.";
 
                 CargarListaFiltrada();
                 Mantenimiento = null;
                 Borrando = false;
                 ModelState.Clear();
             }
-            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
+            catch (Exception ex)
+            {
+                Exception errorReal = ex;
+
+                while (errorReal.InnerException != null)
+                    errorReal = errorReal.InnerException;
+
+                ViewData["Mensaje"] = errorReal.Message;
+
+                CargarListaFiltrada();
+            }
         }
 
         public void OnPostBtBorrar()

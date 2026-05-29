@@ -112,21 +112,44 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
             try
             {
-                if (Pago == null) return;
+                if (Pago == null)
+                    return;
+
+                if ((Pago.Facturas ?? 0) == 0)
+                {
+                    ViewData["Mensaje"] = "Debe seleccionar una factura.";
+                    return;
+                }
 
                 if (Pago.Id == 0)
                     Pago = IPagosPresentacion!.Guardar(Pago!);
                 else
                     Pago = IPagosPresentacion!.Modificar(Pago!);
 
-                if (Pago.Id == 0) return;
+                if (Pago.Id == 0)
+                {
+                    ViewData["Mensaje"] = "No fue posible guardar el pago.";
+                    return;
+                }
+
+                ViewData["Mensaje"] = "Pago guardado correctamente.";
 
                 CargarListaFiltrada();
                 Pago = null;
                 Borrando = false;
                 ModelState.Clear();
             }
-            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
+            catch (Exception ex)
+            {
+                Exception errorReal = ex;
+
+                while (errorReal.InnerException != null)
+                    errorReal = errorReal.InnerException;
+
+                ViewData["Mensaje"] = errorReal.Message;
+
+                CargarListaFiltrada();
+            }
         }
 
         public void OnPostBtBorrar()
