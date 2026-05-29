@@ -74,17 +74,38 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             {
                 if (Promocion == null)
                     return;
+
+                if ((Promocion.Ventas ?? 0) == 0)
+                {
+                    ViewData["Mensaje"] = "Debe seleccionar una venta.";
+                    return;
+                }
+
                 if (Promocion.Id == 0)
                     Promocion = IPromocionesPresentacion!.Guardar(Promocion!);
                 else
                     Promocion = IPromocionesPresentacion!.Modificar(Promocion!);
+
                 if (Promocion.Id == 0)
+                {
+                    ViewData["Mensaje"] = "No fue posible guardar la promoción.";
                     return;
+                }
+
+                ViewData["Mensaje"] = "Promoción guardada correctamente.";
+
                 OnPostBtRefrescar();
             }
             catch (Exception ex)
             {
-                ViewData["Mensaje"] = ex.Message;
+                Exception errorReal = ex;
+
+                while (errorReal.InnerException != null)
+                    errorReal = errorReal.InnerException;
+
+                ViewData["Mensaje"] = errorReal.Message;
+
+                OnPostBtRefrescar();
             }
         }
 

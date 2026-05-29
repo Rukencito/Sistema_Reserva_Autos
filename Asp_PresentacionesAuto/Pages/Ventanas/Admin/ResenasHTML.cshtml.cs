@@ -109,30 +109,53 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
             try
             {
-                if (Resena == null) return;
+                if (Resena == null)
+                    return;
 
                 var rol = HttpContext.Session.GetString("RolId");
                 var usuarioId = HttpContext.Session.GetString("EntidadId");
 
-                // Si es cliente o empleado, forzar su propio ID al guardar
+                // Si es cliente, forzar su propio ID
                 if (rol == "2" && int.TryParse(usuarioId, out int clienteId))
                     Resena.Clientes = clienteId;
+
+                // Validar FK Cliente
+                if (Resena.Clientes == 0)
+                {
+                    ViewData["Mensaje"] = "Debe seleccionar un cliente.";
+                    return;
+                }
 
                 if (Resena.Id == 0)
                     Resena = IResenasPresentacion!.Guardar(Resena!);
                 else
                     Resena = IResenasPresentacion!.Modificar(Resena!);
 
-                if (Resena.Id == 0) return;
+                if (Resena.Id == 0)
+                {
+                    ViewData["Mensaje"] = "No fue posible guardar la reseña.";
+                    return;
+                }
+
+                ViewData["Mensaje"] = "Reseña guardada correctamente.";
 
                 CargarListaFiltrada();
                 Resena = null;
                 Borrando = false;
                 ModelState.Clear();
             }
-            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
-        }
+            catch (Exception ex)
+            {
+                Exception errorReal = ex;
 
+                while (errorReal.InnerException != null)
+                    errorReal = errorReal.InnerException;
+
+                ViewData["Mensaje"] = errorReal.Message;
+
+                CargarListaFiltrada();
+            }
+        }
         public void OnPostBtBorrar()
         {
             try

@@ -12,7 +12,6 @@ namespace Lib_Negocio_Autos.modelo
 
         public int Clientes { get; set; }
 
-        [JsonIgnore]
         [ForeignKey("Clientes")] public Clientes? Cliente { get; set; }
 
         [NotMapped] public List<DetallesFactura>? DetalleFactura { get; set; }

@@ -32,7 +32,15 @@ namespace Lib_Negocio_Autos.Implementaciones
         public List<Facturas> Consultar()
         {
             AbrirConexion();
-            var lista = iConexion!.Facturas!.ToList();
+            var lista = iConexion!.Facturas!
+                .Include(f => f.Cliente)
+                .ToList();
+
+           
+            foreach (var f in lista)
+                if (f.Cliente != null)
+                    f.Cliente.Factura = null; 
+
             RegistrarAuditoria("Se realizó una consulta en Facturas", "Consulta");
             return lista;
         }
@@ -43,7 +51,8 @@ namespace Lib_Negocio_Autos.Implementaciones
 
             ValidarDatos(entidad);
 
-            CalcularTotal(entidad);
+            if (entidad.DetalleFactura != null && entidad.DetalleFactura.Any())
+                CalcularTotal(entidad);
 
             iConexion!.Facturas!.Add(entidad);
             iConexion.SaveChanges();
@@ -78,7 +87,8 @@ namespace Lib_Negocio_Autos.Implementaciones
                 throw new Exception("La factura con ID " + entidad.Id + " no existe en el sistema");
             }
 
-            CalcularTotal(entidad);
+            if (entidad.DetalleFactura != null && entidad.DetalleFactura.Any())
+                CalcularTotal(entidad);
 
             iConexion!.Facturas!.Update(entidad);
             iConexion.SaveChanges();
@@ -119,9 +129,8 @@ namespace Lib_Negocio_Autos.Implementaciones
         public List<Facturas> ConsultarPorCliente(int clienteId)
         {
             AbrirConexion();
-
             var facturas = iConexion!.Facturas!
-                .Where(f => f.Cliente!= null && f.Cliente.Id == clienteId)
+                .Where(f => f.Clientes == clienteId) 
                 .ToList();
 
             RegistrarAuditoria(
@@ -191,7 +200,7 @@ namespace Lib_Negocio_Autos.Implementaciones
             if (entidad == null)
                 throw new Exception("La información de la factura es obligatoria");
 
-            if (entidad.Cliente == null)
+            if (entidad.Clientes == 0)
                 throw new Exception("La factura debe estar asociada a un cliente");
 
             if (entidad.Total < 0)

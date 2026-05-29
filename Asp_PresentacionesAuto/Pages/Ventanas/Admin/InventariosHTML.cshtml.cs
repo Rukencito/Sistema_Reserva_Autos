@@ -66,17 +66,32 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             {
                 if (Inventario == null)
                     return;
+
                 if (Inventario.Id == 0)
                     Inventario = IInventariosPresentacion!.Guardar(Inventario!);
                 else
                     Inventario = IInventariosPresentacion!.Modificar(Inventario!);
+
                 if (Inventario.Id == 0)
+                {
+                    ViewData["Mensaje"] = "No fue posible guardar el inventario.";
                     return;
+                }
+
+                ViewData["Mensaje"] = "Inventario guardado correctamente.";
+
                 OnPostBtRefrescar();
             }
             catch (Exception ex)
             {
-                ViewData["Mensaje"] = ex.Message;
+                Exception errorReal = ex;
+
+                while (errorReal.InnerException != null)
+                    errorReal = errorReal.InnerException;
+
+                ViewData["Mensaje"] = errorReal.Message;
+
+                OnPostBtRefrescar();
             }
         }
 

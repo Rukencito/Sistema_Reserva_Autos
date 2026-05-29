@@ -120,21 +120,44 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
             try
             {
-                if (Seguro == null) return;
+                if (Seguro == null)
+                    return;
+
+                if ((Seguro.Autos ?? 0) == 0)
+                {
+                    ViewData["Mensaje"] = "Debe seleccionar un auto.";
+                    return;
+                }
 
                 if (Seguro.Id == 0)
                     Seguro = ISegurosPresentacion!.Guardar(Seguro!);
                 else
                     Seguro = ISegurosPresentacion!.Modificar(Seguro!);
 
-                if (Seguro.Id == 0) return;
+                if (Seguro.Id == 0)
+                {
+                    ViewData["Mensaje"] = "No fue posible guardar el seguro.";
+                    return;
+                }
+
+                ViewData["Mensaje"] = "Seguro guardado correctamente.";
 
                 CargarListaFiltrada();
                 Seguro = null;
                 Borrando = false;
                 ModelState.Clear();
             }
-            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
+            catch (Exception ex)
+            {
+                Exception errorReal = ex;
+
+                while (errorReal.InnerException != null)
+                    errorReal = errorReal.InnerException;
+
+                ViewData["Mensaje"] = errorReal.Message;
+
+                CargarListaFiltrada();
+            }
         }
 
         public void OnPostBtBorrar()

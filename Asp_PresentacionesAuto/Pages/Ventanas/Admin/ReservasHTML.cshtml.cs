@@ -117,7 +117,8 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
             try
             {
-                if (Reserva == null) return;
+                if (Reserva == null)
+                    return;
 
                 var rol = HttpContext.Session.GetString("RolId");
                 var usuarioId = HttpContext.Session.GetString("EntidadId");
@@ -125,19 +126,49 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                 if (rol == "2" && int.TryParse(usuarioId, out int clienteId))
                     Reserva.Clientes = clienteId;
 
+                
+                if ((Reserva.Clientes ?? 0) == 0)
+                {
+                    ViewData["Mensaje"] = "Debe seleccionar un cliente.";
+                    return;
+                }
+
+                
+                if ((Reserva.Autos ?? 0) == 0)
+                {
+                    ViewData["Mensaje"] = "Debe seleccionar un auto.";
+                    return;
+                }
+
                 if (Reserva.Id == 0)
                     Reserva = IReservasPresentacion!.Guardar(Reserva!);
                 else
                     Reserva = IReservasPresentacion!.Modificar(Reserva!);
 
-                if (Reserva.Id == 0) return;
+                if (Reserva.Id == 0)
+                {
+                    ViewData["Mensaje"] = "No fue posible guardar la reserva.";
+                    return;
+                }
+
+                ViewData["Mensaje"] = "Reserva guardada correctamente.";
 
                 CargarListaFiltrada();
                 Reserva = null;
                 Borrando = false;
                 ModelState.Clear();
             }
-            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
+            catch (Exception ex)
+            {
+                Exception errorReal = ex;
+
+                while (errorReal.InnerException != null)
+                    errorReal = errorReal.InnerException;
+
+                ViewData["Mensaje"] = errorReal.Message;
+
+                CargarListaFiltrada();
+            }
         }
 
         public void OnPostBtBorrar()

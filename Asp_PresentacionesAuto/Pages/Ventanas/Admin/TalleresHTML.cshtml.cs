@@ -66,17 +66,32 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             {
                 if (Taller == null)
                     return;
+
                 if (Taller.Id == 0)
                     Taller = ITalleresPresentacion!.Guardar(Taller!);
                 else
                     Taller = ITalleresPresentacion!.Modificar(Taller!);
+
                 if (Taller.Id == 0)
+                {
+                    ViewData["Mensaje"] = "No fue posible guardar el taller.";
                     return;
+                }
+
+                ViewData["Mensaje"] = "Taller guardado correctamente.";
+
                 OnPostBtRefrescar();
             }
             catch (Exception ex)
             {
-                ViewData["Mensaje"] = ex.Message;
+                Exception errorReal = ex;
+
+                while (errorReal.InnerException != null)
+                    errorReal = errorReal.InnerException;
+
+                ViewData["Mensaje"] = errorReal.Message;
+
+                OnPostBtRefrescar();
             }
         }
 
