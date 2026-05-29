@@ -63,7 +63,8 @@ namespace ASP_ServiciosAuto.Controllers
             return this.IPermisosNegocio!.TienePermisoPorCorreo(correo, nombrePermiso);
         }
 
-       public bool PermisoExisteEnRol(string nombrePermiso, int rolId)
+        [HttpGet]
+        public bool PermisoExisteEnRol(string nombrePermiso, int rolId)
         {
             if (this.IPermisosNegocio == null)
                 throw new Exception("No implementado");
