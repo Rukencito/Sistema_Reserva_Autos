@@ -143,8 +143,8 @@
                             <td>@elemento.EstadoReserva</td>
                             <td>@elemento.Anticipo</td>
                             <td>@elemento.FechaVencimiento</td>
-                            <td>@elemento.Auto</td>
-                            <td>@elemento.Cliente</td>
+                            <td>@elemento.Auto?.Placa</td>
+                            <td>@elemento.Cliente?.Nombre</td>
                             <td>
                                 <input type="submit"
                                        value="Modificar"

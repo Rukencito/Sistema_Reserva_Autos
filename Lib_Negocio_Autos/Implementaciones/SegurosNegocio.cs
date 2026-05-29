@@ -28,10 +28,15 @@ namespace Lib_Negocio_Autos.Implementaciones
         public List<Seguros> Consultar()
         {
             AbrirConexion();
-
             var lista = iConexion!.Seguros!.ToList();
-            RegistrarAuditoria("Se consulto la lista de Seguros", "Consulta");
 
+            foreach (var seguro in lista)
+            {
+                seguro.Auto = iConexion.Autos!
+                    .FirstOrDefault(a => a.Id == seguro.Autos);
+            }
+
+            RegistrarAuditoria("Se consulto la lista de Seguros", "Consulta");
             return lista;
         }
 
@@ -40,8 +45,6 @@ namespace Lib_Negocio_Autos.Implementaciones
             AbrirConexion();
             ValidarDatos(entidad);
 
-            if (!ValidarId(entidad.Id))
-                throw new Exception("El Seguro con ID " + entidad.Id + " no existe en el sistema");
             iConexion!.Seguros!.Add(entidad!);
             iConexion.SaveChanges();
             RegistrarAuditoria("Se guardo un nuevo registro en Seguros", "Creacion");

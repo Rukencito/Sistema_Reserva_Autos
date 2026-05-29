@@ -30,6 +30,13 @@ namespace Lib_Negocio_Autos.Implementaciones
         {
             AbrirConexion();
             var lista = iConexion!.Reservas!.ToList();
+
+            foreach (var reserva in lista)
+            {
+                reserva.Auto = iConexion.Autos!.FirstOrDefault(a => a.Id == reserva.Autos);
+                reserva.Cliente = iConexion.Clientes!.FirstOrDefault(c => c.Id == reserva.Clientes);
+            }
+
             RegistrarAuditoria("Se realizó una consulta en Reservas", "Consulta");
             return lista;
         }
@@ -37,19 +44,16 @@ namespace Lib_Negocio_Autos.Implementaciones
         public Reservas Guardar(Reservas entidad)
         {
             AbrirConexion();
-
             ValidarDatos(entidad);
 
-            if (ValidarReservaDuplicada(entidad.Auto!.Id, entidad.Cliente!.Id, entidad.FechaVencimiento))
-            {
+            if (ValidarReservaDuplicada(entidad.Autos!.Value, entidad.Clientes!.Value, entidad.FechaVencimiento))
                 throw new Exception("Ya existe una reserva activa para ese auto y cliente");
-            }
 
             iConexion!.Reservas!.Add(entidad);
             iConexion.SaveChanges();
 
             RegistrarAuditoria(
-                "Se guardó una reserva para el auto ID " + entidad.Auto.Id +" y cliente ID " + entidad.Cliente.Id,
+                "Se guardó una reserva para el auto ID " + entidad.Autos + " y cliente ID " + entidad.Clientes,
                 "Guardado");
 
             return entidad;
@@ -155,10 +159,10 @@ namespace Lib_Negocio_Autos.Implementaciones
             if (entidad == null)
                 throw new Exception("La información de la reserva es obligatoria");
 
-            if (entidad.Auto == null)
+            if (entidad.Autos == null || entidad.Autos == 0)
                 throw new Exception("El auto es obligatorio para una reserva");
 
-            if (entidad.Cliente == null)
+            if (entidad.Clientes == null || entidad.Clientes == 0)
                 throw new Exception("El cliente es obligatorio para una reserva");
 
             if (entidad.FechaVencimiento <= DateTime.Now)

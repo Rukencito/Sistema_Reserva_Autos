@@ -41,11 +41,7 @@
                 <div>
                     <div class="form-group">
                         <label>Estado</label>
-                        <div class="col-6">
-                            <input id="inEstado"
-                                   class="cts_forms form-control"
-                                   asp-for="@Model.Seguro.Estado" />
-                        </div>
+                        <input type="checkbox" asp-for="@Model.Seguro!.Estado" />
                     </div>
                     <div class="form-group">
                         <label>Tipo</label>
@@ -132,7 +128,7 @@
                             <td>@elemento.Estado</td>
                             <td>@elemento.Cobertura</td>
                             <td>@elemento.Aseguradora</td>
-                            <td>@elemento.Autos</td>
+                            <td>@elemento.Auto?.Placa</td>
                             <td>
                                 <input type="submit"
                                        value="Modificar"

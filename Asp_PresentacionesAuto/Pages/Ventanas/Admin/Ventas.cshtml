@@ -154,9 +154,9 @@
                             <td>@elemento.PrecioVenta</td>
                             <td>@elemento.TipoPago</td>
                             <td>@elemento.EstadoPago</td>
-                            <td>@elemento.Clientes</td>
-                            <td>@elemento.Empleados</td>
-                            <td>@elemento.Autos</td>
+                            <td>@elemento.Cliente?.Nombre</td>
+                            <td>@elemento.Empleado?.Nombre</td>
+                            <td>@elemento.Auto?.Placa</td>
                             <td>
                                 <input type="submit"
                                        value="Modificar"

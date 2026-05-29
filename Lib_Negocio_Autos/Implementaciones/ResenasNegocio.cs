@@ -28,6 +28,13 @@ namespace Lib_Negocio_Autos.Implementaciones
         {
             AbrirConexion();
             var lista = iConexion!.Resenas!.ToList();
+
+            foreach (var resena in lista)
+            {
+                resena.Cliente = iConexion.Clientes!
+                    .FirstOrDefault(c => c.Id == resena.Clientes);
+            }
+
             RegistrarAuditoria("Se consultaron las reseñas", "Consulta");
             return lista;
         }

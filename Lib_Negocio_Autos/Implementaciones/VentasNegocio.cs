@@ -32,8 +32,14 @@ namespace Lib_Negocio_Autos.Implementaciones
         public List<Ventas> Consultar()
         {
             AbrirConexion();
-
             var lista = iConexion!.Ventas!.ToList();
+
+            foreach (var venta in lista)
+            {
+                venta.Cliente = iConexion.Clientes!.FirstOrDefault(c => c.Id == venta.Clientes);
+                venta.Empleado = iConexion.Empleados!.FirstOrDefault(e => e.Id == venta.Empleados);
+                venta.Auto = iConexion.Autos!.FirstOrDefault(a => a.Id == venta.Autos);
+            }
 
             RegistrarAuditoria("Se realizo una consulta en Ventas", "Consulta");
             return lista;
