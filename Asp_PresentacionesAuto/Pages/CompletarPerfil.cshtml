@@ -1,0 +1,226 @@
+﻿@* Pages/CompletarPerfil.cshtml *@
+@page
+@model Asp_PresentacionesAuto.Pages.CompletarPerfilModel
+@{
+    ViewData["Title"] = "Completar Perfil";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistema Autos - Completar Perfil</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+    <style>
+            :root {
+                --paper: #f5f3ee;
+                --cream: #ede9e0;
+                --ink: #0c0c10;
+                --rust: #c94c1e;
+                --rust-dim: #a03a14;
+            }
+
+            body {
+                background: var(--ink);
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+                font-family: 'DM Mono', monospace;
+            }
+
+            .registro-card {
+                background: var(--paper);
+                border: 2px solid var(--rust);
+                border-radius: 4px;
+                padding: 40px;
+                width: 100%;
+                max-width: 540px;
+                color: var(--ink);
+            }
+
+                .registro-card h2 {
+                    text-align: center;
+                    margin-bottom: 4px;
+                    font-family: 'Syne', sans-serif;
+                    font-weight: 800;
+                    font-size: 2rem;
+                    color: var(--ink);
+                }
+
+                .registro-card p.subtitulo {
+                    text-align: center;
+                    color: var(--rust);
+                    margin-bottom: 6px;
+                    font-size: 0.8rem;
+                    text-transform: uppercase;
+                    letter-spacing: 0.1em;
+                }
+
+                .registro-card p.descripcion {
+                    text-align: center;
+                    color: rgba(12,12,16,0.55);
+                    margin-bottom: 28px;
+                    font-size: 0.8rem;
+                }
+
+            .form-label {
+                color: var(--ink);
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                font-weight: 600;
+            }
+
+            .form-control {
+                background: var(--cream);
+                border: 1px solid var(--ink);
+                border-radius: 2px;
+                color: var(--ink);
+                font-family: 'DM Mono', monospace;
+                padding: 10px 12px;
+            }
+
+                .form-control:focus {
+                    background: var(--cream);
+                    border-color: var(--rust);
+                    color: var(--ink);
+                    box-shadow: 0 0 0 2px rgba(201,76,30,0.2);
+                }
+
+                .form-control::placeholder {
+                    color: rgba(12,12,16,0.35);
+                }
+
+            .check-row {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 10px 0;
+            }
+
+                .check-row input[type="checkbox"] {
+                    width: 18px;
+                    height: 18px;
+                    accent-color: var(--rust);
+                    cursor: pointer;
+                }
+
+                .check-row label {
+                    margin: 0;
+                    font-size: 0.8rem;
+                    text-transform: uppercase;
+                    letter-spacing: 0.08em;
+                    font-weight: 600;
+                    color: var(--ink);
+                    cursor: pointer;
+                }
+
+            .btn-registrar {
+                background: var(--rust);
+                border: none;
+                border-radius: 2px;
+                padding: 11px;
+                width: 100%;
+                color: var(--paper);
+                font-family: 'Syne', sans-serif;
+                font-weight: 700;
+                font-size: 0.9rem;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                margin-top: 10px;
+                cursor: pointer;
+            }
+
+                .btn-registrar:hover {
+                    background: var(--rust-dim);
+                }
+
+            .error-msg {
+                background: rgba(201,76,30,0.1);
+                border: 1px solid var(--rust);
+                border-radius: 2px;
+                padding: 10px 14px;
+                text-align: center;
+                margin-bottom: 15px;
+                font-size: 0.85rem;
+                color: var(--rust);
+            }
+
+            .paso-badge {
+                display: inline-block;
+                background: var(--rust);
+                color: var(--paper);
+                font-family: 'Syne', sans-serif;
+                font-weight: 700;
+                font-size: 0.7rem;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                padding: 3px 10px;
+                border-radius: 2px;
+                margin-bottom: 20px;
+            }
+    </style>
+</head>
+<body>
+    <div class="registro-card">
+        <h2>🚗 Sistema Autos</h2>
+        <p class="subtitulo">Completa tu perfil</p>
+        <p class="descripcion">Solo nos falta un poco más de información para activar tu cuenta.</p>
+
+        <form method="POST" asp-page-handler="BtGuardar">
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" asp-for="UsuarioId" />
+
+            @if (!string.IsNullOrEmpty(Model.MensajeError))
+            {
+                <div class="error-msg">@Model.MensajeError</div>
+            }
+
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <label class="form-label">Nombre *</label>
+                    <input class="form-control" asp-for="Nombre" placeholder="Miguel" />
+                </div>
+                <div class="col-6 mb-3">
+                    <label class="form-label">Apellido</label>
+                    <input class="form-control" asp-for="Apellido" placeholder="Bustamante" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-7 mb-3">
+                    <label class="form-label">Cédula *</label>
+                    <input class="form-control" asp-for="Cedula" placeholder="1234567890" />
+                </div>
+                <div class="col-5 mb-3">
+                    <label class="form-label">Edad</label>
+                    <input type="number" class="form-control" asp-for="Edad" placeholder="25" min="0" max="120" />
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Correo</label>
+                <input type="email" class="form-control" asp-for="Correo" placeholder="Usuario@Correo.com" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Teléfono</label>
+                <input class="form-control" asp-for="Telefono" placeholder="3189765423" />
+            </div>
+
+            <div class="check-row mb-3">
+                <input type="checkbox" asp-for="LicenciaConduccion" id="chkLicencia" />
+                <label for="chkLicencia">Tengo licencia de conducción</label>
+            </div>
+
+            <button type="submit" class="btn-registrar">Guardar y continuar</button>
+        </form>
+    </div>
+</body>
+</html>
