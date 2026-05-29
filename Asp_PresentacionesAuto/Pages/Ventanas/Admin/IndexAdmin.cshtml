@@ -287,6 +287,69 @@
         <span class="adm-badge">Administrador</span>
     </div>
 
+    <form method="post" style="display:inline;">
+        @Html.AntiForgeryToken()
+        <button type="submit"
+                asp-page-handler="DescargarReporte"
+                class="btn-reporte">
+            ⬇ Descargar Reporte Excel
+        </button>
+    </form>
+
+    @if (ViewData["Mensaje"] != null)
+    {
+        <p class="reporte-error">@ViewData["Mensaje"]</p>
+    }
+
+    <style>
+            .btn-reporte {
+                /* Forma: igual que .adm-badge pero clickeable */
+                display: inline-flex;
+                align-items: center;
+                gap: 0.45rem;
+                background: var(--ink);
+                color: var(--paper);
+                border: 2px solid var(--ink);
+                font-family: 'DM Mono', monospace;
+                font-size: 0.7rem;
+                font-weight: 500;
+                letter-spacing: 3px;
+                text-transform: uppercase;
+                white-space: nowrap;
+                padding: 0.45rem 1.2rem;
+                border-radius: 2px;
+                cursor: pointer;
+                transition: background 0.18s ease, color 0.18s ease;
+            }
+
+                /* Hover: invertir — fondo crema, texto negro, borde negro */
+                .btn-reporte:hover {
+                    background: var(--paper);
+                    color: var(--ink);
+                }
+
+                /* Estado activo / clic */
+                .btn-reporte:active {
+                    background: var(--rust);
+                    border-color: var(--rust);
+                    color: var(--paper);
+                }
+
+                /* Mientras el form está enviando (navegadores modernos) */
+                .btn-reporte:disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                }
+
+            .reporte-error {
+                font-family: 'DM Mono', monospace;
+                font-size: 0.75rem;
+                color: var(--rust);
+                margin-top: 0.4rem;
+            }
+    </style>
+
+
     <!-- CUERPO: 3 columnas -->
     <div class="adm-body">
 

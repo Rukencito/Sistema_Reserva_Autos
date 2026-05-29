@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.105.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Lib_Presentacion_Autos\Lib_Presentacion_Autos.csproj" />
   </ItemGroup>
 
