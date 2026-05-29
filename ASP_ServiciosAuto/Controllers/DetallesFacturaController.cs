@@ -16,9 +16,18 @@ namespace ASP_ServiciosAuto.Controllers
             this.IDetallesFacturaNegocio = new DetallesFacturaNegocio();
         }
 
+        private void AsignarUsuarioSesion()
+        {
+            string? usuario = HttpContext.Request.Headers["X-Usuario"].FirstOrDefault();
+
+            ((DetallesFacturaNegocio)IDetallesFacturaNegocio!).UsuarioSesion =
+                string.IsNullOrEmpty(usuario) ? "Desconocido" : usuario;
+        }
+
         [HttpGet]
         public List<DetallesFactura> Consultar()
         {
+            AsignarUsuarioSesion();
             if (this.IDetallesFacturaNegocio == null)
                 throw new Exception("No implementado");
             return this.IDetallesFacturaNegocio!.Consultar();
@@ -27,6 +36,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPost]
         public DetallesFactura Guardar(DetallesFactura entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IDetallesFacturaNegocio == null)
                 throw new Exception("No implementado");
             return this.IDetallesFacturaNegocio!.Guardar(entidad);
@@ -34,6 +44,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public DetallesFactura Modificar(DetallesFactura entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IDetallesFacturaNegocio == null)
                 throw new Exception("No implementado");
             return this.IDetallesFacturaNegocio!.Modificar(entidad);
@@ -43,6 +54,7 @@ namespace ASP_ServiciosAuto.Controllers
 
         public DetallesFactura Eliminar(DetallesFactura entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IDetallesFacturaNegocio == null)
                 throw new Exception("No implementado");
             return this.IDetallesFacturaNegocio!.Eliminar(entidad);
@@ -51,6 +63,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public DetallesFactura ConsultarPorId(int id)
         {
+            AsignarUsuarioSesion();
             if (this.IDetallesFacturaNegocio == null)
                 throw new Exception("No implementado");
             return this.IDetallesFacturaNegocio!.ConsultarPorId(id);
@@ -59,6 +72,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public List<DetallesFactura> ConsultarPorFactura(int facturaId)
         {
+            AsignarUsuarioSesion();
             if (this.IDetallesFacturaNegocio == null)
                 throw new Exception("No implementado");
             return this.IDetallesFacturaNegocio!.ConsultarPorFactura(facturaId);
@@ -67,6 +81,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public decimal CalcularSubtotalPorFactura(int facturaId)
         {
+            AsignarUsuarioSesion();
             if (this.IDetallesFacturaNegocio == null)
                 throw new Exception("No implementado");
             return this.IDetallesFacturaNegocio!.CalcularSubtotalPorFactura(facturaId);

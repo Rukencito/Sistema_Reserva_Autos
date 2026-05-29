@@ -16,9 +16,18 @@ namespace ASP_ServiciosAuto.Controllers
             this.IUsuariosNegocio = new UsuariosNegocio();
         }
 
+        private void AsignarUsuarioSesion()
+        {
+            string? usuario = HttpContext.Request.Headers["X-Usuario"].FirstOrDefault();
+
+            ((UsuariosNegocio)IUsuariosNegocio!).UsuarioSesion =
+                string.IsNullOrEmpty(usuario) ? "Desconocido" : usuario;
+        }
+
         [HttpGet]
         public List<Usuarios> Consultar()
         {
+            AsignarUsuarioSesion();
             if (this.IUsuariosNegocio == null)
                 throw new Exception("No implementado");
             return this.IUsuariosNegocio!.Consultar();
@@ -27,6 +36,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPost]
         public Usuarios Guardar(Usuarios entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IUsuariosNegocio == null)
                 throw new Exception("No implementado");
             return this.IUsuariosNegocio!.Guardar(entidad);
@@ -34,6 +44,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Usuarios Modificar(Usuarios id)
         {
+            AsignarUsuarioSesion();
             if (this.IUsuariosNegocio == null)
                 throw new Exception("No implementado");
             return this.IUsuariosNegocio!.Modificar(id);
@@ -43,6 +54,7 @@ namespace ASP_ServiciosAuto.Controllers
 
         public Usuarios Eliminar(Usuarios id)
         {
+            AsignarUsuarioSesion();
             if (this.IUsuariosNegocio == null)
                 throw new Exception("No implementado");
             return this.IUsuariosNegocio!.Eliminar(id);
@@ -50,6 +62,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public Usuarios ConsultarPorCorreo(string correo)
         {
+            AsignarUsuarioSesion();
             if (this.IUsuariosNegocio == null)
                 throw new Exception("No implementado");
             return this.IUsuariosNegocio!.ConsultarPorCorreo(correo);
@@ -58,6 +71,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPost]
         public Usuarios AsignarRol(int usuarioId, int rolId)
         {
+            AsignarUsuarioSesion();
             if (this.IUsuariosNegocio == null)
                 throw new Exception("No implementado");
             return this.IUsuariosNegocio!.AsignarRol(usuarioId, rolId);
@@ -66,6 +80,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public List<Usuarios> ConsultarPorRol(int rolId)
         {
+            AsignarUsuarioSesion();
             if (this.IUsuariosNegocio == null)
                 throw new Exception("No implementado");
             return this.IUsuariosNegocio!.ConsultarPorRol(rolId);

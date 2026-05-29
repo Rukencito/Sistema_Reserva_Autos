@@ -7,6 +7,8 @@ namespace Lib_Negocio_Autos.Implementaciones
 {
     public class FacturasNegocio : IFacturasNegocio
     {
+        public string UsuarioSesion { get; set; } = "";
+
         private IConexion? iConexion;
 
         private const decimal IVA = 0.19m;
@@ -23,7 +25,7 @@ namespace Lib_Negocio_Autos.Implementaciones
             {
                 Descripcion = descripcion,
                 FechaHora = DateTime.Now,
-                Usuario = "UsuarioActual", // Reemplaza con el usuario de sesión
+                Usuario = UsuarioSesion, 
                 Accion = accion
             });
             iConexion.SaveChanges();

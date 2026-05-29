@@ -16,9 +16,18 @@ namespace ASP_ServiciosAuto.Controllers
             this.ISegurosNegocio = new SegurosNegocio();
         }
 
+        private void AsignarUsuarioSesion()
+        {
+            string? usuario = HttpContext.Request.Headers["X-Usuario"].FirstOrDefault();
+
+            ((SegurosNegocio)ISegurosNegocio!).UsuarioSesion =
+                string.IsNullOrEmpty(usuario) ? "Desconocido" : usuario;
+        }
+
         [HttpGet]
         public List<Seguros> Consultar()
         {
+            AsignarUsuarioSesion();
             if (this.ISegurosNegocio == null)
                 throw new Exception("No implementado");
             return this.ISegurosNegocio!.Consultar();
@@ -27,6 +36,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPost]
         public Seguros Guardar(Seguros entidad)
         {
+            AsignarUsuarioSesion();
             if (this.ISegurosNegocio == null)
                 throw new Exception("No implementado");
             return this.ISegurosNegocio!.Guardar(entidad);
@@ -34,6 +44,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Seguros Modificar(Seguros id)
         {
+            AsignarUsuarioSesion();
             if (this.ISegurosNegocio == null)
                 throw new Exception("No implementado");
             return this.ISegurosNegocio!.Modificar(id);
@@ -43,6 +54,7 @@ namespace ASP_ServiciosAuto.Controllers
 
         public Seguros Eliminar(Seguros id)
         {
+            AsignarUsuarioSesion();
             if (this.ISegurosNegocio == null)
                 throw new Exception("No implementado");
             return this.ISegurosNegocio!.Eliminar(id);
@@ -51,6 +63,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public Seguros ConsultarPorId(int id)
         {
+            AsignarUsuarioSesion();
             if (this.ISegurosNegocio == null)
                 throw new Exception("No implementado");
             return this.ISegurosNegocio!.ConsultarPorId(id);

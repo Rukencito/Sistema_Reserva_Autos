@@ -16,9 +16,18 @@ namespace ASP_ServiciosAuto.Controllers
             this.IFacturasNegocio = new FacturasNegocio();
         }
 
+        private void AsignarUsuarioSesion()
+        {
+            string? usuario = HttpContext.Request.Headers["X-Usuario"].FirstOrDefault();
+
+            ((FacturasNegocio)IFacturasNegocio!).UsuarioSesion =
+                string.IsNullOrEmpty(usuario) ? "Desconocido" : usuario;
+        }
+
         [HttpGet]
         public List<Facturas> Consultar()
         {
+            AsignarUsuarioSesion();
             if (this.IFacturasNegocio == null)
                 throw new Exception("No implementado");
             return this.IFacturasNegocio!.Consultar();
@@ -27,6 +36,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPost]
         public Facturas Guardar(Facturas entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IFacturasNegocio == null)
                 throw new Exception("No implementado");
             return this.IFacturasNegocio!.Guardar(entidad);
@@ -34,6 +44,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Facturas Modificar(Facturas entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IFacturasNegocio == null)
                 throw new Exception("No implementado");
             return this.IFacturasNegocio!.Modificar(entidad);
@@ -43,6 +54,7 @@ namespace ASP_ServiciosAuto.Controllers
 
         public Facturas Eliminar(Facturas entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IFacturasNegocio == null)
                 throw new Exception("No implementado");
             return this.IFacturasNegocio!.Eliminar(entidad);
@@ -51,6 +63,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public void CalcularTotal(Facturas id)
         {
+            AsignarUsuarioSesion();
             if (this.IFacturasNegocio == null)
                 throw new Exception("No implementado");
             this.IFacturasNegocio!.CalcularTotal(id);
@@ -59,6 +72,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public List<Facturas> ConsultarPorCliente(int id)
         {
+            AsignarUsuarioSesion();
             if (this.IFacturasNegocio == null)
                 throw new Exception("No implementado");
             return this.IFacturasNegocio!.ConsultarPorCliente(id);
@@ -67,6 +81,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public Facturas ConsultarPorId(int id)
         {
+            AsignarUsuarioSesion();
             if (this.IFacturasNegocio == null)
                 throw new Exception("No implementado");
             return this.IFacturasNegocio!.ConsultarPorId(id);
@@ -75,6 +90,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public List<Facturas> ConsultarPendientes()
         {
+            AsignarUsuarioSesion();
             if (this.IFacturasNegocio == null)
                 throw new Exception("No implementado");
             return this.IFacturasNegocio!.ConsultarPendientes();
@@ -83,6 +99,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public void MarcarComoPagada(int id)
         {
+            AsignarUsuarioSesion();
             if (this.IFacturasNegocio == null)
                 throw new Exception("No implementado");
             this.IFacturasNegocio!.MarcarComoPagada(id);

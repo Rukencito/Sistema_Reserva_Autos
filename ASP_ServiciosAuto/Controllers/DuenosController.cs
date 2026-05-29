@@ -16,9 +16,18 @@ namespace ASP_ServiciosAuto.Controllers
             this.IDuenosNegocio = new DuenosNegocio();
         }
 
+        private void AsignarUsuarioSesion()
+        {
+            string? usuario = HttpContext.Request.Headers["X-Usuario"].FirstOrDefault();
+
+            ((DuenosNegocio)IDuenosNegocio!).UsuarioSesion =
+                string.IsNullOrEmpty(usuario) ? "Desconocido" : usuario;
+        }
+
         [HttpGet]
         public List<Duenos> Consultar()
         {
+            AsignarUsuarioSesion();
             if (this.IDuenosNegocio == null)
                 throw new Exception("No implementado");
             return this.IDuenosNegocio!.Consultar();
@@ -27,6 +36,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPost]
         public Duenos Guardar(Duenos entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IDuenosNegocio == null)
                 throw new Exception("No implementado");
             return this.IDuenosNegocio!.Guardar(entidad);
@@ -34,6 +44,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Duenos Modificar(Duenos entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IDuenosNegocio == null)
                 throw new Exception("No implementado");
             return this.IDuenosNegocio!.Modificar(entidad);
@@ -43,6 +54,7 @@ namespace ASP_ServiciosAuto.Controllers
 
         public Duenos Eliminar(Duenos entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IDuenosNegocio == null)
                 throw new Exception("No implementado");
             return this.IDuenosNegocio!.Eliminar(entidad);
@@ -51,6 +63,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public Duenos ConsultarPorCedula(string cedula)
         {
+            AsignarUsuarioSesion();
             if (this.IDuenosNegocio == null)
                 throw new Exception("No implementado");
             return this.IDuenosNegocio!.ConsultarPorCedula(cedula);
@@ -59,6 +72,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public bool VerificarEstadoDueno(int duenoId)
         {
+            AsignarUsuarioSesion();
             if (this.IDuenosNegocio == null)
                 throw new Exception("No implementado");
             return this.IDuenosNegocio!.VerificarEstadoDueno(duenoId);
@@ -67,6 +81,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Duenos AgregarAuto(int duenoId)
         {
+            AsignarUsuarioSesion();
             if (this.IDuenosNegocio == null)
                 throw new Exception("No implementado");
             return this.IDuenosNegocio!.AgregarAuto(duenoId);
@@ -75,6 +90,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Duenos QuitarAuto(int duenoId)
         {
+            AsignarUsuarioSesion();
             if (this.IDuenosNegocio == null)
                 throw new Exception("No implementado");
             return this.IDuenosNegocio!.QuitarAuto(duenoId);

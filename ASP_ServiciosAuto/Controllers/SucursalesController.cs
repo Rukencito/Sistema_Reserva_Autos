@@ -16,9 +16,18 @@ namespace ASP_ServiciosAuto.Controllers
             this.ISucursalesNegocio = new SucursalesNegocio();
         }
 
+        private void AsignarUsuarioSesion()
+        {
+            string? usuario = HttpContext.Request.Headers["X-Usuario"].FirstOrDefault();
+
+            ((SucursalesNegocio)ISucursalesNegocio!).UsuarioSesion =
+                string.IsNullOrEmpty(usuario) ? "Desconocido" : usuario;
+        }
+
         [HttpGet]
         public List<Sucursales> Consultar()
         {
+            AsignarUsuarioSesion();
             if (this.ISucursalesNegocio == null)
                 throw new Exception("No implementado");
             return this.ISucursalesNegocio!.Consultar();
@@ -27,6 +36,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPost]
         public Sucursales Guardar(Sucursales entidad)
         {
+            AsignarUsuarioSesion();
             if (this.ISucursalesNegocio == null)
                 throw new Exception("No implementado");
             return this.ISucursalesNegocio!.Guardar(entidad);
@@ -34,6 +44,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Sucursales Modificar(Sucursales id)
         {
+            AsignarUsuarioSesion();
             if (this.ISucursalesNegocio == null)
                 throw new Exception("No implementado");
             return this.ISucursalesNegocio!.Modificar(id);
@@ -43,6 +54,7 @@ namespace ASP_ServiciosAuto.Controllers
 
         public Sucursales Eliminar(Sucursales id)
         {
+            AsignarUsuarioSesion();
             if (this.ISucursalesNegocio == null)
                 throw new Exception("No implementado");
             return this.ISucursalesNegocio!.Eliminar(id);
@@ -51,6 +63,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public List<Sucursales> ConsultarPorCiudad(string ciudad)
         {
+            AsignarUsuarioSesion();
             if(this.ISucursalesNegocio == null)
                 throw new Exception("No implementado");
             return this.ISucursalesNegocio!.ConsultarPorCiudad(ciudad);

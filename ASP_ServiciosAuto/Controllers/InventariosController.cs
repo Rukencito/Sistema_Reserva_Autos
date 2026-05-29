@@ -15,10 +15,18 @@ namespace ASP_ServiciosAuto.Controllers
         {
             this.IInventariosNegocio = new InventariosNegocio();
         }
+        private void AsignarUsuarioSesion()
+        {
+            string? usuario = HttpContext.Request.Headers["X-Usuario"].FirstOrDefault();
+
+            ((InventariosNegocio)IInventariosNegocio!).UsuarioSesion =
+                string.IsNullOrEmpty(usuario) ? "Desconocido" : usuario;
+        }
 
         [HttpGet]
         public List<Inventarios> Consultar()
         {
+            AsignarUsuarioSesion();
             if (this.IInventariosNegocio == null)
                 throw new Exception("No implementado");
             return this.IInventariosNegocio!.Consultar();
@@ -27,6 +35,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPost]
         public Inventarios Guardar(Inventarios entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IInventariosNegocio == null)
                 throw new Exception("No implementado");
             return this.IInventariosNegocio!.Guardar(entidad);
@@ -34,6 +43,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Inventarios Modificar(Inventarios entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IInventariosNegocio == null)
                 throw new Exception("No implementado");
             return this.IInventariosNegocio!.Modificar(entidad);
@@ -43,6 +53,7 @@ namespace ASP_ServiciosAuto.Controllers
 
         public Inventarios Eliminar(Inventarios entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IInventariosNegocio == null)
                 throw new Exception("No implementado");
             return this.IInventariosNegocio!.Eliminar(entidad);
@@ -51,6 +62,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public Inventarios ConsultarPorId(int id)
         {
+            AsignarUsuarioSesion();
             if (this.IInventariosNegocio == null)
                 throw new Exception("No implementado");
             return this.IInventariosNegocio!.ConsultarPorId(id);
@@ -59,6 +71,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public List<Inventarios> ConsultarPorUbicacion(string ubicacion)
         {
+            AsignarUsuarioSesion();
             if (this.IInventariosNegocio == null)
                 throw new Exception("No implementado");
             return this.IInventariosNegocio!.ConsultarPorUbicacion(ubicacion);
@@ -67,6 +80,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Inventarios AgregarStock(int inventarioId, int cantidad, decimal precioUnitario)
         {
+            AsignarUsuarioSesion();
             if (this.IInventariosNegocio == null)
                 throw new Exception("No implementado");
             return this.IInventariosNegocio!.AgregarStock(inventarioId, cantidad, precioUnitario);
@@ -75,6 +89,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Inventarios ReducirStock(int inventarioId, int cantidad, decimal precioUnitario)
         {
+            AsignarUsuarioSesion();
             if (this.IInventariosNegocio == null)
                 throw new Exception("No implementado");
             return this.IInventariosNegocio!.ReducirStock(inventarioId, cantidad, precioUnitario);
@@ -83,6 +98,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Inventarios RecalcularValorTotal(int inventarioId)
         {
+            AsignarUsuarioSesion();
             if (this.IInventariosNegocio == null)
                 throw new Exception("No implementado");
             return this.IInventariosNegocio!.RecalcularValorTotal(inventarioId);

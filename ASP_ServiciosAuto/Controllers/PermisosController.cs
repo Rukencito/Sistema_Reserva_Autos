@@ -16,9 +16,18 @@ namespace ASP_ServiciosAuto.Controllers
             this.IPermisosNegocio = new PermisosNegocio();
         }
 
+        private void AsignarUsuarioSesion()
+        {
+            string? usuario = HttpContext.Request.Headers["X-Usuario"].FirstOrDefault();
+
+            ((PermisosNegocio)IPermisosNegocio!).UsuarioSesion =
+                string.IsNullOrEmpty(usuario) ? "Desconocido" : usuario;
+        }
+
         [HttpGet]
         public List<Permisos> Consultar()
         {
+            AsignarUsuarioSesion();
             if (this.IPermisosNegocio == null)
                 throw new Exception("No implementado");
             return this.IPermisosNegocio!.Consultar();
@@ -27,6 +36,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPost]
         public Permisos Guardar(Permisos entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IPermisosNegocio == null)
                 throw new Exception("No implementado");
             return this.IPermisosNegocio!.Guardar(entidad);
@@ -34,6 +44,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Permisos Modificar(Permisos id)
         {
+            AsignarUsuarioSesion();
             if (this.IPermisosNegocio == null)
                 throw new Exception("No implementado");
             return this.IPermisosNegocio!.Modificar(id);
@@ -43,6 +54,7 @@ namespace ASP_ServiciosAuto.Controllers
 
         public Permisos Eliminar(Permisos id)
         {
+            AsignarUsuarioSesion(); 
             if (this.IPermisosNegocio == null)
                 throw new Exception("No implementado");
             return this.IPermisosNegocio!.Eliminar(id);
@@ -51,6 +63,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public bool TienePermiso(int usuarioId, string nombrePermiso)
         {
+            AsignarUsuarioSesion();
             if (this.IPermisosNegocio == null)
                 throw new Exception("No implementado");
             return this.IPermisosNegocio!.TienePermiso(usuarioId, nombrePermiso);
@@ -58,6 +71,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public bool TienePermisoPorCorreo(string correo, string nombrePermiso)
         {
+            AsignarUsuarioSesion();
             if (this.IPermisosNegocio == null)
                 throw new Exception("No implementado");
             return this.IPermisosNegocio!.TienePermisoPorCorreo(correo, nombrePermiso);
@@ -65,6 +79,7 @@ namespace ASP_ServiciosAuto.Controllers
 
        public bool PermisoExisteEnRol(string nombrePermiso, int rolId)
         {
+            AsignarUsuarioSesion();
             if (this.IPermisosNegocio == null)
                 throw new Exception("No implementado");
             return this.IPermisosNegocio!.PermisoExisteEnRol(nombrePermiso, rolId);

@@ -16,9 +16,18 @@ namespace ASP_ServiciosAuto.Controllers
             this.IEmpleadosNegocio = new EmpleadosNegocio();
         }
 
+        private void AsignarUsuarioSesion()
+        {
+            string? usuario = HttpContext.Request.Headers["X-Usuario"].FirstOrDefault();
+
+            ((EmpleadosNegocio)IEmpleadosNegocio!).UsuarioSesion =
+                string.IsNullOrEmpty(usuario) ? "Desconocido" : usuario;
+        }
+
         [HttpGet]
         public List<Empleados> Consultar()
         {
+            AsignarUsuarioSesion();
             if (this.IEmpleadosNegocio == null)
                 throw new Exception("No implementado");
             return this.IEmpleadosNegocio!.Consultar();
@@ -27,6 +36,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPost]
         public Empleados Guardar(Empleados entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IEmpleadosNegocio == null)
                 throw new Exception("No implementado");
             return this.IEmpleadosNegocio!.Guardar(entidad);
@@ -34,6 +44,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Empleados Modificar(Empleados entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IEmpleadosNegocio == null)
                 throw new Exception("No implementado");
             return this.IEmpleadosNegocio!.Modificar(entidad);
@@ -43,6 +54,7 @@ namespace ASP_ServiciosAuto.Controllers
 
         public Empleados Eliminar(Empleados entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IEmpleadosNegocio == null)
                 throw new Exception("No implementado");
             return this.IEmpleadosNegocio!.Eliminar(entidad);
@@ -51,6 +63,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public Empleados ConsultarPorCedula(string cedula)
         {
+            AsignarUsuarioSesion();
             if (this.IEmpleadosNegocio == null)
                 throw new Exception("No implementado");
             return this.IEmpleadosNegocio!.ConsultarPorCedula(cedula);
@@ -59,6 +72,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public List<Empleados> ConsultarPorCargo(string cargo)
         {
+            AsignarUsuarioSesion();
             if (this.IEmpleadosNegocio == null)
                 throw new Exception("No implementado");
             return this.IEmpleadosNegocio!.ConsultarPorCargo(cargo);
@@ -67,6 +81,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public List<Empleados> ConsultarPorSucursal(int sucursalId)
         {
+            AsignarUsuarioSesion();
             if (this.IEmpleadosNegocio == null)
                 throw new Exception("No implementado");
             return this.IEmpleadosNegocio!.ConsultarPorSucursal(sucursalId);
@@ -75,6 +90,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public decimal CalcularSalarioTotal(int empleadoId)
         {
+            AsignarUsuarioSesion();
             if (this.IEmpleadosNegocio == null)
                 throw new Exception("No implementado");
             return this.IEmpleadosNegocio!.CalcularSalarioTotal(empleadoId);

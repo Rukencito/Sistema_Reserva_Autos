@@ -16,9 +16,18 @@ namespace ASP_ServiciosAuto.Controllers
             this.IReseñasNegocio = new ResenasNegocio();
         }
 
+        private void AsignarUsuarioSesion()
+        {
+            string? usuario = HttpContext.Request.Headers["X-Usuario"].FirstOrDefault();
+
+            ((ResenasNegocio)IReseñasNegocio!).UsuarioSesion =
+                string.IsNullOrEmpty(usuario) ? "Desconocido" : usuario;
+        }
+
         [HttpGet]
         public List<Resenas> Consultar()
         {
+            AsignarUsuarioSesion();
             if (this.IReseñasNegocio == null)
                 throw new Exception("No implementado");
             return this.IReseñasNegocio!.Consultar();
@@ -27,6 +36,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPost]
         public Resenas Guardar(Resenas entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IReseñasNegocio == null)
                 throw new Exception("No implementado");
             return this.IReseñasNegocio!.Guardar(entidad);
@@ -34,6 +44,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Resenas Modificar(Resenas id)
         {
+            AsignarUsuarioSesion();
             if (this.IReseñasNegocio == null)
                 throw new Exception("No implementado");
             return this.IReseñasNegocio!.Modificar(id);
@@ -43,6 +54,7 @@ namespace ASP_ServiciosAuto.Controllers
 
         public Resenas Eliminar(Resenas id)
         {
+            AsignarUsuarioSesion();
             if (this.IReseñasNegocio == null)
                 throw new Exception("No implementado");
             return this.IReseñasNegocio!.Eliminar(id);
@@ -52,6 +64,7 @@ namespace ASP_ServiciosAuto.Controllers
 
         public List<Resenas> ConsultarPorCliente(int idCliente)
         {
+            AsignarUsuarioSesion();
             if (this.IReseñasNegocio == null)
                 throw new Exception("No implementado");
             return this.IReseñasNegocio!.ConsultarPorCliente(idCliente);

@@ -16,9 +16,18 @@ namespace ASP_ServiciosAuto.Controllers
             this.IAutosNegocio = new AutosNegocio();
         }
 
+        private void AsignarUsuarioSesion()
+        {
+            string? usuario = HttpContext.Request.Headers["X-Usuario"].FirstOrDefault();
+
+            ((AutosNegocio)IAutosNegocio!).UsuarioSesion =
+                string.IsNullOrEmpty(usuario) ? "Desconocido" : usuario;
+        }
+
         [HttpGet]
         public List<Autos> Consultar()
         {
+            AsignarUsuarioSesion();
             if (this.IAutosNegocio == null)
                 throw new Exception("No implementado");
             return this.IAutosNegocio!.Consultar();
@@ -27,6 +36,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPost]
         public Autos Guardar(Autos entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IAutosNegocio == null)
                 throw new Exception("No implementado");
             return this.IAutosNegocio!.Guardar(entidad);
@@ -34,6 +44,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Autos Modificar(Autos entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IAutosNegocio == null)
                 throw new Exception("No implementado");
             return this.IAutosNegocio!.Modificar(entidad);
@@ -43,6 +54,7 @@ namespace ASP_ServiciosAuto.Controllers
 
         public Autos Eliminar(Autos entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IAutosNegocio == null)
                 throw new Exception("No implementado");
             return this.IAutosNegocio!.Eliminar(entidad);
@@ -51,6 +63,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public Autos ConsultarPorPlaca(string placa)
         {
+            AsignarUsuarioSesion();
             if (this.IAutosNegocio == null)
                 throw new Exception("No implementado");
             return this.IAutosNegocio!.ConsultarPorPlaca(placa);
@@ -59,6 +72,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public List<Autos> ConsultarPorMarca(string marca)
         {
+            AsignarUsuarioSesion();
             if (this.IAutosNegocio == null)
                 throw new Exception("No implementado");
             return this.IAutosNegocio!.ConsultarPorMarca(marca);
@@ -67,6 +81,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public List<Autos> ConsultarPorModelo(string modelo)
         {
+            AsignarUsuarioSesion();
             if (this.IAutosNegocio == null)
                 throw new Exception("No implementado");
             return this.IAutosNegocio!.ConsultarPorModelo(modelo);
@@ -75,6 +90,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public List<Autos> ConsultarDisponibles()
         {
+            AsignarUsuarioSesion();
             if (this.IAutosNegocio == null)
                 throw new Exception("No implementado");
             return this.IAutosNegocio!.ConsultarDisponibles();
@@ -83,6 +99,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public bool VerificarDisponibilidad(string placa)
         {
+            AsignarUsuarioSesion();
             if (this.IAutosNegocio == null)
                 throw new Exception("No implementado");
             return this.IAutosNegocio!.VerificarDisponibilidad(placa);
@@ -91,6 +108,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public bool CambiarEstado(string placa, bool nuevoEstado)
         {
+            AsignarUsuarioSesion();
             if (this.IAutosNegocio == null)
                 throw new Exception("No implementado");
             return this.IAutosNegocio!.CambiarEstado(placa, nuevoEstado);

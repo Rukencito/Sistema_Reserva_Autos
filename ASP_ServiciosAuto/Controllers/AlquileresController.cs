@@ -15,9 +15,19 @@ namespace ASP_ServiciosAuto.Controllers
             this.IAlquileresNegocio = new AlquileresNegocio();
         }
 
+        private void AsignarUsuarioSesion()
+        {
+            string? usuario = HttpContext.Request.Headers["X-Usuario"].FirstOrDefault();
+
+            ((AlquileresNegocio)IAlquileresNegocio!).UsuarioSesion =
+                string.IsNullOrEmpty(usuario) ? "Desconocido" : usuario;
+        }
+
+
         [HttpGet]
         public List<Alquileres> Consultar()
         {
+            AsignarUsuarioSesion();
             if (this.IAlquileresNegocio == null)
                 throw new Exception("No implementado");
             return this.IAlquileresNegocio!.Consultar();
@@ -26,6 +36,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPost]
         public Alquileres Guardar(Alquileres entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IAlquileresNegocio == null)
                 throw new Exception("No implementado");
             return this.IAlquileresNegocio!.Guardar(entidad);
@@ -33,6 +44,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Alquileres Modificar(Alquileres entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IAlquileresNegocio == null)
                 throw new Exception("No implementado");
             return this.IAlquileresNegocio!.Modificar(entidad);
@@ -42,6 +54,7 @@ namespace ASP_ServiciosAuto.Controllers
 
         public Alquileres Eliminar(Alquileres entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IAlquileresNegocio == null)
                 throw new Exception("No implementado");
             return this.IAlquileresNegocio!.Eliminar(entidad);
@@ -50,6 +63,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public List<Alquileres> ConsultarEstadoAlquiler(bool estadoAlquiler)
         {
+            AsignarUsuarioSesion();
             if (this.IAlquileresNegocio == null)
                 throw new Exception("No implementado");
             return this.IAlquileresNegocio.ConsultarEstadoAlquiler(estadoAlquiler);
@@ -58,6 +72,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public List<Alquileres> ConsultarAlquileresPorCliente(int clienteId)
         {
+            AsignarUsuarioSesion();
             if (this.IAlquileresNegocio == null)
                 throw new Exception("No implementado");
             return this.IAlquileresNegocio.ConsultarAlquileresPorCliente(clienteId);
@@ -66,6 +81,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public bool ExisteCruceDeFechas(int autoId, DateTime fechaInicio, DateTime fechaFin)
         {
+            AsignarUsuarioSesion();
             if (this.IAlquileresNegocio == null)
                 throw new Exception("No implementado");
             return this.IAlquileresNegocio.ExisteCruceDeFechas(autoId, fechaInicio, fechaFin);
@@ -74,6 +90,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public decimal CalcularTotalPrecio(decimal precioAlquiler, DateTime fechaInicio, DateTime fechaFin)
         {
+            AsignarUsuarioSesion();
             if (this.IAlquileresNegocio == null)
                 throw new Exception("No implementado");
             return this.IAlquileresNegocio.CalcularTotalPrecio(precioAlquiler, fechaInicio, fechaFin);

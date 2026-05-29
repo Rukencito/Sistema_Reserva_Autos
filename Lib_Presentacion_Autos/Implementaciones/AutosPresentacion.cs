@@ -7,12 +7,25 @@ namespace Lib_Presentacion_Autos.Implementaciones
     public class AutosPresentacion : IAutosPresentacion
     {
         private IComunicaciones? iComunicaciones;
+        private readonly string _usuarioSesion;
 
+        public AutosPresentacion(string usuarioSesion = "Sistema")
+        {
+            _usuarioSesion = usuarioSesion;
+        }
+
+        private Dictionary<string, object> ConUrl(string url)
+        {
+            return new Dictionary<string, object>
+            {
+                ["Url"] = url,
+                ["X-Usuario"] = _usuarioSesion
+            };
+        }
         public List<Autos> Consultar()
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Autos/Consultar";
+            var datos = ConUrl("http://localhost:5108/Autos/Consultar");
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -31,8 +44,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("El auto ya fue guardado");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Autos/Guardar";
+            var datos = ConUrl("http://localhost:5108/Autos/Guardar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarPost(datos)!;
@@ -52,8 +64,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("El auto no ha sido guardado");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Autos/Modificar";
+            var datos = ConUrl("http://localhost:5108/Autos/Modificar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarPut(datos)!;
@@ -73,8 +84,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("El auto no ha sido guardado");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Autos/Eliminar";
+            var datos = ConUrl("http://localhost:5108/Autos/Eliminar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarDelete(datos)!;
@@ -91,8 +101,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public Autos ConsultarPorPlaca(string placa)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Autos/ConsultarPorPlaca?placa=" + placa;
+            var datos = ConUrl("http://localhost:5108/Autos/ConsultarPorPlaca?placa=" + placa);
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -108,8 +117,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public List<Autos> ConsultarPorMarca(string marca)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Autos/ConsultarPorMarca?marca=" + marca;
+            var datos = ConUrl("http://localhost:5108/Autos/ConsultarPorMarca?marca=" + marca);
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -125,8 +133,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public List<Autos> ConsultarPorModelo(string modelo)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Autos/ConsultarPorModelo?modelo=" + modelo;
+            var datos = ConUrl("http://localhost:5108/Autos/ConsultarPorModelo?modelo=" + modelo);
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -142,8 +149,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public List<Autos> ConsultarDisponibles()
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Autos/ConsultarDisponibles";
+            var datos = ConUrl("http://localhost:5108/Autos/ConsultarDisponibles");
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -159,8 +165,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public bool VerificarDisponibilidad(string placa)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Autos/VerificarDisponibilidad?placa=" + placa;
+            var datos = ConUrl("http://localhost:5108/Autos/VerificarDisponibilidad?placa=" + placa);
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -176,10 +181,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public bool CambiarEstado(string placa, bool nuevoEstado)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Autos/CambiarEstado";
-            datos["Entidad"] = new { placa, nuevoEstado };
+            var datos = ConUrl("http://localhost:5108/Autos/CambiarEstado");
 
             var task = this.iComunicaciones.EjecutarPut(datos)!;
             task.Wait();

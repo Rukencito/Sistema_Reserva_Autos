@@ -23,16 +23,22 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public AlquileresHTMLModel()
         {
-            IAlquileresPresentacion = new AlquileresPresentacion();
-            IAutosPresentacion= new AutosPresentacion();
-            IClientesPresentacion= new  ClientesPresentacion();
-            IEmpleadosPresentacion= new  EmpleadosPresentacion();
+            IAutosPresentacion = new AutosPresentacion();
+            IClientesPresentacion = new ClientesPresentacion();
+            IEmpleadosPresentacion = new EmpleadosPresentacion();
+        }
+
+        private void IniciarAlquileres()
+        {
+            var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
+            IAlquileresPresentacion = new AlquileresPresentacion(correo);
         }
 
         public List<Autos> ObtenerAutos()
         {
             return ListaAuto = IAutosPresentacion!.Consultar();
         }
+
         public List<Clientes> ObtenerClientes()
         {
             return ListaCliente = IClientesPresentacion!.Consultar();
@@ -42,7 +48,6 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
             return ListaEmpleado = IEmpleadosPresentacion!.Consultar();
         }
-
 
         private void CargarListaFiltrada()
         {
@@ -68,6 +73,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnGet()
         {
+            IniciarAlquileres();
             try
             {
                 CargarListaFiltrada();
@@ -79,6 +85,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtRefrescar()
         {
+            IniciarAlquileres();
             try
             {
                 CargarListaFiltrada();
@@ -91,6 +98,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtNuevo()
         {
+            IniciarAlquileres();
             Alquiler = new Alquileres();
             Lista = null;
             Borrando = false;
@@ -98,6 +106,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtModificar(int data)
         {
+            IniciarAlquileres();
             try
             {
                 var rol = HttpContext.Session.GetString("RolId");
@@ -132,10 +141,10 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtGuardar()
         {
+            IniciarAlquileres();
             try
             {
-                if (Alquiler == null)
-                    return;
+                if (Alquiler == null) return;
 
                 if (Alquiler.Clientes == 0)
                 {
@@ -158,7 +167,6 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                 var rol = HttpContext.Session.GetString("RolId");
                 var usuarioId = HttpContext.Session.GetString("EntidadId");
 
-                // Si es cliente o empleado, forzar su propio ID al guardar
                 if (rol == "2" && int.TryParse(usuarioId, out int clienteId))
                     Alquiler.Clientes = clienteId;
                 else if (rol == "3" && int.TryParse(usuarioId, out int empleadoId))
@@ -176,7 +184,6 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                 }
 
                 ViewData["Mensaje"] = "Alquiler guardado correctamente.";
-
                 CargarListaFiltrada();
                 Alquiler = null;
                 Borrando = false;
@@ -185,19 +192,17 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             catch (Exception ex)
             {
                 Exception errorReal = ex;
-
                 while (errorReal.InnerException != null)
                     errorReal = errorReal.InnerException;
 
                 ViewData["Mensaje"] = "Error al guardar el alquiler: " + errorReal.Message;
-
                 CargarListaFiltrada();
             }
         }
 
-
         public void OnPostBtBorrar()
         {
+            IniciarAlquileres();
             try
             {
                 var rol = HttpContext.Session.GetString("RolId");
@@ -230,7 +235,6 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                 }
 
                 Alquiler = IAlquileresPresentacion!.Eliminar(Alquiler!);
-
                 CargarListaFiltrada();
                 Alquiler = null;
                 Borrando = false;
@@ -241,6 +245,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrarVal(int data)
         {
+            IniciarAlquileres();
             try
             {
                 OnPostBtRefrescar();
@@ -248,14 +253,12 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                 Lista = null;
                 Borrando = true;
             }
-            catch (Exception ex)
-            {
-                ViewData["Mensaje"] = ex.Message;
-            }
+            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
         }
 
         public void OnPostBtCerrar()
         {
+            IniciarAlquileres();
             OnPostBtRefrescar();
             Borrando = false;
         }

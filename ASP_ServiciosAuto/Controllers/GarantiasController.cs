@@ -16,9 +16,18 @@ namespace ASP_ServiciosAuto.Controllers
             this.IGarantiasNegocio = new GarantiasNegocio();
         }
 
+        private void AsignarUsuarioSesion()
+        {
+            string? usuario = HttpContext.Request.Headers["X-Usuario"].FirstOrDefault();
+
+            ((GarantiasNegocio)IGarantiasNegocio!).UsuarioSesion =
+                string.IsNullOrEmpty(usuario) ? "Desconocido" : usuario;
+        }
+
         [HttpGet]
         public List<Garantias> Consultar()
         {
+            AsignarUsuarioSesion();
             if (this.IGarantiasNegocio == null)
                 throw new Exception("No implementado");
             return this.IGarantiasNegocio!.Consultar();
@@ -27,6 +36,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPost]
         public Garantias Guardar(Garantias entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IGarantiasNegocio == null)
                 throw new Exception("No implementado");
             return this.IGarantiasNegocio!.Guardar(entidad);
@@ -34,6 +44,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Garantias Modificar(Garantias entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IGarantiasNegocio == null)
                 throw new Exception("No implementado");
             return this.IGarantiasNegocio!.Modificar(entidad);
@@ -43,6 +54,7 @@ namespace ASP_ServiciosAuto.Controllers
 
         public Garantias Eliminar(Garantias entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IGarantiasNegocio == null)
                 throw new Exception("No implementado");
             return this.IGarantiasNegocio!.Eliminar(entidad);
@@ -51,6 +63,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public Garantias ConsultarPorId(int id)
         {
+            AsignarUsuarioSesion();
             if (this.IGarantiasNegocio == null)
                 throw new Exception("No implementado");
             return this.IGarantiasNegocio!.ConsultarPorId(id);
@@ -59,6 +72,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public List<Garantias> ConsultarPorAuto(int autoId)
         {
+            AsignarUsuarioSesion();
             if (this.IGarantiasNegocio == null)
                 throw new Exception("No implementado");
             return this.IGarantiasNegocio!.ConsultarPorAuto(autoId);
@@ -67,6 +81,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public bool TieneGarantiaVigente(int autoId)
         {
+            AsignarUsuarioSesion();
             if (this.IGarantiasNegocio == null)
                 throw new Exception("No implementado");
             return this.IGarantiasNegocio!.TieneGarantiaVigente(autoId);

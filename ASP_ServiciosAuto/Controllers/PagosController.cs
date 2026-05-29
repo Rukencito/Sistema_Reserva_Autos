@@ -16,9 +16,18 @@ namespace ASP_ServiciosAuto.Controllers
             this.IPagosNegocio = new PagosNegocio();
         }
 
+        private void AsignarUsuarioSesion()
+        {
+            string? usuario = HttpContext.Request.Headers["X-Usuario"].FirstOrDefault();
+
+            ((PagosNegocio)IPagosNegocio!).UsuarioSesion =
+                string.IsNullOrEmpty(usuario) ? "Desconocido" : usuario;
+        }
+
         [HttpGet]
         public List<Pagos> Consultar()
         {
+            AsignarUsuarioSesion();
             if (this.IPagosNegocio == null)
                 throw new Exception("No implementado");
             return this.IPagosNegocio!.Consultar();
@@ -27,6 +36,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPost]
         public Pagos Guardar(Pagos entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IPagosNegocio == null)
                 throw new Exception("No implementado");
             return this.IPagosNegocio!.Guardar(entidad);
@@ -34,6 +44,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Pagos Modificar(Pagos entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IPagosNegocio == null)
                 throw new Exception("No implementado");
             return this.IPagosNegocio!.Modificar(entidad);
@@ -43,6 +54,7 @@ namespace ASP_ServiciosAuto.Controllers
 
         public Pagos Eliminar(Pagos entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IPagosNegocio == null)
                 throw new Exception("No implementado");
             return this.IPagosNegocio!.Eliminar(entidad);
@@ -51,6 +63,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public Pagos ConsultarPorId(int id)
         {
+            AsignarUsuarioSesion();
             if (this.IPagosNegocio == null)
                 throw new Exception("No implementado");
             return this.IPagosNegocio!.ConsultarPorId(id);
@@ -59,6 +72,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public List<Pagos> ConsultarPorFactura(int facturaId)
         {
+            AsignarUsuarioSesion();
             if (this.IPagosNegocio == null)
                 throw new Exception("No implementado");
             return this.IPagosNegocio!.ConsultarPorFactura(facturaId);

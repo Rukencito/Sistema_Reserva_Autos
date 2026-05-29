@@ -15,10 +15,18 @@ namespace ASP_ServiciosAuto.Controllers
         {
             this.IReservasNegocio = new ReservasNegocio();
         }
+        private void AsignarUsuarioSesion()
+        {
+            string? usuario = HttpContext.Request.Headers["X-Usuario"].FirstOrDefault();
+
+            ((ReservasNegocio)IReservasNegocio!).UsuarioSesion =
+                string.IsNullOrEmpty(usuario) ? "Desconocido" : usuario;
+        }
 
         [HttpGet]
         public List<Reservas> Consultar()
         {
+            AsignarUsuarioSesion();
             if (this.IReservasNegocio == null)
                 throw new Exception("No implementado");
             return this.IReservasNegocio!.Consultar();
@@ -27,6 +35,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPost]
         public Reservas Guardar(Reservas entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IReservasNegocio == null)
                 throw new Exception("No implementado");
             return this.IReservasNegocio!.Guardar(entidad);
@@ -34,6 +43,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Reservas Modificar(Reservas id)
         {
+            AsignarUsuarioSesion();
             if (this.IReservasNegocio == null)
                 throw new Exception("No implementado");
             return this.IReservasNegocio!.Modificar(id);
@@ -43,13 +53,16 @@ namespace ASP_ServiciosAuto.Controllers
 
         public Reservas Eliminar(Reservas id)
         {
+            AsignarUsuarioSesion();
             if (this.IReservasNegocio == null)
                 throw new Exception("No implementado");
             return this.IReservasNegocio!.Eliminar(id);
         }
         [HttpGet]
+
         public bool ValidarReservaDuplicada(int autoId, int clienteId, DateTime fechaVencimiento)
         {
+            AsignarUsuarioSesion();
             if (this.IReservasNegocio == null)
                 throw new Exception("No implementado");
             return this.IReservasNegocio!.ValidarReservaDuplicada(autoId, clienteId, fechaVencimiento);
@@ -58,6 +71,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Reservas CambiarEstado(int reservaId, string nuevoEstado)
         {
+            AsignarUsuarioSesion();
             if (this.IReservasNegocio == null)
                 throw new Exception("No implementado");
             return this.IReservasNegocio!.CambiarEstado(reservaId, nuevoEstado);
@@ -65,6 +79,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public List<Reservas> ConsultarPorCliente(int clienteId)
         {
+            AsignarUsuarioSesion();
             if (this.IReservasNegocio == null)
                 throw new Exception("No implementado");
             return this.IReservasNegocio!.ConsultarPorCliente(clienteId);

@@ -8,6 +8,7 @@ namespace Lib_Negocio_Autos.Implementaciones
     {
         private IConexion? iConexion;
 
+        public string UsuarioSesion { get; set; } = ""; 
         private void AbrirConexion()
         {
             iConexion = new Conexion();
@@ -20,7 +21,7 @@ namespace Lib_Negocio_Autos.Implementaciones
             {
                 Descripcion = descripcion,
                 FechaHora = DateTime.Now,
-                Usuario = "UsuarioActual", // Reemplaza con el usuario de sesión
+                Usuario = UsuarioSesion,
                 Accion = accion
             });
             iConexion.SaveChanges();

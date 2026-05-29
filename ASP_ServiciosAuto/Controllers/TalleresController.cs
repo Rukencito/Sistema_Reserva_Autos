@@ -16,9 +16,18 @@ namespace ASP_ServiciosAuto.Controllers
             this.ITalleresNegocio = new TalleresNegocio();
         }
 
+        private void AsignarUsuarioSesion()
+        {
+            string? usuario = HttpContext.Request.Headers["X-Usuario"].FirstOrDefault();
+
+            ((TalleresNegocio)ITalleresNegocio!).UsuarioSesion =
+                string.IsNullOrEmpty(usuario) ? "Desconocido" : usuario;
+        }
+
         [HttpGet]
         public List<Talleres> Consultar()
         {
+            AsignarUsuarioSesion();
             if (this.ITalleresNegocio == null)
                 throw new Exception("No implementado");
             return this.ITalleresNegocio!.Consultar();
@@ -27,6 +36,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPost]
         public Talleres Guardar(Talleres entidad)
         {
+            AsignarUsuarioSesion();
             if (this.ITalleresNegocio == null)
                 throw new Exception("No implementado");
             return this.ITalleresNegocio!.Guardar(entidad);
@@ -34,6 +44,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Talleres Modificar(Talleres id)
         {
+            AsignarUsuarioSesion();
             if (this.ITalleresNegocio == null)
                 throw new Exception("No implementado");
             return this.ITalleresNegocio!.Modificar(id);
@@ -43,6 +54,7 @@ namespace ASP_ServiciosAuto.Controllers
 
         public Talleres Eliminar(Talleres id)
         {
+            AsignarUsuarioSesion();
             if (this.ITalleresNegocio == null)
                 throw new Exception("No implementado");
             return this.ITalleresNegocio!.Eliminar(id);

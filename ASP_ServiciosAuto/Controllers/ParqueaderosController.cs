@@ -16,9 +16,18 @@ namespace ASP_ServiciosAuto.Controllers
             this.IParqueaderosNegocio = new ParqueaderosNegocio();
         }
 
+        private void AsignarUsuarioSesion()
+        {
+            string? usuario = HttpContext.Request.Headers["X-Usuario"].FirstOrDefault();
+
+            ((ParqueaderosNegocio)IParqueaderosNegocio!).UsuarioSesion =
+                string.IsNullOrEmpty(usuario) ? "Desconocido" : usuario;
+        }
+
         [HttpGet]
         public List<Parqueaderos> Consultar()
         {
+            AsignarUsuarioSesion();
             if (this.IParqueaderosNegocio == null)
                 throw new Exception("No implementado");
             return this.IParqueaderosNegocio!.Consultar();
@@ -27,6 +36,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPost]
         public Parqueaderos Guardar(Parqueaderos entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IParqueaderosNegocio == null)
                 throw new Exception("No implementado");
             return this.IParqueaderosNegocio!.Guardar(entidad);
@@ -34,6 +44,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Parqueaderos Modificar(Parqueaderos id)
         {
+            AsignarUsuarioSesion();
             if (this.IParqueaderosNegocio == null)
                 throw new Exception("No implementado");
             return this.IParqueaderosNegocio!.Modificar(id);
@@ -43,6 +54,7 @@ namespace ASP_ServiciosAuto.Controllers
 
         public Parqueaderos Eliminar(Parqueaderos id)
         {
+            AsignarUsuarioSesion();
             if (this.IParqueaderosNegocio == null)
                 throw new Exception("No implementado");
             return this.IParqueaderosNegocio!.Eliminar(id);
@@ -51,6 +63,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public Parqueaderos ConsultarPorId(int id)
         {
+            AsignarUsuarioSesion();
             if (this.IParqueaderosNegocio == null)
                 throw new Exception("No implementado");
             return this.IParqueaderosNegocio!.ConsultarPorId(id);
@@ -59,6 +72,7 @@ namespace ASP_ServiciosAuto.Controllers
        [HttpGet]
         public int ContarAutosEnParqueadero(int parqueaderoId)
         {
+            AsignarUsuarioSesion();
             if (this.IParqueaderosNegocio == null)
                 throw new Exception("No implementado");
             return this.IParqueaderosNegocio!.ContarAutosEnParqueadero(parqueaderoId);
@@ -67,6 +81,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public int ConsultarEspaciosDisponibles(int parqueaderoId)
         {
+            AsignarUsuarioSesion();
             if (this.IParqueaderosNegocio == null)
                 throw new Exception("No implementado");
             return this.IParqueaderosNegocio!.ConsultarEspaciosDisponibles(parqueaderoId);
@@ -75,6 +90,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public bool TieneEspacioDisponible(int parqueaderoId)
         {
+            AsignarUsuarioSesion();
             if (this.IParqueaderosNegocio == null)
                 throw new Exception("No implementado");
             return this.IParqueaderosNegocio!.TieneEspacioDisponible(parqueaderoId);
@@ -83,6 +99,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public List<Parqueaderos> ConsultarConEspacioDisponible()
         {
+            AsignarUsuarioSesion();
             if (this.IParqueaderosNegocio == null)
                 throw new Exception("No implementado");
             return this.IParqueaderosNegocio!.ConsultarConEspacioDisponible();
@@ -91,6 +108,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public List<Autos> ConsultarAutosPorParqueadero(int parqueaderoId)
         {
+            AsignarUsuarioSesion();
             if (this.IParqueaderosNegocio == null)
                 throw new Exception("No implementado");
             return this.IParqueaderosNegocio!.ConsultarAutosPorParqueadero(parqueaderoId);

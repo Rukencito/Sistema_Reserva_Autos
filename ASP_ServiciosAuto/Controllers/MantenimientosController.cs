@@ -16,9 +16,18 @@ namespace ASP_ServiciosAuto.Controllers
             this.IMantenimientosNegocio = new MantenimientosNegocio();
         }
 
+        private void AsignarUsuarioSesion()
+        {
+            string? usuario = HttpContext.Request.Headers["X-Usuario"].FirstOrDefault();
+
+            ((MantenimientosNegocio)IMantenimientosNegocio!).UsuarioSesion =
+                string.IsNullOrEmpty(usuario) ? "Desconocido" : usuario;
+        }
+
         [HttpGet]
         public List<Mantenimientos> Consultar()
         {
+            AsignarUsuarioSesion();
             if (this.IMantenimientosNegocio == null)
                 throw new Exception("No implementado");
             return this.IMantenimientosNegocio!.Consultar();
@@ -27,6 +36,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPost]
         public Mantenimientos Guardar(Mantenimientos entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IMantenimientosNegocio == null)
                 throw new Exception("No implementado");
             return this.IMantenimientosNegocio!.Guardar(entidad);
@@ -34,6 +44,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Mantenimientos Modificar(Mantenimientos entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IMantenimientosNegocio == null)
                 throw new Exception("No implementado");
             return this.IMantenimientosNegocio!.Modificar(entidad);
@@ -43,6 +54,7 @@ namespace ASP_ServiciosAuto.Controllers
 
         public Mantenimientos Eliminar(Mantenimientos entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IMantenimientosNegocio == null)
                 throw new Exception("No implementado");
             return this.IMantenimientosNegocio!.Eliminar(entidad);
@@ -51,6 +63,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public Mantenimientos ConsultarPorId(int id)
         {
+            AsignarUsuarioSesion();
             if (this.IMantenimientosNegocio == null)
                 throw new Exception("No implementado");
             return this.IMantenimientosNegocio!.ConsultarPorId(id);
@@ -59,6 +72,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public List<Mantenimientos> ConsultarPorAuto(int autoId)
         {
+            AsignarUsuarioSesion();
             if (this.IMantenimientosNegocio == null)
                 throw new Exception("No implementado");
             return this.IMantenimientosNegocio!.ConsultarPorAuto(autoId);
@@ -67,6 +81,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public List<Mantenimientos> ConsultarPorTaller(int tallerId)
         {
+            AsignarUsuarioSesion();
             if (this.IMantenimientosNegocio == null)
                 throw new Exception("No implementado");
             return this.IMantenimientosNegocio!.ConsultarPorTaller(tallerId);
@@ -75,6 +90,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Mantenimientos FinalizarMantenimiento(int mantenimientoId)
         {
+            AsignarUsuarioSesion();
             if (this.IMantenimientosNegocio == null)
                 throw new Exception("No implementado");
             return this.IMantenimientosNegocio!.FinalizarMantenimiento(mantenimientoId);

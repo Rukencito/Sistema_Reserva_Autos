@@ -16,9 +16,19 @@ namespace ASP_ServiciosAuto.Controllers
             this.IContratosNegocio = new ContratosNegocio();
         }
 
+        private void AsignarUsuarioSesion()
+        {
+            string? usuario = HttpContext.Request.Headers["X-Usuario"].FirstOrDefault();
+
+            ((ContratosNegocio)IContratosNegocio!).UsuarioSesion =
+                string.IsNullOrEmpty(usuario) ? "Desconocido" : usuario;
+        }
+
         [HttpGet]
         public List<Contratos> Consultar()
         {
+            AsignarUsuarioSesion();
+
             if (this.IContratosNegocio == null)
                 throw new Exception("No implementado");
             return this.IContratosNegocio!.Consultar();
@@ -27,6 +37,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPost]
         public Contratos Guardar(Contratos entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IContratosNegocio == null)
                 throw new Exception("No implementado");
             return this.IContratosNegocio!.Guardar(entidad);
@@ -34,6 +45,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Contratos Modificar(Contratos entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IContratosNegocio == null)
                 throw new Exception("No implementado");
             return this.IContratosNegocio!.Modificar(entidad);
@@ -43,6 +55,7 @@ namespace ASP_ServiciosAuto.Controllers
 
         public Contratos Eliminar(Contratos entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IContratosNegocio == null)
                 throw new Exception("No implementado");
             return this.IContratosNegocio!.Eliminar(entidad);
@@ -52,6 +65,7 @@ namespace ASP_ServiciosAuto.Controllers
 
         public Contratos ConsultarPorId(int id)
         {
+            AsignarUsuarioSesion();
             if (this.IContratosNegocio == null)
                 throw new Exception("No implementado");
             return this.IContratosNegocio!.ConsultarPorId(id);
@@ -60,6 +74,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public List<Contratos> ConsultarPorAlquiler(int alquilerId)
         {
+            AsignarUsuarioSesion();
             if (this.IContratosNegocio == null)
                 throw new Exception("No implementado");
             return this.IContratosNegocio!.ConsultarPorAlquiler(alquilerId);

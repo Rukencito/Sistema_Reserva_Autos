@@ -17,9 +17,18 @@ namespace ASP_ServiciosAuto.Controllers
             this.IRolesNegocio = new RolesNegocio();
         }
 
+        private void AsignarUsuarioSesion()
+        {
+            string? usuario = HttpContext.Request.Headers["X-Usuario"].FirstOrDefault();
+
+            ((RolesNegocio)IRolesNegocio!).UsuarioSesion =
+                string.IsNullOrEmpty(usuario) ? "Desconocido" : usuario;
+        }
+
         [HttpGet]
         public List<Roles> Consultar()
         {
+            AsignarUsuarioSesion();
             if (this.IRolesNegocio == null)
                 throw new Exception("No implementado");
             return this.IRolesNegocio!.Consultar();
@@ -28,6 +37,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPost]
         public Roles Guardar(Roles entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IRolesNegocio == null)
                 throw new Exception("No implementado");
             return this.IRolesNegocio!.Guardar(entidad);
@@ -35,6 +45,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Roles Modificar(Roles id)
         {
+            AsignarUsuarioSesion();
             if (this.IRolesNegocio == null)
                 throw new Exception("No implementado");
             return this.IRolesNegocio!.Modificar(id);
@@ -44,6 +55,7 @@ namespace ASP_ServiciosAuto.Controllers
 
         public Roles Eliminar(Roles id)
         {
+            AsignarUsuarioSesion();
             if (this.IRolesNegocio == null)
                 throw new Exception("No implementado");
             return this.IRolesNegocio!.Eliminar(id);
@@ -52,6 +64,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public bool NombreExiste(string nombre)
         {
+            AsignarUsuarioSesion();
             if (this.IRolesNegocio == null)
                 throw new Exception("No implementado");
             return this.IRolesNegocio!.NombreExiste(nombre);
@@ -60,6 +73,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public Roles ConsultarPorId(int id)
         {
+            AsignarUsuarioSesion();
             if (this.IRolesNegocio == null)
                 throw new Exception("No implementado");
             return this.IRolesNegocio!.ConsultarPorId(id);

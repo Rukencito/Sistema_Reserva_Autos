@@ -16,9 +16,18 @@ namespace ASP_ServiciosAuto.Controllers
             this.IClientesNegocio = new ClientesNegocio();
         }
 
+        private void AsignarUsuarioSesion()
+        {
+            string? usuario = HttpContext.Request.Headers["X-Usuario"].FirstOrDefault();
+
+            ((ClientesNegocio)IClientesNegocio!).UsuarioSesion =
+                string.IsNullOrEmpty(usuario) ? "Desconocido" : usuario;
+        }
+
         [HttpGet]
         public List<Clientes> Consultar()
         {
+            AsignarUsuarioSesion();
             if (this.IClientesNegocio == null)
                 throw new Exception("No implementado");
             return this.IClientesNegocio!.Consultar();
@@ -27,6 +36,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPost]
         public Clientes Guardar(Clientes entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IClientesNegocio == null)
                 throw new Exception("No implementado");
             return this.IClientesNegocio!.Guardar(entidad);
@@ -34,6 +44,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Clientes Modificar(Clientes entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IClientesNegocio == null)
                 throw new Exception("No implementado");
             return this.IClientesNegocio!.Modificar(entidad);
@@ -43,6 +54,7 @@ namespace ASP_ServiciosAuto.Controllers
 
         public Clientes Eliminar(Clientes entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IClientesNegocio == null)
                 throw new Exception("No implementado");
             return this.IClientesNegocio!.Eliminar(entidad);
@@ -51,6 +63,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public Clientes ConsultarPorCedula(string cedula)
         {
+            AsignarUsuarioSesion();
             if (this.IClientesNegocio == null)
                 throw new Exception("No implementado");
             return this.IClientesNegocio!.ConsultarPorCedula(cedula);
@@ -59,6 +72,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Clientes AgregarPuntosFidelidad(int clienteId, int puntos)
         {
+            AsignarUsuarioSesion();
             if (this.IClientesNegocio == null)
                 throw new Exception("No implementado");
             return this.IClientesNegocio!.AgregarPuntosFidelidad(clienteId, puntos);
@@ -67,6 +81,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpGet]
         public bool TieneLicencia(int clienteId)
         {
+            AsignarUsuarioSesion();
             if (this.IClientesNegocio == null)
                 throw new Exception("No implementado");
             return this.IClientesNegocio!.TieneLicencia(clienteId);

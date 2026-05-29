@@ -6,6 +6,17 @@ namespace Lib_Presentacion_Autos.Implementaciones
 {
     public class Comunicaciones : IComunicaciones
     {
+        private HttpClient CrearCliente(Dictionary<string, object> datos)
+        {
+            var client = new HttpClient();
+            client.Timeout = new TimeSpan(0, 4, 0);
+
+            if (datos.TryGetValue("X-Usuario", out var usuario) && usuario is string u && !string.IsNullOrEmpty(u))
+                client.DefaultRequestHeaders.Add("X-Usuario", u);
+
+            datos.Remove("X-Usuario");
+            return client;
+        }
         public async Task<Dictionary<string, object>> Ejecutar(Dictionary<string, object> datos)
         {
             var url = datos["Url"].ToString();
@@ -14,7 +25,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 JsonConvert.SerializeObject(datos["Entidad"]) : "{}";
             var body = new StringContent(stringData, Encoding.UTF8, "application/json"); // avisa que mandara la entidad convertida en json, en el tiopo de texto que la quiere y le avisa que esta mandando un json
 
-            var httpClient = new HttpClient(); //crea al cliente http, Esto es como abrir un navegador invisible desde código. Sirve para hacer peticiones a APIs o páginas web.
+            var httpClient = CrearCliente(datos); //crea al cliente http, Esto es como abrir un navegador invisible desde código. Sirve para hacer peticiones a APIs o páginas web.
             httpClient.Timeout = new TimeSpan(0, 4, 0); //si al intentar acceder se demora 4 minutos, cancela la petición (horas, minutos, segundos)
 
             var message = await httpClient.GetAsync(url); // ingresa a la url, y pide informacion, como escribir una url en el navegador
@@ -40,7 +51,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 JsonConvert.SerializeObject(datos["Entidad"]) : "{}";
             var body = new StringContent(stringData, Encoding.UTF8, "application/json");
 
-            var httpClient = new HttpClient();
+            var httpClient = CrearCliente(datos);
             httpClient.Timeout = new TimeSpan(0, 4, 0);
 
             var message = await httpClient.PostAsync(url, body); // como se envia el body al servidor, se necesita recibir en el metodo
@@ -65,7 +76,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 JsonConvert.SerializeObject(datos["Entidad"]) : "{}";
             var body = new StringContent(stringData, Encoding.UTF8, "application/json");
 
-            var httpClient = new HttpClient();
+            var httpClient = CrearCliente(datos);
             httpClient.Timeout = new TimeSpan(0, 4, 0);
 
             var message = await httpClient.PutAsync(url, body); // como se envia el body al servidor, se necesita recibir en el metodo
@@ -90,7 +101,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 JsonConvert.SerializeObject(datos["Entidad"]) : "{}";
             var body = new StringContent(stringData, Encoding.UTF8, "application/json");
 
-            var httpClient = new HttpClient();
+            var httpClient = CrearCliente(datos);
             httpClient.Timeout = new TimeSpan(0, 4, 0);
 
             var request = new HttpRequestMessage //voy a crear una peticion http

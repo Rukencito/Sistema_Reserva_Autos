@@ -16,9 +16,18 @@ namespace ASP_ServiciosAuto.Controllers
             this.IPromocionesNegocio = new PromocionesNegocio();
         }
 
+        private void AsignarUsuarioSesion()
+        {
+            string? usuario = HttpContext.Request.Headers["X-Usuario"].FirstOrDefault();
+
+            ((PromocionesNegocio)IPromocionesNegocio!).UsuarioSesion =
+                string.IsNullOrEmpty(usuario) ? "Desconocido" : usuario;
+        }
+
         [HttpGet]
         public List<Promociones> Consultar()
         {
+            AsignarUsuarioSesion();
             if (this.IPromocionesNegocio == null)
                 throw new Exception("No implementado");
             return this.IPromocionesNegocio!.Consultar();
@@ -27,6 +36,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPost]
         public Promociones Guardar(Promociones entidad)
         {
+            AsignarUsuarioSesion();
             if (this.IPromocionesNegocio == null)
                 throw new Exception("No implementado");
             return this.IPromocionesNegocio!.Guardar(entidad);
@@ -34,6 +44,7 @@ namespace ASP_ServiciosAuto.Controllers
         [HttpPut]
         public Promociones Modificar(Promociones id)
         {
+            AsignarUsuarioSesion();
             if (this.IPromocionesNegocio == null)
                 throw new Exception("No implementado");
             return this.IPromocionesNegocio!.Modificar(id);
@@ -43,6 +54,7 @@ namespace ASP_ServiciosAuto.Controllers
 
         public Promociones Eliminar(Promociones id)
         {
+            AsignarUsuarioSesion();
             if (this.IPromocionesNegocio == null)
                 throw new Exception("No implementado");
             return this.IPromocionesNegocio!.Eliminar(id);
