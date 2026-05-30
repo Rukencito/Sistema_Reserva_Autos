@@ -7,11 +7,25 @@ namespace Lib_Presentacion_Autos.Implementaciones
     public class UsuariosPresentacion : IUsuariosPresentacion
     {
         private IComunicaciones? iComunicaciones;
+        private readonly string _usuarioSesion;
+
+        public UsuariosPresentacion(string usuarioSesion = "Sistema")
+        {
+            _usuarioSesion = usuarioSesion;
+        }
+
+        private Dictionary<string, object> ConUrl(string url)
+        {
+            return new Dictionary<string, object>
+            {
+                ["Url"] = url,
+                ["X-Usuario"] = _usuarioSesion
+            };
+        }
 
         public List<Usuarios> Consultar()
         {
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Usuarios/Consultar";
+            var datos = ConUrl("http://localhost:5108/Usuarios/Consultar");
 
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.Ejecutar(datos)!;
@@ -32,8 +46,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
             this.iComunicaciones = new Comunicaciones();
 
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Usuarios/Guardar";
+            var datos = ConUrl("http://localhost:5108/Usuarios/Guardar");
             datos["Entidad"] = entidad;
 
             this.iComunicaciones = new Comunicaciones();
@@ -55,8 +68,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
             this.iComunicaciones = new Comunicaciones();
 
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Usuarios/Modificar";
+            var datos = ConUrl("http://localhost:5108/Usuarios/Modificar");
             datos["Entidad"] = entidad;
 
             this.iComunicaciones = new Comunicaciones();
@@ -78,8 +90,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
             this.iComunicaciones = new Comunicaciones();
 
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Usuarios/Eliminar";
+            var datos = ConUrl("http://localhost:5108/Usuarios/Eliminar");
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarDelete(datos)!;
@@ -95,8 +106,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
         public Usuarios ConsultarPorCorreo(string correo)
         {
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Usuarios/ConsultarPorCorreo";
+            var datos = ConUrl("http://localhost:5108/Usuarios/ConsultarPorCorreo");
             datos["Correo"] = correo;
 
             this.iComunicaciones = new Comunicaciones();
@@ -118,8 +128,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
             this.iComunicaciones = new Comunicaciones();
 
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Usuarios/AsignarRol";
+            var datos = ConUrl("http://localhost:5108/Usuarios/AsignarRol");
             datos["usuarioId"] = usuarioId;
             datos["rolId"] = rolId;
 

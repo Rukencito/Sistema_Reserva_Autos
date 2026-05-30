@@ -7,11 +7,25 @@ namespace Lib_Presentacion_Autos.Implementaciones
     public class TalleresPresentacion : ITalleresPresentacion
     {
         private IComunicaciones? iComunicaciones;
+        private readonly string _usuarioSesion;
+
+        public TalleresPresentacion(string usuarioSesion = "Sistema")
+        {
+            _usuarioSesion = usuarioSesion;
+        }
+
+        private Dictionary<string, object> ConUrl(string url)
+        {
+            return new Dictionary<string, object>
+            {
+                ["Url"] = url,
+                ["X-Usuario"] = _usuarioSesion
+            };
+        }
 
         public List<Talleres> Consultar()
         {
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Talleres/Consultar";
+            var datos = ConUrl("http://localhost:5108/Talleres/Consultar");
 
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.Ejecutar(datos)!;
@@ -32,8 +46,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
             this.iComunicaciones = new Comunicaciones();
 
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Talleres/Guardar";
+            var datos = ConUrl("http://localhost:5108/Talleres/Guardar");
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPost(datos)!;
@@ -54,8 +67,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
             this.iComunicaciones = new Comunicaciones();
 
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Talleres/Modificar";
+            var datos = ConUrl("http://localhost:5108/Talleres/Modificar");
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPut(datos)!;
@@ -76,8 +88,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
             this.iComunicaciones = new Comunicaciones();
 
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Talleres/Eliminar";
+            var datos = ConUrl("http://localhost:5108/Talleres/Eliminar");
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarDelete(datos)!;

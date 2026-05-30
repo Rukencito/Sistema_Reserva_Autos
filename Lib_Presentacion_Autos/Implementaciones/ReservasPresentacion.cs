@@ -7,11 +7,25 @@ namespace Lib_Presentacion_Autos.Implementaciones
     public class ReservasPresentacion : IReservasPresentacion
     {
         private IComunicaciones? iComunicaciones;
+        private readonly string _usuarioSesion;
+
+        public ReservasPresentacion(string usuarioSesion = "Sistema")
+        {
+            _usuarioSesion = usuarioSesion;
+        }
+
+        private Dictionary<string, object> ConUrl(string url)
+        {
+            return new Dictionary<string, object>
+            {
+                ["Url"] = url,
+                ["X-Usuario"] = _usuarioSesion
+            };
+        }
 
         public List<Reservas> Consultar()
         {
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Reservas/Consultar";
+            var datos = ConUrl("http://localhost:5108/Reservas/Consultar");
 
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.Ejecutar(datos)!;
@@ -32,8 +46,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
             this.iComunicaciones = new Comunicaciones();
 
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Reservas/Guardar";
+            var datos = ConUrl("http://localhost:5108/Reservas/Guardar");
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPost(datos)!;
@@ -54,8 +67,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
             this.iComunicaciones = new Comunicaciones();
 
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Reservas/Modificar";
+            var datos = ConUrl("http://localhost:5108/Reservas/Modificar");
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPut(datos)!;
@@ -76,8 +88,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
             this.iComunicaciones = new Comunicaciones();
 
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Reservas/Eliminar";
+            var datos = ConUrl("http://localhost:5108/Reservas/Eliminar");
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarDelete(datos)!;
@@ -92,8 +103,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         }
         public bool ValidarReservaDuplicada(int autoId, int clienteId, DateTime fechaVencimiento)
         {
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Reservas/ValidarReservaDuplicada";
+            var datos = ConUrl("http://localhost:5108/Reservas/ValidarReservaDuplicada");
             datos["autoId"]= autoId;
             datos["clienteId"] = clienteId;
             datos["fechaVencimiento"] = fechaVencimiento;
@@ -114,8 +124,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
             if (reservaId == 0)
                 throw new Exception("No se ha guardado");
 
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Reservas/CambiarEstado";
+            var datos = ConUrl("http://localhost:5108/Reservas/CambiarEstado");
             datos["reservaId"] = reservaId;
             datos["nuevoEstado"] = nuevoEstado;
 
@@ -133,8 +142,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
         public List<Reservas> ConsultarPorCliente(int clienteId)
         {
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Reservas/ConsultarPorCliente";
+            var datos = ConUrl("http://localhost:5108/Reservas/ConsultarPorCliente");
             datos["clienteId"] = clienteId;
 
             this.iComunicaciones = new Comunicaciones();

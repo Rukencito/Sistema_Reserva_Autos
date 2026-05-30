@@ -7,11 +7,25 @@ namespace Lib_Presentacion_Autos.Implementaciones
     public class SegurosPresentacion : ISegurosPresentacion
     {
         private IComunicaciones? iComunicaciones;
+        private readonly string _usuarioSesion;
+
+        public SegurosPresentacion(string usuarioSesion = "Sistema")
+        {
+            _usuarioSesion = usuarioSesion;
+        }
+
+        private Dictionary<string, object> ConUrl(string url)
+        {
+            return new Dictionary<string, object>
+            {
+                ["Url"] = url,
+                ["X-Usuario"] = _usuarioSesion
+            };
+        }
 
         public List<Seguros> Consultar()
         {
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Seguros/Consultar";
+            var datos = ConUrl("http://localhost:5108/Seguros/Consultar");
 
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.Ejecutar(datos)!;
@@ -32,8 +46,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
             this.iComunicaciones = new Comunicaciones();
 
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Seguros/Guardar";
+            var datos = ConUrl("http://localhost:5108/Seguros/Guardar");
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPost(datos)!;
@@ -54,8 +67,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
             this.iComunicaciones = new Comunicaciones();
 
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Seguros/Modificar";
+            var datos = ConUrl("http://localhost:5108/Seguros/Modificar");
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPut(datos)!;
@@ -76,8 +88,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
             this.iComunicaciones = new Comunicaciones();
 
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Seguros/Eliminar";
+            var datos = ConUrl("http://localhost:5108/Seguros/Eliminar");
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarDelete(datos)!;
@@ -92,8 +103,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         }
         public Seguros ConsultarPorId(int id)
         {
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Seguros/ConsultarPorId";
+            var datos = ConUrl("http://localhost:5108/Seguros/ConsultarPorId");
             datos["Id"] = id;
 
             this.iComunicaciones = new Comunicaciones();
