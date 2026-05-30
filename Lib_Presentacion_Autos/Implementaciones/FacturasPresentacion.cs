@@ -7,13 +7,25 @@ namespace Lib_Presentacion_Autos.Implementaciones
     public class FacturasPresentacion : IFacturasPresentacion
     {
         private IComunicaciones? iComunicaciones;
+        private readonly string _usuarioSesion;
 
+        public FacturasPresentacion(string usuarioSesion = "Sistema")
+        {
+            _usuarioSesion = usuarioSesion;
+        }
+
+        private Dictionary<string, object> ConUrl(string url)
+        {
+            return new Dictionary<string, object>
+            {
+                ["Url"] = url,
+                ["X-Usuario"] = _usuarioSesion
+            };
+        }
         public List<Facturas> Consultar()
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Facturas/Consultar";
+            var datos = ConUrl("http://localhost:5108/Facturas/Consultar");
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -32,9 +44,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("La factura ya fue guardada");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Facturas/Guardar";
+            var datos = ConUrl("http://localhost:5108/Facturas/Guardar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarPost(datos)!;
@@ -54,9 +64,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("La factura no ha sido guardada");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Facturas/Modificar";
+            var datos = ConUrl("http://localhost:5108/Facturas/Modificar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarPut(datos)!;
@@ -76,9 +84,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("La factura no ha sido guardada");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Facturas/Eliminar";
+            var datos = ConUrl("http://localhost:5108/Facturas/Eliminar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarDelete(datos)!;
@@ -95,9 +101,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public void CalcularTotal(Facturas id)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Facturas/CalcularTotal";
+            var datos = ConUrl("http://localhost:5108/Facturas/CalcularTotal");
             datos["Entidad"] = id;
 
             var task = this.iComunicaciones.EjecutarPut(datos)!;
@@ -107,9 +111,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public List<Facturas> ConsultarPorCliente(int id)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Facturas/ConsultarPorCliente?id=" + id;
+            var datos = ConUrl("http://localhost:5108/Facturas/ConsultarPorCliente?id=" + id);
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -125,9 +127,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public Facturas ConsultarPorId(int id)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Facturas/ConsultarPorId?id=" + id;
+            var datos = ConUrl("http://localhost:5108/Facturas/ConsultarPorId?id=" + id);
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -143,9 +143,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public List<Facturas> ConsultarPendientes()
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Facturas/ConsultarPendientes";
+            var datos = ConUrl("http://localhost:5108/Facturas/ConsultarPendientes");
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -161,9 +159,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public void MarcarComoPagada(int id)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Facturas/MarcarComoPagada?id=" + id;
+            var datos = ConUrl("http://localhost:5108/Facturas/MarcarComoPagada?id=" + id);
 
             var task = this.iComunicaciones.EjecutarPut(datos)!;
             task.Wait();

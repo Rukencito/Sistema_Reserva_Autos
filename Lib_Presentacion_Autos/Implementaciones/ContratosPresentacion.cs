@@ -7,11 +7,25 @@ namespace Lib_Presentacion_Autos.Implementaciones
     public class ContratosPresentacion : IContratosPresentacion
     {
         private IComunicaciones? iComunicaciones;
+        private readonly string _usuarioSesion;
+
+        public ContratosPresentacion(string usuarioSesion = "Sistema")
+        {
+            _usuarioSesion = usuarioSesion;
+        }
+
+        private Dictionary<string, object> ConUrl(string url)
+        {
+            return new Dictionary<string, object>
+            {
+                ["Url"] = url,
+                ["X-Usuario"] = _usuarioSesion
+            };
+        }
         public List<Contratos> Consultar()
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Contratos/Consultar";
+            var datos = ConUrl("http://localhost:5108/Contratos/Consultar");
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -30,8 +44,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("El contrato ya fue guardado");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Contratos/Guardar";
+            var datos = ConUrl("http://localhost:5108/Contratos/Guardar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarPost(datos)!;
@@ -51,8 +64,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("El contrato no ha sido guardado");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Contratos/Modificar";
+            var datos = ConUrl("http://localhost:5108/Contratos/Modificar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarPut(datos)!;
@@ -72,8 +84,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("El contrato no ha sido guardado");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Contratos/Eliminar";
+            var datos = ConUrl("http://localhost:5108/Contratos/Eliminar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarDelete(datos)!;
@@ -90,8 +101,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public Contratos ConsultarPorId(int id)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Contratos/ConsultarPorId?id=" + id;
+            var datos = ConUrl("http://localhost:5108/Contratos/ConsultarPorId?id=" + id);
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -107,8 +117,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public List<Contratos> ConsultarPorAlquiler(int alquilerId)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Contratos/ConsultarPorAlquiler?alquilerId=" + alquilerId;
+            var datos = ConUrl("http://localhost:5108/Contratos/ConsultarPorAlquiler?alquilerId=" + alquilerId);
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();

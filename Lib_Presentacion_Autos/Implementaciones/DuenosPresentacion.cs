@@ -8,12 +8,26 @@ namespace Lib_Presentacion_Autos.Implementaciones
     public class DuenosPresentacion : IDuenosPresentacion
     {
         private IComunicaciones? iComunicaciones;
+        private readonly string _usuarioSesion;
+
+        public DuenosPresentacion(string usuarioSesion = "Sistema")
+        {
+            _usuarioSesion = usuarioSesion;
+        }
+
+        private Dictionary<string, object> ConUrl(string url)
+        {
+            return new Dictionary<string, object>
+            {
+                ["Url"] = url,
+                ["X-Usuario"] = _usuarioSesion
+            };
+        }
 
         public List<Duenos> Consultar()
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Duenos/Consultar";
+            var datos = ConUrl("http://localhost:5108/Duenos/Consultar");
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -32,8 +46,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("La devolucion ya fue guardada");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Duenos/Guardar";
+            var datos = ConUrl("http://localhost:5108/Duenos/Guardar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarPost(datos)!;
@@ -53,8 +66,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("La devolucion no ha sido guardada");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Duenos/Modificar";
+            var datos = ConUrl("http://localhost:5108/Duenos/Modificar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarPut(datos)!;
@@ -74,8 +86,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("La devolucion no ha sido guardada");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Duenos/Eliminar";
+            var datos = ConUrl("http://localhost:5108/Duenos/Eliminar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarDelete(datos)!;
@@ -92,9 +103,8 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public Duenos ConsultarPorCedula(string cedula)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Duenos/ConsultarPorCedula?cedula=" + cedula;
-            
+            var datos = ConUrl("http://localhost:5108/Duenos/ConsultarPorCedula?cedula=" + cedula);
+
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
             var respuesta = task.Result;
@@ -109,9 +119,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public bool VerificarEstadoDueno(int duenoId)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Duenos/VerificarEstadoDueno?duenoId=" + duenoId;
+            var datos = ConUrl("http://localhost:5108/Duenos/VerificarEstadoDueno?duenoId=" + duenoId);
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -127,9 +135,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public Duenos AgregarAuto(int duenoId)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Duenos/AgregarAuto?duenoId=" + duenoId;
+            var datos = ConUrl("http://localhost:5108/Duenos/AgregarAuto?duenoId=" + duenoId);
 
             var task = this.iComunicaciones.EjecutarPut(datos)!;
             task.Wait();

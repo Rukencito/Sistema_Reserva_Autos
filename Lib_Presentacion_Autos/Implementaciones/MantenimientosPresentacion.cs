@@ -7,14 +7,26 @@ namespace Lib_Presentacion_Autos.Implementaciones
     public class MantenimientosPresentacion : IMantenimientosPresentacion
     {
         private IComunicaciones? iComunicaciones;
+        private readonly string _usuarioSesion;
+
+        public MantenimientosPresentacion(string usuarioSesion = "Sistema")
+        {
+            _usuarioSesion = usuarioSesion;
+        }
+
+        private Dictionary<string, object> ConUrl(string url)
+        {
+            return new Dictionary<string, object>
+            {
+                ["Url"] = url,
+                ["X-Usuario"] = _usuarioSesion
+            };
+        }
 
         public List<Mantenimientos> Consultar()
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Mantenimientos/Consultar";
-
+            var datos = ConUrl("http://localhost:5108/Mantenimientos/Consultar");
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
             var respuesta = task.Result;
@@ -32,9 +44,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("El mantenimiento ya fue guardado");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Mantenimientos/Guardar";
+            var datos = ConUrl("http://localhost:5108/Mantenimientos/Guardar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarPost(datos)!;
@@ -54,9 +64,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("El mantenimiento no ha sido guardado");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Mantenimientos/Modificar";
+            var datos = ConUrl("http://localhost:5108/Mantenimientos/Modificar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarPut(datos)!;
@@ -76,9 +84,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("El mantenimiento no ha sido guardado");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Mantenimientos/Eliminar";
+            var datos = ConUrl("http://localhost:5108/Mantenimientos/Eliminar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarDelete(datos)!;
@@ -95,9 +101,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public Mantenimientos ConsultarPorId(int id)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Mantenimientos/ConsultarPorId?id=" + id;
+            var datos = ConUrl("http://localhost:5108/Mantenimientos/ConsultarPorId?id=" + id);
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -113,9 +117,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public List<Mantenimientos> ConsultarPorAuto(int autoId)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Mantenimientos/ConsultarPorAuto?autoId=" + autoId;
+            var datos = ConUrl("http://localhost:5108/Mantenimientos/ConsultarPorAuto?autoId=" + autoId);
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -131,9 +133,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public List<Mantenimientos> ConsultarPorTaller(int tallerId)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Mantenimientos/ConsultarPorTaller?tallerId=" + tallerId;
+            var datos = ConUrl("http://localhost:5108/Mantenimientos/ConsultarPorTaller?tallerId=" + tallerId);
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -149,9 +149,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public Mantenimientos FinalizarMantenimiento(int mantenimientoId)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Mantenimientos/FinalizarMantenimiento?mantenimientoId=" + mantenimientoId;
+            var datos = ConUrl("http://localhost:5108/Mantenimientos/FinalizarMantenimiento?mantenimientoId=" + mantenimientoId);
 
             var task = this.iComunicaciones.EjecutarPut(datos)!;
             task.Wait();

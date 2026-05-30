@@ -8,12 +8,25 @@ namespace Lib_Presentacion_Autos.Implementaciones
     public class EmpleadosPresentacion : IEmpleadosPresentacion
     {
         private IComunicaciones? iComunicaciones;
+        private readonly string _usuarioSesion;
 
+        public EmpleadosPresentacion(string usuarioSesion = "Sistema")
+        {
+            _usuarioSesion = usuarioSesion;
+        }
+
+        private Dictionary<string, object> ConUrl(string url)
+        {
+            return new Dictionary<string, object>
+            {
+                ["Url"] = url,
+                ["X-Usuario"] = _usuarioSesion
+            };
+        }
         public List<Empleados> Consultar()
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Empleados/Consultar";
+            var datos = ConUrl("http://localhost:5108/Empleados/Consultar");
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -32,8 +45,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("El empleado ya fue guardado");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Empleados/Guardar";
+            var datos = ConUrl("http://localhost:5108/Empleados/Guardar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarPost(datos)!;
@@ -53,8 +65,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("El empleado no ha sido guardado");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Empleados/Modificar";
+            var datos = ConUrl("http://localhost:5108/Empleados/Modificar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarPut(datos)!;
@@ -74,8 +85,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("El empleado no ha sido guardado");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Empleados/Eliminar";
+            var datos = ConUrl("http://localhost:5108/Empleados/Eliminar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarDelete(datos)!;
@@ -92,8 +102,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public Empleados ConsultarPorCedula(string cedula)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Empleados/ConsultarPorCedula?cedula=" + cedula;
+            var datos = ConUrl("http://localhost:5108/Empleados/ConsultarPorCedula?cedula=" + cedula);
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -109,8 +118,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public List<Empleados> ConsultarPorCargo(string cargo)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Empleados/ConsultarPorCargo?cargo=" + cargo;
+            var datos = ConUrl("http://localhost:5108/Empleados/ConsultarPorCargo?cargo=" + cargo);
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -126,8 +134,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public List<Empleados> ConsultarPorSucursal(int sucursalId)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Empleados/ConsultarPorSucursal?sucursalId=" + sucursalId;
+            var datos = ConUrl("http://localhost:5108/Empleados/ConsultarPorSucursal?sucursalId=" + sucursalId);
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -143,8 +150,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public decimal CalcularSalarioTotal(int empleadoId)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Empleados/CalcularSalarioTotal?empleadoId=" + empleadoId;
+            var datos = ConUrl("http://localhost:5108/Empleados/CalcularSalarioTotal?empleadoId=" + empleadoId);
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();

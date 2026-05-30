@@ -7,11 +7,24 @@ namespace Lib_Presentacion_Autos.Implementaciones
     public class PermisosPresentacion : IPermisosPresentacion
     {
         private IComunicaciones? iComunicaciones;
+        private readonly string _usuarioSesion;
 
+        public PermisosPresentacion(string usuarioSesion = "Sistema")
+        {
+            _usuarioSesion = usuarioSesion;
+        }
+
+        private Dictionary<string, object> ConUrl(string url)
+        {
+            return new Dictionary<string, object>
+            {
+                ["Url"] = url,
+                ["X-Usuario"] = _usuarioSesion
+            };
+        }
         public List<Permisos> Consultar()
         {
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Permisos/Consultar";
+            var datos = ConUrl("http://localhost:5108/Permisos/Consultar");
 
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.Ejecutar(datos)!;
@@ -32,8 +45,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
             this.iComunicaciones = new Comunicaciones();
 
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Permisos/Guardar";
+            var datos = ConUrl("http://localhost:5108/Permisos/Guardar");
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPost(datos)!;
@@ -54,8 +66,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
             this.iComunicaciones = new Comunicaciones();
 
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Permisos/Modificar";
+            var datos = ConUrl("http://localhost:5108/Permisos/Modificar");
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPut(datos)!;
@@ -76,8 +87,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
             this.iComunicaciones = new Comunicaciones();
 
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Permisos/Eliminar";
+            var datos = ConUrl("http://localhost:5108/Permisos/Eliminar");
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarDelete(datos)!;
@@ -93,8 +103,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
         public bool TienePermiso(int usuarioId, string nombrePermiso)
         {
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Permisos/TienePermiso";
+            var datos = ConUrl("http://localhost:5108/Permisos/TienePermiso");
             datos["usuarioId"] = usuarioId;
             datos["nombrePermiso"] = nombrePermiso;
 
@@ -112,8 +121,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
         public bool TienePermisoPorCorreo(string correo, string nombrePermiso)
         {
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Permisos/TienePermisoPorCorreo";
+            var datos = ConUrl("http://localhost:5108/Permisos/TienePermisoPorCorreo");
             datos["Correo"] = correo;
             datos["nombrePermiso"] = nombrePermiso;
 
@@ -130,8 +138,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
         public bool PermisoExisteEnRol(string nombrePermiso, int rolId)
         {
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Permisos/PermisoExisteEnRol";
+            var datos = ConUrl("http://localhost:5108/Permisos/PermisoExisteEnRol");
             datos["nombrePermiso"] = nombrePermiso;
             datos["rolId"] = rolId;
 

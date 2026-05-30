@@ -7,11 +7,24 @@ namespace Lib_Presentacion_Autos.Implementaciones
     public class ParqueaderosPresentacion : IParqueaderosPresentacion
     {
         private IComunicaciones? iComunicaciones;
+        private readonly string _usuarioSesion;
 
+        public ParqueaderosPresentacion(string usuarioSesion = "Sistema")
+        {
+            _usuarioSesion = usuarioSesion;
+        }
+
+        private Dictionary<string, object> ConUrl(string url)
+        {
+            return new Dictionary<string, object>
+            {
+                ["Url"] = url,
+                ["X-Usuario"] = _usuarioSesion
+            };
+        }
         public List<Parqueaderos> Consultar()
         {
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Parqueaderos/Consultar";
+            var datos = ConUrl("http://localhost:5108/Parqueaderos/Consultar");
 
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.Ejecutar(datos)!;
@@ -32,8 +45,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
             this.iComunicaciones = new Comunicaciones();
 
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Parqueaderos/Guardar";
+            var datos = ConUrl("http://localhost:5108/Parqueaderos/Guardar");
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPost(datos)!;
@@ -54,8 +66,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
             this.iComunicaciones = new Comunicaciones();
 
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Parqueaderos/Modificar";
+            var datos = ConUrl("http://localhost:5108/Parqueaderos/Modificar");
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPut(datos)!;
@@ -76,8 +87,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
             this.iComunicaciones = new Comunicaciones();
 
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Parqueaderos/Eliminar";
+            var datos = ConUrl("http://localhost:5108/Parqueaderos/Eliminar");
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarDelete(datos)!;
@@ -92,9 +102,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         }
         public Parqueaderos ConsultarPorId(int id)
         {
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Parqueaderos/ConsultarPorId";
-            datos["Id"] = id;
+            var datos = ConUrl("http://localhost:5108/Parqueaderos/ConsultarPorId?id=" + id);
 
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.Ejecutar(datos)!;
@@ -110,8 +118,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
         public int ContarAutosEnParqueadero(int parqueaderoId)
         {
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Parqueaderos/ContarAutosEnParqueadero";
+            var datos = ConUrl("http://localhost:5108/Parqueaderos/ContarAutosEnParqueadero");
             datos["ParqueaderoId"] = parqueaderoId;
 
             this.iComunicaciones = new Comunicaciones();
@@ -126,8 +133,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         }
         public int ConsultarEspaciosDisponibles(int parqueaderoId)
         {
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Parqueaderos/ConsultarEspaciosDisponibles";
+            var datos = ConUrl("http://localhost:5108/Parqueaderos/ConsultarEspaciosDisponibles");
             datos["ParqueaderoId"] = parqueaderoId;
 
             this.iComunicaciones = new Comunicaciones();
@@ -141,8 +147,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         }
       public bool TieneEspacioDisponible(int parqueaderoId)
         {
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Parqueaderos/TieneEspacioDisponible";
+            var datos = ConUrl("http://localhost:5108/Parqueaderos/TieneEspacioDisponible");
             datos["ParqueaderoId"] = parqueaderoId;
 
             this.iComunicaciones = new Comunicaciones();
@@ -157,8 +162,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
         public List<Parqueaderos> ConsultarConEspacioDisponible()
         {
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Parqueaderos/ConsultarConEspacioDisponible";
+            var datos = ConUrl("http://localhost:5108/Parqueaderos/ConsultarConEspacioDisponible");
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -172,8 +176,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
         public List<Autos> ConsultarAutosPorParqueadero(int parqueaderoId)
         {
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Parqueaderos/ConsultarAutosPorParqueadero";
+            var datos = ConUrl("http://localhost:5108/Parqueaderos/ConsultarAutosPorParqueadero");
             datos["ParqueaderoId"] = parqueaderoId;
 
             this.iComunicaciones = new Comunicaciones();

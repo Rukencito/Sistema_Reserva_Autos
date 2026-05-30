@@ -7,13 +7,25 @@ namespace Lib_Presentacion_Autos.Implementaciones
     public class PagosPresentacion : IPagosPresentacion
     {
         private IComunicaciones? iComunicaciones;
+        private readonly string _usuarioSesion;
 
+        public PagosPresentacion(string usuarioSesion = "Sistema")
+        {
+            _usuarioSesion = usuarioSesion;
+        }
+
+        private Dictionary<string, object> ConUrl(string url)
+        {
+            return new Dictionary<string, object>
+            {
+                ["Url"] = url,
+                ["X-Usuario"] = _usuarioSesion
+            };
+        }
         public List<Pagos> Consultar()
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Pagos/Consultar";
+            var datos = ConUrl("http://localhost:5108/Pagos/Consultar");
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -32,9 +44,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("El pago ya fue guardado");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Pagos/Guardar";
+            var datos = ConUrl("http://localhost:5108/Pagos/Guardar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarPost(datos)!;
@@ -54,9 +64,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("El pago no ha sido guardado");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Pagos/Modificar";
+            var datos = ConUrl("http://localhost:5108/Pagos/Modificar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarPut(datos)!;
@@ -76,9 +84,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("El pago no ha sido guardado");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Pagos/Eliminar";
+            var datos = ConUrl("http://localhost:5108/Pagos/Eliminar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarDelete(datos)!;
@@ -95,9 +101,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public Pagos ConsultarPorId(int id)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Pagos/ConsultarPorId?id=" + id;
+            var datos = ConUrl("http://localhost:5108/Pagos/ConsultarPorId?id=" + id);
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -113,9 +117,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public List<Pagos> ConsultarPorFactura(int facturaId)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Pagos/ConsultarPorFactura?facturaId=" + facturaId;
+            var datos = ConUrl("http://localhost:5108/Pagos/ConsultarPorFactura?facturaId=" + facturaId);
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();

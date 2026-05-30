@@ -7,13 +7,25 @@ namespace Lib_Presentacion_Autos.Implementaciones
     public class GarantiasPresentacion : IGarantiasPresentacion
     {
         private IComunicaciones? iComunicaciones;
+        private readonly string _usuarioSesion;
 
+        public GarantiasPresentacion(string usuarioSesion = "Sistema")
+        {
+            _usuarioSesion = usuarioSesion;
+        }
+
+        private Dictionary<string, object> ConUrl(string url)
+        {
+            return new Dictionary<string, object>
+            {
+                ["Url"] = url,
+                ["X-Usuario"] = _usuarioSesion
+            };
+        }
         public List<Garantias> Consultar()
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Garantias/Consultar";
+            var datos = ConUrl("http://localhost:5108/Garantias/Consultar");
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -32,9 +44,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("La garantía ya fue guardada");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Garantias/Guardar";
+            var datos = ConUrl("http://localhost:5108/Garantias/Guardar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarPost(datos)!;
@@ -54,9 +64,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("La garantía no ha sido guardada");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Garantias/Modificar";
+            var datos = ConUrl("http://localhost:5108/Garantias/Modificar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarPut(datos)!;
@@ -76,9 +84,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("La garantía no ha sido guardada");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Garantias/Eliminar";
+            var datos = ConUrl("http://localhost:5108/Garantias/Eliminar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarDelete(datos)!;
@@ -95,9 +101,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public Garantias ConsultarPorId(int id)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Garantias/ConsultarPorId?id=" + id;
+            var datos = ConUrl("http://localhost:5108/Garantias/ConsultarPorId?id=" + id);
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -113,9 +117,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public List<Garantias> ConsultarPorAuto(int autoId)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Garantias/ConsultarPorAuto?autoId=" + autoId;
+            var datos = ConUrl("http://localhost:5108/Garantias/ConsultarPorAuto?autoId=" + autoId);
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -131,9 +133,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public bool TieneGarantiaVigente(int autoId)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-
-            datos["Url"] = "http://localhost:5108/Garantias/TieneGarantiaVigente?autoId=" + autoId;
+            var datos = ConUrl("http://localhost:5108/Garantias/TieneGarantiaVigente?autoId=" + autoId);
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();

@@ -7,12 +7,26 @@ namespace Lib_Presentacion_Autos.Implementaciones
     public class DevolucionesPresentacion : IDevolucionesPresentacion
     {
         private IComunicaciones? iComunicaciones;
+        private readonly string _usuarioSesion;
+
+        public DevolucionesPresentacion(string usuarioSesion = "Sistema")
+        {
+            _usuarioSesion = usuarioSesion;
+        }
+
+        private Dictionary<string, object> ConUrl(string url)
+        {
+            return new Dictionary<string, object>
+            {
+                ["Url"] = url,
+                ["X-Usuario"] = _usuarioSesion
+            };
+        }
 
         public List<Devoluciones> Consultar()
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Devoluciones/Consultar";
+            var datos = ConUrl("http://localhost:5108/Devoluciones/Consultar");
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -31,8 +45,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("La devolucion ya fue guardada");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Devoluciones/Guardar";
+            var datos = ConUrl("http://localhost:5108/Devoluciones/Guardar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarPost(datos)!;
@@ -52,8 +65,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("La devolucion no ha sido guardada");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Devoluciones/Modificar";
+            var datos = ConUrl("http://localhost:5108/Devoluciones/Modificar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarPut(datos)!;
@@ -73,8 +85,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("La devolucion no ha sido guardada");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Devoluciones/Eliminar";
+            var datos = ConUrl("http://localhost:5108/Devoluciones/Eliminar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarDelete(datos)!;
@@ -91,8 +102,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public Devoluciones ConsultarPorAlquiler(int idAlquiler)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Devoluciones/ConsultarPorAlquiler?idAlquiler=" + idAlquiler;
+            var datos = ConUrl("http://localhost:5108/Devoluciones/ConsultarPorAlquiler?idAlquiler=" + idAlquiler);
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -108,8 +118,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public Devoluciones ConsultarPorId(int id)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Devoluciones/ConsultarPorId?id=" + id;
+            var datos = ConUrl("http://localhost:5108/Devoluciones/ConsultarPorId?id=" + id);
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
