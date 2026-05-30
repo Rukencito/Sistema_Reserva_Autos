@@ -7,11 +7,25 @@ namespace Lib_Presentacion_Autos.Implementaciones
     public class RolesPresentacion : IRolesPresentacion
     {
         private IComunicaciones? iComunicaciones;
+        private readonly string _usuarioSesion;
+
+        public RolesPresentacion(string usuarioSesion = "Sistema")
+        {
+            _usuarioSesion = usuarioSesion;
+        }
+
+        private Dictionary<string, object> ConUrl(string url)
+        {
+            return new Dictionary<string, object>
+            {
+                ["Url"] = url,
+                ["X-Usuario"] = _usuarioSesion
+            };
+        }
 
         public List<Roles> Consultar()
         {
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Roles/Consultar";
+            var datos = ConUrl("http://localhost:5108/Roles/Consultar");
 
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.Ejecutar(datos)!;
@@ -32,8 +46,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
             this.iComunicaciones = new Comunicaciones();
 
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Roles/Guardar";
+            var datos = ConUrl("http://localhost:5108/Roles/Guardar");
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPost(datos)!;
@@ -54,8 +67,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
             this.iComunicaciones = new Comunicaciones();
 
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Roles/Modificar";
+            var datos = ConUrl("http://localhost:5108/Roles/Modificar");
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarPut(datos)!;
@@ -76,8 +88,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
             this.iComunicaciones = new Comunicaciones();
 
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Roles/Eliminar";
+            var datos = ConUrl("http://localhost:5108/Roles/Eliminar");
             datos["Entidad"] = entidad;
             this.iComunicaciones = new Comunicaciones();
             var task = this.iComunicaciones.EjecutarDelete(datos)!;
@@ -93,8 +104,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
         public bool NombreExiste(string nombre)
         {
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Roles/NombreExiste";
+            var datos = ConUrl("http://localhost:5108/Roles/NombreExiste");
             datos["Nombre"] = nombre;
 
             this.iComunicaciones = new Comunicaciones();
@@ -111,8 +121,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
 
         public Roles ConsultarPorId(int id)
         {
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Roles/ConsultarPorId";
+            var datos = ConUrl("http://localhost:5108/Roles/ConsultarPorId");
             datos["Id"] = id;
 
             this.iComunicaciones = new Comunicaciones();
