@@ -20,9 +20,15 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
           IPromocionesPresentacion = new  PromocionesPresentacion();
             IVentasPresentacion = new VentasPresentacion();
         }
+        private void IniciarPromociones()
+        {
+            var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
+            IPromocionesPresentacion = new PromocionesPresentacion(correo);
+        }
 
         public void OnGet()
         {
+            IniciarPromociones();
             OnPostBtRefrescar();
         }
 
@@ -33,6 +39,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtRefrescar()
         {
+            IniciarPromociones();
             try
             {
                 if (IPromocionesPresentacion == null)
@@ -48,6 +55,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtNuevo()
         {
+            IniciarPromociones();
             Promocion = new Promociones();
             Lista = null;
             Borrando = false;
@@ -55,6 +63,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtModificar(int data)
         {
+            IniciarPromociones();
             try
             {
                 OnPostBtRefrescar();
@@ -70,6 +79,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtGuardar()
         {
+            IniciarPromociones();
             try
             {
                 if (Promocion == null)
@@ -111,6 +121,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrar()
         {
+            IniciarPromociones();
             try
             {
                 if (Promocion == null)
@@ -126,6 +137,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrarVal(int data)
         {
+            IniciarPromociones();
             try
             {
                 OnPostBtRefrescar();
@@ -141,6 +153,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtCerrar()
         {
+            IniciarPromociones();
             OnPostBtRefrescar();
             Borrando = false;
         }

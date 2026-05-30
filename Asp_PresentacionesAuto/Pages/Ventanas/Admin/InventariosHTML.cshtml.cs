@@ -17,14 +17,21 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
             IInventariosPresentacion = new InventariosPresentacion();
         }
+        private void IniciarInventarios()
+        {
+            var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
+            IInventariosPresentacion = new InventariosPresentacion(correo);
+        }
 
         public void OnGet()
         {
+            IniciarInventarios();
             OnPostBtRefrescar();
         }
 
         public void OnPostBtRefrescar()
         {
+            IniciarInventarios();
             try
             {
                 if (IInventariosPresentacion == null)
@@ -40,6 +47,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtNuevo()
         {
+            IniciarInventarios();
             Inventario = new Inventarios();
             Lista = null;
             Borrando = false;
@@ -47,6 +55,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtModificar(int data)
         {
+            IniciarInventarios();
             try
             {
                 OnPostBtRefrescar();
@@ -62,6 +71,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtGuardar()
         {
+            IniciarInventarios();
             try
             {
                 if (Inventario == null)
@@ -97,6 +107,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrar()
         {
+            IniciarInventarios();
             try
             {
                 if (Inventario == null)
@@ -112,6 +123,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrarVal(int data)
         {
+            IniciarInventarios();
             try
             {
                 OnPostBtRefrescar();
@@ -127,6 +139,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtCerrar()
         {
+            IniciarInventarios();
             OnPostBtRefrescar();
             Borrando = false;
         }

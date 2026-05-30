@@ -20,6 +20,11 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             IPermisosPresentacion = new PermisosPresentacion();
             IRolesPresentacion = new RolesPresentacion();
         }
+        private void IniciarPermisos()
+        {
+            var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
+            IPermisosPresentacion = new PermisosPresentacion(correo);
+        }
 
         public List<Roles> ObtenerRoles()
         {
@@ -28,11 +33,13 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnGet()
         {
+            IniciarPermisos();
             OnPostBtRefrescar();
         }
 
         public void OnPostBtRefrescar()
         {
+            IniciarPermisos();
             try
             {
                 if (IPermisosPresentacion == null)
@@ -48,6 +55,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtNuevo()
         {
+            IniciarPermisos();
             Permiso = new Permisos();
             Lista = null;
             Borrando = false;
@@ -55,6 +63,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtModificar(int data)
         {
+            IniciarPermisos();
             try
             {
                 OnPostBtRefrescar();
@@ -70,6 +79,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtGuardar()
         {
+            IniciarPermisos();
             try
             {
                 if (Permiso == null)
@@ -95,6 +105,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrar()
         {
+            IniciarPermisos();
             try
             {
                 if (Permiso == null)
@@ -110,6 +121,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrarVal(int data)
         {
+            IniciarPermisos();
             try
             {
                 OnPostBtRefrescar();
@@ -125,6 +137,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtCerrar()
         {
+            IniciarPermisos();
             OnPostBtRefrescar();
             Borrando = false;
         }

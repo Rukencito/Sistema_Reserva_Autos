@@ -26,6 +26,11 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             IEmpleadosPresentacion = new EmpleadosPresentacion();
             IAutosPresentacion = new AutosPresentacion();
         }
+        private void IniciarVentas()
+        {
+            var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
+            IVentasPresentacion = new VentasPresentacion(correo);
+        }
 
         private void CargarListaFiltrada()
         {
@@ -51,6 +56,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnGet()
         {
+            IniciarVentas();
             try
             {
                 CargarListaFiltrada();
@@ -81,6 +87,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtRefrescar()
         {
+            IniciarVentas();
             try
             {
                 CargarListaFiltrada();
@@ -93,6 +100,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtNuevo()
         {
+            IniciarVentas();
             var rol = HttpContext.Session.GetString("RolId");
 
             if (rol == "4")
@@ -109,6 +117,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtModificar(int data)
         {
+            IniciarVentas();
             try
             {
                 var rol = HttpContext.Session.GetString("RolId");
@@ -140,6 +149,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtGuardar()
         {
+            IniciarVentas();
             try
             {
                 if (Venta == null)
@@ -214,6 +224,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrar()
         {
+            IniciarVentas();
             try
             {
                 if (Venta == null) return;
@@ -250,6 +261,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrarVal(int data)
         {
+            IniciarVentas();
             try
             {
                 var rol = HttpContext.Session.GetString("RolId");
@@ -270,6 +282,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtCerrar()
         {
+            IniciarVentas();
             OnPostBtRefrescar();
             Borrando = false;
         }

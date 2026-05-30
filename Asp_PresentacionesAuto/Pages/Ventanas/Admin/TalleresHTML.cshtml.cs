@@ -18,13 +18,21 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
           ITalleresPresentacion = new  TalleresPresentacion();
         }
 
+        private void IniciarTalleres()
+        {
+            var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
+            ITalleresPresentacion = new TalleresPresentacion(correo);
+        }
+
         public void OnGet()
         {
+            IniciarTalleres();
             OnPostBtRefrescar();
         }
 
         public void OnPostBtRefrescar()
         {
+            IniciarTalleres();
             try
             {
                 if (ITalleresPresentacion == null)
@@ -40,6 +48,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtNuevo()
         {
+            IniciarTalleres();
             Taller = new Talleres();
             Lista = null;
             Borrando = false;
@@ -47,6 +56,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtModificar(int data)
         {
+            IniciarTalleres();
             try
             {
                 OnPostBtRefrescar();
@@ -62,6 +72,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtGuardar()
         {
+            IniciarTalleres();
             try
             {
                 if (Taller == null)
@@ -97,6 +108,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrar()
         {
+            IniciarTalleres();
             try
             {
                 if (Taller == null)
@@ -112,6 +124,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrarVal(int data)
         {
+            IniciarTalleres();
             try
             {
                 OnPostBtRefrescar();
@@ -127,6 +140,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtCerrar()
         {
+            IniciarTalleres();
             OnPostBtRefrescar();
             Borrando = false;
         }

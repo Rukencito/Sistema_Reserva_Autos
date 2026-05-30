@@ -31,9 +31,15 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
           IEmpleadosPresentacion = new EmpleadosPresentacion();
           IDuenosPresentacion = new DuenosPresentacion();
         }
+        private void IniciarUsuarios()
+        {
+            var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
+            IUsuariosPresentacion = new UsuariosPresentacion(correo);
+        }
 
         public void OnGet()
         {
+            IniciarUsuarios();
             OnPostBtRefrescar();
         }
 
@@ -59,6 +65,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtRefrescar()
         {
+            IniciarUsuarios();
             try
             {
                 if (IUsuariosPresentacion == null)
@@ -74,6 +81,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtNuevo()
         {
+            IniciarUsuarios();
             Usuario = new Usuarios();
             Lista = null;
             Borrando = false;
@@ -81,6 +89,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtModificar(int data)
         {
+            IniciarUsuarios();
             try
             {
                 OnPostBtRefrescar();
@@ -96,6 +105,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtGuardar()
         {
+            IniciarUsuarios();
             try
             {
                 if (Usuario == null)
@@ -116,6 +126,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrar()
         {
+            IniciarUsuarios();
             try
             {
                 if (Usuario == null)
@@ -131,6 +142,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrarVal(int data)
         {
+            IniciarUsuarios();
             try
             {
                 OnPostBtRefrescar();
@@ -146,6 +158,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtCerrar()
         {
+            IniciarUsuarios();
             OnPostBtRefrescar();
             Borrando = false;
         }

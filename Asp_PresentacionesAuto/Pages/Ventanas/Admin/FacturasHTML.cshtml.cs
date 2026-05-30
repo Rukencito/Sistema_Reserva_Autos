@@ -21,6 +21,11 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             IFacturasPresentacion = new FacturasPresentacion();
             IClientesPresentacion = new ClientesPresentacion();
         }
+        private void IniciarFacturas()
+        {
+            var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
+            IFacturasPresentacion = new FacturasPresentacion(correo);
+        }
 
         public List<Clientes> ObtenerClientes()
         {
@@ -40,6 +45,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnGet()
         {
+            IniciarFacturas();
             try
             {
                 CargarListaFiltrada();
@@ -53,6 +59,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtRefrescar()
         {
+            IniciarFacturas();
             try
             {
                 CargarListaFiltrada();
@@ -65,6 +72,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtNuevo()
         {
+            IniciarFacturas();
             Factura = new Facturas();
             Lista = null;
             Borrando = false;
@@ -72,6 +80,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtModificar(int data)
         {
+            IniciarFacturas();
             try
             {
                 var rol = HttpContext.Session.GetString("RolId");
@@ -109,6 +118,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtGuardar()
         {
+            IniciarFacturas();
             try
             {
                 if (Factura == null) return;
@@ -137,6 +147,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrar()
         {
+            IniciarFacturas();
             try
             {
                 var rol = HttpContext.Session.GetString("RolId");
@@ -188,6 +199,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrarVal(int data)
         {
+            IniciarFacturas();
             try
             {
                 OnPostBtRefrescar();
@@ -203,6 +215,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtCerrar()
         {
+            IniciarFacturas();
             OnPostBtRefrescar();
             Borrando = false;
         }
