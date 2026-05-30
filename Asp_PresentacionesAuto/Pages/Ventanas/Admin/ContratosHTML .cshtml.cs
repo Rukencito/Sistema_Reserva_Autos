@@ -21,6 +21,13 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             IAlquileresPresentacion = new AlquileresPresentacion();
         }
 
+        private void IniciarContratos()
+        {
+            var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
+            IContratosPresentacion = new ContratosPresentacion(correo);
+        }
+
+
         public List<Alquileres> ObtenerAlquileres()
         {
             return ListaAlquiler = IAlquileresPresentacion!.Consultar();
@@ -56,6 +63,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnGet()
         {
+            IniciarContratos();
             try
             {
                 CargarListaFiltrada();
@@ -68,6 +76,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtRefrescar()
         {
+            IniciarContratos();
             try
             {
                 CargarListaFiltrada();
@@ -80,6 +89,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtNuevo()
         {
+            IniciarContratos();
             Contrato = new Contratos();
             Lista = null;
             Borrando = false;
@@ -87,6 +97,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtModificar(int data)
         {
+            IniciarContratos();
             try
             {
                 var rol = HttpContext.Session.GetString("RolId");
@@ -133,6 +144,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtGuardar()
         {
+            IniciarContratos();
             try
             {
                 if (Contrato == null)
@@ -177,6 +189,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrar()
         {
+            IniciarContratos();
             try
             {
                 if (Contrato == null) return;
@@ -234,6 +247,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrarVal(int data)
         {
+            IniciarContratos();
             try
             {
                 OnPostBtRefrescar();
@@ -249,6 +263,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtCerrar()
         {
+            IniciarContratos();
             OnPostBtRefrescar();
             Borrando = false;
         }

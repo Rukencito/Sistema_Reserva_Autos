@@ -19,6 +19,13 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             IClientesPresentacion = new ClientesPresentacion();
         }
 
+        private void IniciarClientes()
+        {
+            var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
+            IClientesPresentacion = new ClientesPresentacion(correo);
+        }
+
+
         private void CargarListaFiltrada()
         {
             Lista = IClientesPresentacion!.Consultar();
@@ -26,6 +33,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnGet()
         {
+            IniciarClientes();
             try
             {
                 CargarListaFiltrada();
@@ -37,6 +45,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtRefrescar()
         {
+            IniciarClientes();
             try
             {
                 CargarListaFiltrada();
@@ -49,7 +58,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtNuevo()
         {
-            // Solo Admin puede crear clientes
+            IniciarClientes();
             var rol = HttpContext.Session.GetString("RolId");
             if (rol != "1")
             {
@@ -64,6 +73,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtModificar(int data)
         {
+            IniciarClientes();
             try
             {
                 var rol = HttpContext.Session.GetString("RolId");
@@ -91,6 +101,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtGuardar()
         {
+            IniciarClientes();
             try
             {
                 if (Cliente == null)
@@ -138,6 +149,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrar()
         {
+            IniciarClientes();
             try
             {
                 if (Cliente == null) return;
@@ -163,6 +175,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrarVal(int data)
         {
+            IniciarClientes();
             try
             {
                 var rol = HttpContext.Session.GetString("RolId");
@@ -184,6 +197,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtCerrar()
         {
+            IniciarClientes();
             OnPostBtRefrescar();
             Borrando = false;
         }

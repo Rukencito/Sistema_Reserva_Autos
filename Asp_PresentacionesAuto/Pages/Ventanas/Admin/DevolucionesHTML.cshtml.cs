@@ -21,6 +21,13 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             IAlquileresPresentacion = new AlquileresPresentacion();
         }
 
+        private void IniciarDevoluciones()
+        {
+            var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
+            IDevolucionesPresentacion = new DevolucionesPresentacion(correo);
+        }
+
+
         private void CargarListaFiltrada()
         {
             var rol = HttpContext.Session.GetString("RolId");
@@ -42,6 +49,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnGet()
         {
+            IniciarDevoluciones();
             try
             {
                 CargarListaFiltrada();
@@ -53,6 +61,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public List<Alquileres> ObtenerAlquileres()
         {
+            IniciarDevoluciones();
             var rol = HttpContext.Session.GetString("RolId");
             var entidadId = HttpContext.Session.GetString("EntidadId");
 
@@ -67,6 +76,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtRefrescar()
         {
+            IniciarDevoluciones();
             try
             {
                 CargarListaFiltrada();
@@ -79,6 +89,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtNuevo()
         {
+            IniciarDevoluciones();
             Devolucion = new Devoluciones();
             Lista = null;
             Borrando = false;
@@ -86,6 +97,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtModificar(int data)
         {
+            IniciarDevoluciones();
             try
             {
                 var rol = HttpContext.Session.GetString("RolId");
@@ -119,6 +131,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtGuardar()
         {
+            IniciarDevoluciones();
             try
             {
                 if (Devolucion == null)
@@ -163,6 +176,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrar()
         {
+            IniciarDevoluciones();
             try
             {
                 if (Devolucion == null) return;
@@ -189,6 +203,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrarVal(int data)
         {
+            IniciarDevoluciones();
             try
             {
                 var rol = HttpContext.Session.GetString("RolId");
@@ -211,6 +226,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtCerrar()
         {
+            IniciarDevoluciones();
             OnPostBtRefrescar();
             Borrando = false;
         }

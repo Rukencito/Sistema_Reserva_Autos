@@ -30,6 +30,13 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             IInventariosPresentacion = new InventariosPresentacion();
         }
 
+        private void IniciarAutos()
+        {
+            var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
+            IAutosPresentacion = new AutosPresentacion(correo);
+        }
+
+
         public List<Parqueaderos> ObtenerParqueaderos()
         {
             return ListaParqueadero = IParqueaderosPresentacion!.Consultar();
@@ -63,6 +70,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnGet()
         {
+            IniciarAutos();
             try
             {
                 CargarListaFiltrada();
@@ -74,6 +82,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtRefrescar()
         {
+            IniciarAutos();
             try
             {
                 CargarListaFiltrada();
@@ -86,6 +95,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtNuevo()
         {
+            IniciarAutos();
             Auto = new Autos();
             Lista = null;
             Borrando = false;
@@ -93,6 +103,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtModificar(int data)
         {
+            IniciarAutos();
             try
             {
                 var rol = HttpContext.Session.GetString("RolId");
@@ -116,6 +127,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtGuardar()
         {
+            IniciarAutos();
             try
             {
                 if (Auto == null)
@@ -184,6 +196,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrar()
         {
+            IniciarAutos();
             try
             {
                 if (Auto == null) return;
@@ -218,6 +231,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrarVal(int data)
         {
+            IniciarAutos();
             try
             {
                 OnPostBtRefrescar();
@@ -233,6 +247,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtCerrar()
         {
+            IniciarAutos();
             OnPostBtRefrescar();
             Borrando = false;
         }

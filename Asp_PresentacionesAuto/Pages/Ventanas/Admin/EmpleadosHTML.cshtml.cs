@@ -20,6 +20,13 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             IEmpleadosPresentacion = new EmpleadosPresentacion();
             ISucursalesPresentacion = new SucursalesPresentacion();
         }
+
+        private void IniciarEmpleados()
+        {
+            var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
+            IEmpleadosPresentacion = new EmpleadosPresentacion(correo);
+        }
+
         public List<Sucursales> ObtenerSucursales()
         {
             return ListaSucursal = ISucursalesPresentacion!.Consultar();
@@ -27,11 +34,13 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnGet()
         {
+            IniciarEmpleados();
             OnPostBtRefrescar();
         }
 
         public void OnPostBtRefrescar()
         {
+            IniciarEmpleados();
             try
             {
                 if (IEmpleadosPresentacion == null)
@@ -47,6 +56,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtNuevo()
         {
+            IniciarEmpleados();
             Empleado = new Empleados();
             Lista = null;
             Borrando = false;
@@ -54,6 +64,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtModificar(int data)
         {
+            IniciarEmpleados();
             try
             {
                 OnPostBtRefrescar();
@@ -69,6 +80,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtGuardar()
         {
+            IniciarEmpleados();
             try
             {
                 if (Empleado == null)
@@ -110,6 +122,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrar()
         {
+            IniciarEmpleados();
             try
             {
                 if (Empleado == null)
@@ -125,6 +138,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrarVal(int data)
         {
+            IniciarEmpleados();
             try
             {
                 OnPostBtRefrescar();
@@ -140,6 +154,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtCerrar()
         {
+            IniciarEmpleados();
             OnPostBtRefrescar();
             Borrando = false;
         }

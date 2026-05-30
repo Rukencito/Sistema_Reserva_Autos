@@ -7,12 +7,26 @@ namespace Lib_Presentacion_Autos.Implementaciones
     public class ClientesPresentacion : IClientesPresentacion
     {
         private IComunicaciones? iComunicaciones;
+        private readonly string _usuarioSesion;
+
+        public ClientesPresentacion(string usuarioSesion = "Sistema")
+        {
+            _usuarioSesion = usuarioSesion;
+        }
+
+        private Dictionary<string, object> ConUrl(string url)
+        {
+            return new Dictionary<string, object>
+            {
+                ["Url"] = url,
+                ["X-Usuario"] = _usuarioSesion
+            };
+        }
 
         public List<Clientes> Consultar()
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Clientes/Consultar";
+            var datos = ConUrl("http://localhost:5108/Clientes/Consultar");
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -31,8 +45,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("El cliente ya fue guardado");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Clientes/Guardar";
+            var datos = ConUrl("http://localhost:5108/Clientes/Guardar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarPost(datos)!;
@@ -52,8 +65,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("El cliente no ha sido guardado");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Clientes/Modificar";
+            var datos = ConUrl("http://localhost:5108/Clientes/Modificar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarPut(datos)!;
@@ -73,8 +85,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
                 throw new Exception("El cliente no ha sido guardado");
 
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Clientes/Eliminar";
+            var datos = ConUrl("http://localhost:5108/Clientes/Eliminar");
             datos["Entidad"] = entidad;
 
             var task = this.iComunicaciones.EjecutarDelete(datos)!;
@@ -91,8 +102,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public Clientes ConsultarPorCedula(string cedula)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Clientes/ConsultarPorCedula?cedula=" + cedula;
+            var datos = ConUrl("http://localhost:5108/Clientes/ConsultarPorCedula?cedula=" + cedula);
 
             var task = this.iComunicaciones.Ejecutar(datos)!;
             task.Wait();
@@ -108,8 +118,7 @@ namespace Lib_Presentacion_Autos.Implementaciones
         public Clientes AgregarPuntosFidelidad(int clienteId, int puntos)
         {
             this.iComunicaciones = new Comunicaciones();
-            var datos = new Dictionary<string, object>();
-            datos["Url"] = "http://localhost:5108/Clientes/AgregarPuntosFidelidad";
+            var datos = ConUrl("http://localhost:5108/Clientes/AgregarPuntosFidelidad");
             datos["Entidad"] = new { clienteId, puntos };
 
             var task = this.iComunicaciones.EjecutarPut(datos)!;

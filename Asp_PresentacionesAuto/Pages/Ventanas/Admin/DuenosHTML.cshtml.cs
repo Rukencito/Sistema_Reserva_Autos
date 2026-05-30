@@ -18,13 +18,22 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             IDuenosPresentacion = new DuenosPresentacion();
         }
 
+        private void IniciarDuenos()
+        {
+            var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
+            IDuenosPresentacion = new DuenosPresentacion(correo);
+        }
+
+
         public void OnGet()
         {
+            IniciarDuenos();
             OnPostBtRefrescar();
         }
 
         public void OnPostBtRefrescar()
         {
+            IniciarDuenos();
             try
             {
                 if (IDuenosPresentacion == null)
@@ -40,6 +49,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtNuevo()
         {
+            IniciarDuenos();
             Dueno = new Duenos();
             Lista = null;
             Borrando = false;
@@ -47,6 +57,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtModificar(int data)
         {
+            IniciarDuenos();
             try
             {
                 OnPostBtRefrescar();
@@ -62,6 +73,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtGuardar()
         {
+            IniciarDuenos();
             try
             {
                 if (Dueno == null)
@@ -97,6 +109,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrar()
         {
+            IniciarDuenos();
             try
             {
                 if (Dueno == null)
@@ -112,6 +125,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrarVal(int data)
         {
+            IniciarDuenos();
             try
             {
                 OnPostBtRefrescar();
@@ -127,6 +141,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtCerrar()
         {
+            IniciarDuenos();
             OnPostBtRefrescar();
             Borrando = false;
         }
