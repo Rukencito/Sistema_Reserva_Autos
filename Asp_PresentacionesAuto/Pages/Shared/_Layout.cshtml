@@ -611,6 +611,30 @@
                     <span class="bottom-arrow">→</span>
                 </a>
             }
+            else if (esEmpleado)
+            {
+                <a asp-page="/Ventanas/Empleado/IndexEmpleados" class="btn-bottom btn-bottom-admin">
+                    <span>👷</span>
+                    <span>Panel Empleado</span>
+                    <span class="bottom-arrow">→</span>
+                </a>
+            }
+            else if (esDueno)
+            {
+                <a asp-page="/Ventanas/Dueno/IndexDuenos" class="btn-bottom btn-bottom-admin">
+                    <span>🔑</span>
+                    <span>Panel Dueño</span>
+                    <span class="bottom-arrow">→</span>
+                </a>
+            }
+            else if (esCliente)
+            {
+                <a asp-page="/Ventanas/Cliente/IndexClientes" class="btn-bottom btn-bottom-admin">
+                    <span>🙋</span>
+                    <span>Mi Panel</span>
+                    <span class="bottom-arrow">→</span>
+                </a>
+            }
             else if (!estaLogueado)
             {
                 <a asp-page="/Login" class="btn-bottom btn-bottom-login">
