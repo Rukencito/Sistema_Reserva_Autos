@@ -17,14 +17,21 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
           IRolesPresentacion = new  RolesPresentacion();
         }
+        private void IniciarRoles()
+        {
+            var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
+            IRolesPresentacion = new RolesPresentacion(correo);
+        }
 
         public void OnGet()
         {
+            IniciarRoles();
             OnPostBtRefrescar();
         }
 
         public void OnPostBtRefrescar()
         {
+            IniciarRoles();
             try
             {
                 if (IRolesPresentacion == null)
@@ -40,6 +47,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtNuevo()
         {
+            IniciarRoles();
             Rol = new Roles();
             Lista = null;
             Borrando = false;
@@ -47,6 +55,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtModificar(int data)
         {
+            IniciarRoles();
             try
             {
                 OnPostBtRefrescar();
@@ -62,6 +71,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtGuardar()
         {
+            IniciarRoles();
             try
             {
                 if (Rol == null)
@@ -82,6 +92,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrar()
         {
+            IniciarRoles();
             try
             {
                 if (Rol == null)
@@ -97,6 +108,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrarVal(int data)
         {
+            IniciarRoles();
             try
             {
                 OnPostBtRefrescar();
@@ -112,6 +124,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtCerrar()
         {
+            IniciarRoles();
             OnPostBtRefrescar();
             Borrando = false;
         }

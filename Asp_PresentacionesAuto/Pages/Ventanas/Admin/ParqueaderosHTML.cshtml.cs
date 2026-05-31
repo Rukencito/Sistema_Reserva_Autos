@@ -17,14 +17,20 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         {
            IParqueaderosPresentacion = new  ParqueaderosPresentacion();
         }
-
+        private void IniciarParqueaderos()
+        {
+            var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
+            IParqueaderosPresentacion = new ParqueaderosPresentacion(correo);
+        }
         public void OnGet()
         {
+            IniciarParqueaderos();
             OnPostBtRefrescar();
         }
 
         public void OnPostBtRefrescar()
         {
+            IniciarParqueaderos();
             try
             {
                 if (IParqueaderosPresentacion == null)
@@ -40,6 +46,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtNuevo()
         {
+            IniciarParqueaderos();
             Parqueadero = new Parqueaderos();
             Lista = null;
             Borrando = false;
@@ -47,6 +54,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtModificar(int data)
         {
+            IniciarParqueaderos();
             try
             {
                 OnPostBtRefrescar();
@@ -62,6 +70,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtGuardar()
         {
+            IniciarParqueaderos();
             try
             {
                 if (Parqueadero == null)
@@ -97,6 +106,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrar()
         {
+            IniciarParqueaderos();
             try
             {
                 if (Parqueadero == null)
@@ -112,6 +122,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrarVal(int data)
         {
+            IniciarParqueaderos();
             try
             {
                 OnPostBtRefrescar();
@@ -127,6 +138,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtCerrar()
         {
+            IniciarParqueaderos();
             OnPostBtRefrescar();
             Borrando = false;
         }

@@ -20,6 +20,11 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
           IResenasPresentacion = new  ResenasPresentacion();
             IClientesPresentacion = new ClientesPresentacion();
         }
+        private void IniciarResenas()
+        {
+            var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
+            IResenasPresentacion = new ResenasPresentacion(correo);
+        }
 
         public List<Clientes> ObtenerClientes()
         {
@@ -39,6 +44,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnGet()
         {
+            IniciarResenas();
             try
             {
                 CargarListaFiltrada();
@@ -51,6 +57,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtRefrescar()
         {
+            IniciarResenas();
             try
             {
                 CargarListaFiltrada();
@@ -63,6 +70,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtNuevo()
         {
+            IniciarResenas();
             Resena = new Resenas();
             Lista = null;
             Borrando = false;
@@ -70,6 +78,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtModificar(int data)
         {
+            IniciarResenas();
             try
             {
                 var rol = HttpContext.Session.GetString("RolId");
@@ -107,6 +116,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtGuardar()
         {
+            IniciarResenas();
             try
             {
                 if (Resena == null)
@@ -158,6 +168,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         }
         public void OnPostBtBorrar()
         {
+            IniciarResenas();
             try
             {
                 var rol = HttpContext.Session.GetString("RolId");
@@ -209,6 +220,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrarVal(int data)
         {
+            IniciarResenas();
             try
             {
                 OnPostBtRefrescar();
@@ -224,6 +236,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtCerrar()
         {
+            IniciarResenas();
             OnPostBtRefrescar();
             Borrando = false;
         }

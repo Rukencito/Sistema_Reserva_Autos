@@ -24,6 +24,11 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             IAutosPresentacion = new AutosPresentacion();
             IClientesPresentacion = new ClientesPresentacion();
         }
+        private void IniciarReservas()
+        {
+            var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
+            IReservasPresentacion = new ReservasPresentacion(correo);
+        }
 
         public List<Autos> ObtenerAutos()
         {
@@ -48,6 +53,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnGet()
         {
+            IniciarReservas();
             try
             {
                 CargarListaFiltrada();
@@ -59,6 +65,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtRefrescar()
         {
+            IniciarReservas();
             try
             {
                 CargarListaFiltrada();
@@ -71,6 +78,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtNuevo()
         {
+            IniciarReservas();
             Reserva = new Reservas();
             Lista = null;
             Borrando = false;
@@ -78,6 +86,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtModificar(int data)
         {
+            IniciarReservas();
             try
             {
                 var rol = HttpContext.Session.GetString("RolId");
@@ -115,6 +124,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtGuardar()
         {
+            IniciarReservas();
             try
             {
                 if (Reserva == null)
@@ -173,6 +183,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrar()
         {
+            IniciarReservas();
             try
             {
                 var rol = HttpContext.Session.GetString("RolId");
@@ -224,6 +235,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtBorrarVal(int data)
         {
+            IniciarReservas();
             try
             {
                 OnPostBtRefrescar();
@@ -239,6 +251,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public void OnPostBtCerrar()
         {
+            IniciarReservas();
             OnPostBtRefrescar();
             Borrando = false;
         }
