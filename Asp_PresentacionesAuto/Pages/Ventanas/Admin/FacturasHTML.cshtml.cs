@@ -18,13 +18,13 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public FacturasHTMLModel()
         {
-            IFacturasPresentacion = new FacturasPresentacion();
-            IClientesPresentacion = new ClientesPresentacion();
         }
         private void IniciarFacturas()
         {
             var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
             IFacturasPresentacion = new FacturasPresentacion(correo);
+            IClientesPresentacion = new ClientesPresentacion(correo);
+
         }
 
         public List<Clientes> ObtenerClientes()

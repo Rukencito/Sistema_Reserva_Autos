@@ -15,7 +15,6 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public ParqueaderosHTMLModel()
         {
-           IParqueaderosPresentacion = new  ParqueaderosPresentacion();
         }
         private void IniciarParqueaderos()
         {

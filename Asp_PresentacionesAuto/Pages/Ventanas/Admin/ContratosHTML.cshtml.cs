@@ -17,14 +17,14 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public ContratosHTMLModel()
         {
-            IContratosPresentacion = new ContratosPresentacion();
-            IAlquileresPresentacion = new AlquileresPresentacion();
         }
 
         private void IniciarContratos()
         {
             var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
             IContratosPresentacion = new ContratosPresentacion(correo);
+            IAlquileresPresentacion = new AlquileresPresentacion(correo);
+
         }
 
 

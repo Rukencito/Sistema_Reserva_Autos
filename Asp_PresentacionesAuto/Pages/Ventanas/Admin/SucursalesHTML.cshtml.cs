@@ -15,7 +15,6 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public SucursalesHTMLModel()
         {
-          ISucursalesPresentacion = new  SucursalesPresentacion();
         }
         private void IniciarSucursales()
         {

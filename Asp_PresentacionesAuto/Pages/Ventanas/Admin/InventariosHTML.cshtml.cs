@@ -15,7 +15,6 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public InventariosHTMLModel()
         {
-            IInventariosPresentacion = new InventariosPresentacion();
         }
         private void IniciarInventarios()
         {

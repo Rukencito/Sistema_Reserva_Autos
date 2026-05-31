@@ -17,14 +17,13 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public EmpleadosHTMLModel()
         {
-            IEmpleadosPresentacion = new EmpleadosPresentacion();
-            ISucursalesPresentacion = new SucursalesPresentacion();
         }
 
         private void IniciarEmpleados()
         {
             var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
             IEmpleadosPresentacion = new EmpleadosPresentacion(correo);
+            ISucursalesPresentacion = new SucursalesPresentacion(correo);
         }
 
         public List<Sucursales> ObtenerSucursales()

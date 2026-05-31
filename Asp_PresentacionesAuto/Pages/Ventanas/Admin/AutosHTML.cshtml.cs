@@ -23,17 +23,17 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public AutosHTMLModel()
         {
-            IAutosPresentacion = new AutosPresentacion();
-            IParqueaderosPresentacion = new ParqueaderosPresentacion();
-            IDuenosPresentacion = new DuenosPresentacion();
-            ISucursalesPresentacion = new SucursalesPresentacion();
-            IInventariosPresentacion = new InventariosPresentacion();
+            
         }
 
         private void IniciarAutos()
         {
             var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
             IAutosPresentacion = new AutosPresentacion(correo);
+            IParqueaderosPresentacion = new ParqueaderosPresentacion(correo);
+            IDuenosPresentacion = new DuenosPresentacion(correo);
+            ISucursalesPresentacion = new SucursalesPresentacion(correo);
+            IInventariosPresentacion = new InventariosPresentacion(correo);
         }
 
 

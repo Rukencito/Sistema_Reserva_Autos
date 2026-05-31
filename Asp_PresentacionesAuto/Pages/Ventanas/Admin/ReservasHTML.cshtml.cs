@@ -20,14 +20,13 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public ReservasHTMLModel()
         {
-          IReservasPresentacion = new  ReservasPresentacion();
-            IAutosPresentacion = new AutosPresentacion();
-            IClientesPresentacion = new ClientesPresentacion();
         }
         private void IniciarReservas()
         {
             var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
             IReservasPresentacion = new ReservasPresentacion(correo);
+            IAutosPresentacion = new AutosPresentacion(correo);
+            IClientesPresentacion = new ClientesPresentacion(correo);
         }
 
         public List<Autos> ObtenerAutos()

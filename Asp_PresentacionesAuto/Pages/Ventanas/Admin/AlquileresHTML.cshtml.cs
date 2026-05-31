@@ -23,15 +23,16 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public AlquileresHTMLModel()
         {
-            IAutosPresentacion = new AutosPresentacion();
-            IClientesPresentacion = new ClientesPresentacion();
-            IEmpleadosPresentacion = new EmpleadosPresentacion();
+            
         }
 
         private void IniciarAlquileres()
         {
             var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
             IAlquileresPresentacion = new AlquileresPresentacion(correo);
+            IAutosPresentacion = new AutosPresentacion(correo);
+            IClientesPresentacion = new ClientesPresentacion(correo);
+            IEmpleadosPresentacion = new EmpleadosPresentacion(correo);
         }
 
         public List<Autos> ObtenerAutos()

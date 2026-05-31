@@ -18,13 +18,12 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public GarantiasHTMLModel()
         {
-            IGarantiasPresentacion = new GarantiasPresentacion();
-            IAutosPresentacion = new AutosPresentacion(); 
         }
         private void IniciarGarantias()
         {
             var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
             IGarantiasPresentacion = new GarantiasPresentacion(correo);
+            IAutosPresentacion = new AutosPresentacion(correo);
         }
         public List<Autos> ObtenerAutos()
         {

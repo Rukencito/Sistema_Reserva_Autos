@@ -17,13 +17,12 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public ResenasHTMLModel()
         {
-          IResenasPresentacion = new  ResenasPresentacion();
-            IClientesPresentacion = new ClientesPresentacion();
         }
         private void IniciarResenas()
         {
             var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
             IResenasPresentacion = new ResenasPresentacion(correo);
+            IClientesPresentacion = new ClientesPresentacion();
         }
 
         public List<Clientes> ObtenerClientes()

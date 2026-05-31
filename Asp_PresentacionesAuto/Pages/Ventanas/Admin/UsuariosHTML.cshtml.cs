@@ -25,16 +25,16 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public UsuariosHTMLModel()
         {
-          IUsuariosPresentacion = new  UsuariosPresentacion();
-          IRolesPresentacion = new RolesPresentacion();
-          IClientesPresentacion = new ClientesPresentacion();
-          IEmpleadosPresentacion = new EmpleadosPresentacion();
-          IDuenosPresentacion = new DuenosPresentacion();
         }
         private void IniciarUsuarios()
         {
             var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
             IUsuariosPresentacion = new UsuariosPresentacion(correo);
+            IRolesPresentacion = new RolesPresentacion(correo);
+            IClientesPresentacion = new ClientesPresentacion(correo);
+            IEmpleadosPresentacion = new EmpleadosPresentacion(correo);
+            IDuenosPresentacion = new DuenosPresentacion(correo);
+
         }
 
         public void OnGet()

@@ -17,14 +17,14 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public DevolucionesHTMLModel()
         {
-            IDevolucionesPresentacion = new DevolucionesPresentacion();
-            IAlquileresPresentacion = new AlquileresPresentacion();
         }
 
         private void IniciarDevoluciones()
         {
             var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
             IDevolucionesPresentacion = new DevolucionesPresentacion(correo);
+            IAlquileresPresentacion = new AlquileresPresentacion(correo);
+
         }
 
 

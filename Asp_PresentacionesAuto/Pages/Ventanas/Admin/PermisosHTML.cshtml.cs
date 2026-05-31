@@ -17,13 +17,12 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public PermisosHTMLModel()
         {
-            IPermisosPresentacion = new PermisosPresentacion();
-            IRolesPresentacion = new RolesPresentacion();
         }
         private void IniciarPermisos()
         {
             var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
             IPermisosPresentacion = new PermisosPresentacion(correo);
+            IRolesPresentacion = new RolesPresentacion(correo);
         }
 
         public List<Roles> ObtenerRoles()

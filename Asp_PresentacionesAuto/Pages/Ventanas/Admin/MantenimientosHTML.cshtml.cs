@@ -19,14 +19,13 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public MantenimientosHTMLModel()
         {
-          IMantenimientosPresentacion = new  MantenimientosPresentacion();
-            IAutosPresentacion = new AutosPresentacion();
-            ITalleresPresentacion = new TalleresPresentacion();
         }
         private void IniciarMantenimientos()
         {
             var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
             IMantenimientosPresentacion = new MantenimientosPresentacion(correo);
+            IAutosPresentacion = new AutosPresentacion(correo);
+            ITalleresPresentacion = new TalleresPresentacion(correo);
         }
 
         public List<Talleres> ObtenerTalleres()

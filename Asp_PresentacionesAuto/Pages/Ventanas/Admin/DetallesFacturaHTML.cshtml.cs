@@ -17,13 +17,13 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public DetallesFacturaHTMLModel()
         {
-            IDetallesFacturaPresentacion = new DetallesFacturaPresentacion();
-            IFacturasPresentacion = new FacturasPresentacion();
         }
         private void IniciarDetallesFactura()
         {
             var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
             IDetallesFacturaPresentacion = new DetallesFacturaPresentacion(correo);
+            IFacturasPresentacion = new FacturasPresentacion(correo);
+
         }
 
 

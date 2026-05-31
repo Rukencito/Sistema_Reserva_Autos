@@ -17,13 +17,12 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public PromocionesHTMLModel()
         {
-          IPromocionesPresentacion = new  PromocionesPresentacion();
-            IVentasPresentacion = new VentasPresentacion();
         }
         private void IniciarPromociones()
         {
             var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
             IPromocionesPresentacion = new PromocionesPresentacion(correo);
+            IVentasPresentacion = new VentasPresentacion(correo);
         }
 
         public void OnGet()

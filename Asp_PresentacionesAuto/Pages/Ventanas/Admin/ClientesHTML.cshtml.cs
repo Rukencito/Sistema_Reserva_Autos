@@ -16,7 +16,6 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public ClientesHTMLModel()
         {
-            IClientesPresentacion = new ClientesPresentacion();
         }
 
         private void IniciarClientes()

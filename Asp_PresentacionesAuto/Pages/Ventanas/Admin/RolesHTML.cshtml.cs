@@ -15,7 +15,6 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public RolesHTMLModel()
         {
-          IRolesPresentacion = new  RolesPresentacion();
         }
         private void IniciarRoles()
         {

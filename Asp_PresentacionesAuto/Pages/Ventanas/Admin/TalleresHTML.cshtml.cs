@@ -15,7 +15,6 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public TalleresHTMLModel()
         {
-          ITalleresPresentacion = new  TalleresPresentacion();
         }
 
         private void IniciarTalleres()

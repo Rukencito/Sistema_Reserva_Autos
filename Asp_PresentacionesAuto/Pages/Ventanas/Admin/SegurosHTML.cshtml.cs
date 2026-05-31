@@ -17,13 +17,12 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
 
         public SegurosHTMLModel()
         {
-            ISegurosPresentacion = new SegurosPresentacion();
-            IAutosPresentacion = new AutosPresentacion();
         }
         private void IniciarSeguros()
         {
             var correo = HttpContext.Session.GetString("Usuario") ?? "Sistema";
             ISegurosPresentacion = new SegurosPresentacion(correo);
+            IAutosPresentacion = new AutosPresentacion(correo);
         }
 
         private void CargarListaFiltrada()
