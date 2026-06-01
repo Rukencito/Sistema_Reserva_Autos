@@ -48,6 +48,7 @@ namespace Lib_Negocio_Autos.Implementaciones
         {
 
             AbrirConexion();
+            ValidarDatos(entidad);
             iConexion!.Promociones!.Add(entidad!);
             iConexion.SaveChanges();
             RegistrarAuditoria("Se guardó un nuevo registro en Promociones", "Creacion");
@@ -66,6 +67,7 @@ namespace Lib_Negocio_Autos.Implementaciones
         public Promociones Modificar(Promociones entidad)
         {
             AbrirConexion();
+            ValidarDatos(entidad);
             iConexion!.Promociones!.Update(entidad!);
             iConexion.SaveChanges();
             RegistrarAuditoria("Se modifico un registro en promociones", "Modificacion");

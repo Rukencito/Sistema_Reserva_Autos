@@ -14,6 +14,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         [BindProperty] public List<Autos>? ListaAuto { get; set; }
         [BindProperty] public Seguros? Seguro { get; set; }
         [BindProperty] public bool Borrando { get; set; }
+        [BindProperty] public bool TieneError { get; set; }
 
         public SegurosHTMLModel()
         {
@@ -257,8 +258,19 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         public void OnPostBtCerrar()
         {
             IniciarSeguros();
-            OnPostBtRefrescar();
-            Borrando = false;
+            if (TieneError)
+            {
+                CargarListaFiltrada();
+                Lista = null;
+                Borrando = false;
+                TieneError = false;
+                ModelState.Clear();
+            }
+            else
+            {
+                OnPostBtRefrescar();
+                Borrando = false;
+            }
         }
     }
 }

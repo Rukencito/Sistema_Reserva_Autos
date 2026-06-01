@@ -16,6 +16,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         [BindProperty] public List<Talleres>? ListaTaller { get; set; }
         [BindProperty] public Mantenimientos? Mantenimiento { get; set; }
         [BindProperty] public bool Borrando { get; set; }
+        [BindProperty] public bool TieneError { get; set; }
 
         public MantenimientosHTMLModel()
         {
@@ -159,7 +160,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                     CargarListaFiltrada();
                     return;
                 }
-                
+
                 if ((Mantenimiento.Autos ?? 0) == 0)
                 {
                     ViewData["Mensaje"] = "Debe seleccionar un auto.";
@@ -256,8 +257,19 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         public void OnPostBtCerrar()
         {
             IniciarMantenimientos();
-            OnPostBtRefrescar();
-            Borrando = false;
+            if (TieneError)
+            {
+                CargarListaFiltrada();
+                Lista = null;
+                Borrando = false;
+                TieneError = false;
+                ModelState.Clear();
+            }
+            else
+            {
+                OnPostBtRefrescar();
+                Borrando = false;
+            }
         }
     }
 }

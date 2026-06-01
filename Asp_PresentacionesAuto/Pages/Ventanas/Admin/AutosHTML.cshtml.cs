@@ -20,10 +20,11 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         [BindProperty] public List<Inventarios>? ListaInventario { get; set; }
         [BindProperty] public Autos? Auto { get; set; }
         [BindProperty] public bool Borrando { get; set; }
+        [BindProperty] public bool TieneError { get; set; }
 
         public AutosHTMLModel()
         {
-            
+
         }
 
         private void IniciarAutos()
@@ -138,7 +139,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                     ViewData["Mensaje"] = "Debe seleccionar un dueño.";
                     return;
                 }
-                
+
                 if (!Auto.Parqueaderos.HasValue || Auto.Parqueaderos.Value == 0)
                 {
                     ViewData["Mensaje"] = "Debe seleccionar un parqueadero.";
@@ -248,8 +249,19 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         public void OnPostBtCerrar()
         {
             IniciarAutos();
-            OnPostBtRefrescar();
-            Borrando = false;
+            if (TieneError)
+            {
+                CargarListaFiltrada();
+                Lista = null;
+                Borrando = false;
+                TieneError = false;
+                ModelState.Clear();
+            }
+            else
+            {
+                OnPostBtRefrescar();
+                Borrando = false;
+            }
         }
     }
 }

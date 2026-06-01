@@ -12,6 +12,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         [BindProperty] public List<Parqueaderos>? Lista { get; set; }
         [BindProperty] public Parqueaderos? Parqueadero { get; set; }
         [BindProperty] public bool Borrando { get; set; }
+        [BindProperty] public bool TieneError { get; set; }
 
         public ParqueaderosHTMLModel()
         {
@@ -138,8 +139,18 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         public void OnPostBtCerrar()
         {
             IniciarParqueaderos();
-            OnPostBtRefrescar();
-            Borrando = false;
+            if (TieneError)
+            {
+                Lista = null;
+                Borrando = false;
+                TieneError = false;
+                ModelState.Clear();
+            }
+            else
+            {
+                OnPostBtRefrescar();
+                Borrando = false;
+            }
         }
     }
 }

@@ -12,6 +12,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         [BindProperty] public List<Inventarios>? Lista { get; set; }
         [BindProperty] public Inventarios? Inventario { get; set; }
         [BindProperty] public bool Borrando { get; set; }
+        [BindProperty] public bool TieneError { get; set; }
 
         public InventariosHTMLModel()
         {
@@ -139,8 +140,18 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         public void OnPostBtCerrar()
         {
             IniciarInventarios();
-            OnPostBtRefrescar();
-            Borrando = false;
+            if (TieneError)
+            {
+                Lista = null;
+                Borrando = false;
+                TieneError = false;
+                ModelState.Clear();
+            }
+            else
+            {
+                OnPostBtRefrescar();
+                Borrando = false;
+            }
         }
     }
 }

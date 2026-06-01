@@ -14,6 +14,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         [BindProperty] public List<Clientes>? ListaCliente { get; set; }
         [BindProperty] public Resenas? Resena { get; set; }
         [BindProperty] public bool Borrando { get; set; }
+        [BindProperty] public bool TieneError { get; set; }
 
         public ResenasHTMLModel()
         {
@@ -236,8 +237,19 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         public void OnPostBtCerrar()
         {
             IniciarResenas();
-            OnPostBtRefrescar();
-            Borrando = false;
+            if (TieneError)
+            {
+                CargarListaFiltrada();
+                Lista = null;
+                Borrando = false;
+                TieneError = false;
+                ModelState.Clear();
+            }
+            else
+            {
+                OnPostBtRefrescar();
+                Borrando = false;
+            }
         }
     }
 }

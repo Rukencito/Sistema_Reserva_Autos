@@ -14,6 +14,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         [BindProperty] public List<Alquileres>? ListaAlquiler { get; set; }
         [BindProperty] public Contratos? Contrato { get; set; }
         [BindProperty] public bool Borrando { get; set; }
+        [BindProperty] public bool TieneError { get; set; }
 
         public ContratosHTMLModel()
         {
@@ -264,8 +265,19 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         public void OnPostBtCerrar()
         {
             IniciarContratos();
-            OnPostBtRefrescar();
-            Borrando = false;
+            if (TieneError)
+            {
+                CargarListaFiltrada();
+                Lista = null;
+                Borrando = false;
+                TieneError = false;
+                ModelState.Clear();
+            }
+            else
+            {
+                OnPostBtRefrescar();
+                Borrando = false;
+            }
         }
     }
 }

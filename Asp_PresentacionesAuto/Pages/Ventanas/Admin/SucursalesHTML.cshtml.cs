@@ -12,6 +12,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         [BindProperty] public List<Sucursales>? Lista { get; set; }
         [BindProperty] public Sucursales? Sucursal { get; set; }
         [BindProperty] public bool Borrando { get; set; }
+        [BindProperty] public bool TieneError { get; set; }
 
         public SucursalesHTMLModel()
         {
@@ -139,8 +140,18 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         public void OnPostBtCerrar()
         {
             IniciarSucursales();
-            OnPostBtRefrescar();
-            Borrando = false;
+            if (TieneError)
+            {
+                Lista = null;
+                Borrando = false;
+                TieneError = false;
+                ModelState.Clear();
+            }
+            else
+            {
+                OnPostBtRefrescar();
+                Borrando = false;
+            }
         }
     }
 }

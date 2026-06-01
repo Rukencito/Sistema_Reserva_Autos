@@ -18,6 +18,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         [BindProperty] public List<Autos>? ListaAuto { get; set; }
         [BindProperty] public Ventas? Venta { get; set; }
         [BindProperty] public bool Borrando { get; set; }
+        [BindProperty] public bool TieneError { get; set; }
 
         public VentasHTMLModel()
         {
@@ -169,21 +170,21 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                 else if (rol == "3" && int.TryParse(entidadId, out int empleadoId))
                     Venta.Empleados = empleadoId;
 
-               
+
                 if ((Venta.Clientes ?? 0) == 0)
                 {
                     ViewData["Mensaje"] = "Debe seleccionar un cliente.";
                     return;
                 }
 
-               
+
                 if ((Venta.Empleados ?? 0) == 0)
                 {
                     ViewData["Mensaje"] = "Debe seleccionar un empleado.";
                     return;
                 }
 
-               
+
                 if ((Venta.Autos ?? 0) == 0)
                 {
                     ViewData["Mensaje"] = "Debe seleccionar un auto.";
@@ -282,8 +283,19 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         public void OnPostBtCerrar()
         {
             IniciarVentas();
-            OnPostBtRefrescar();
-            Borrando = false;
+            if (TieneError)
+            {
+                CargarListaFiltrada();
+                Lista = null;
+                Borrando = false;
+                TieneError = false;
+                ModelState.Clear();
+            }
+            else
+            {
+                OnPostBtRefrescar();
+                Borrando = false;
+            }
         }
     }
 }

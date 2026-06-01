@@ -1,4 +1,3 @@
-
 using Lib_Negocio_Autos.modelo;
 using Lib_Presentacion_Autos.Interfaces;
 using Lib_Presentacion_Autos.Implementaciones;
@@ -15,6 +14,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         [BindProperty] public List<Autos>? ListaAuto { get; set; }
         [BindProperty] public Garantias? Garantia { get; set; }
         [BindProperty] public bool Borrando { get; set; }
+        [BindProperty] public bool TieneError { get; set; }
 
         public GarantiasHTMLModel()
         {
@@ -248,8 +248,19 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         public void OnPostBtCerrar()
         {
             IniciarGarantias();
-            OnPostBtRefrescar();
-            Borrando = false;
+            if (TieneError)
+            {
+                CargarListaFiltrada();
+                Lista = null;
+                Borrando = false;
+                TieneError = false;
+                ModelState.Clear();
+            }
+            else
+            {
+                OnPostBtRefrescar();
+                Borrando = false;
+            }
         }
     }
 }

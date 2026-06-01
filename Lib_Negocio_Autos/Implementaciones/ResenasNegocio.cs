@@ -44,6 +44,7 @@ namespace Lib_Negocio_Autos.Implementaciones
         public Resenas Guardar(Resenas entidad)
         {
             AbrirConexion();
+            ValidarDatos(entidad);
             iConexion!.Resenas!.Add(entidad!);
             iConexion.SaveChanges();
             RegistrarAuditoria("Se guardo un nuevo registro en Reseñas", "Creacion");
@@ -62,6 +63,7 @@ namespace Lib_Negocio_Autos.Implementaciones
         public Resenas Modificar(Resenas entidad)
         {
             AbrirConexion();
+            ValidarDatos(entidad);
             iConexion!.Resenas!.Update(entidad!);
             iConexion.SaveChanges();
             RegistrarAuditoria("Se modifico un registro en Reseñas", "Modificacion");
@@ -96,7 +98,7 @@ namespace Lib_Negocio_Autos.Implementaciones
             if (entidad.Clientes <= 0)
                 throw new Exception("El cliente de la reseña es obligatorio");
         }
-    public List<Resenas> ConsultarPorCliente(int idCliente)
+        public List<Resenas> ConsultarPorCliente(int idCliente)
         {
             AbrirConexion();
 
@@ -112,4 +114,4 @@ namespace Lib_Negocio_Autos.Implementaciones
             return lista;
         }
     }
-    }
+}

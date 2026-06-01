@@ -17,6 +17,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         [BindProperty] public List<Clientes>? ListaCliente { get; set; }
         [BindProperty] public Reservas? Reserva { get; set; }
         [BindProperty] public bool Borrando { get; set; }
+        [BindProperty] public bool TieneError { get; set; }
 
         public ReservasHTMLModel()
         {
@@ -135,14 +136,14 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                 if (rol == "2" && int.TryParse(usuarioId, out int clienteId))
                     Reserva.Clientes = clienteId;
 
-                
+
                 if ((Reserva.Clientes ?? 0) == 0)
                 {
                     ViewData["Mensaje"] = "Debe seleccionar un cliente.";
                     return;
                 }
 
-                
+
                 if ((Reserva.Autos ?? 0) == 0)
                 {
                     ViewData["Mensaje"] = "Debe seleccionar un auto.";
@@ -251,8 +252,19 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         public void OnPostBtCerrar()
         {
             IniciarReservas();
-            OnPostBtRefrescar();
-            Borrando = false;
+            if (TieneError)
+            {
+                CargarListaFiltrada();
+                Lista = null;
+                Borrando = false;
+                TieneError = false;
+                ModelState.Clear();
+            }
+            else
+            {
+                OnPostBtRefrescar();
+                Borrando = false;
+            }
         }
     }
 }

@@ -1,4 +1,3 @@
-
 using Lib_Negocio_Autos.modelo;
 using Lib_Presentacion_Autos.Interfaces;
 using Lib_Presentacion_Autos.Implementaciones;
@@ -15,6 +14,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         [BindProperty] public List<Clientes>? ListaCliente { get; set; }
         [BindProperty] public Facturas? Factura { get; set; }
         [BindProperty] public bool Borrando { get; set; }
+        [BindProperty] public bool TieneError { get; set; }
 
         public FacturasHTMLModel()
         {
@@ -216,8 +216,19 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         public void OnPostBtCerrar()
         {
             IniciarFacturas();
-            OnPostBtRefrescar();
-            Borrando = false;
+            if (TieneError)
+            {
+                CargarListaFiltrada();
+                Lista = null;
+                Borrando = false;
+                TieneError = false;
+                ModelState.Clear();
+            }
+            else
+            {
+                OnPostBtRefrescar();
+                Borrando = false;
+            }
         }
     }
 }

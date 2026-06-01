@@ -12,6 +12,7 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         [BindProperty] public List<Talleres>? Lista { get; set; }
         [BindProperty] public Talleres? Taller { get; set; }
         [BindProperty] public bool Borrando { get; set; }
+        [BindProperty] public bool TieneError { get; set; }
 
         public TalleresHTMLModel()
         {
@@ -140,8 +141,18 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
         public void OnPostBtCerrar()
         {
             IniciarTalleres();
-            OnPostBtRefrescar();
-            Borrando = false;
+            if (TieneError)
+            {
+                Lista = null;
+                Borrando = false;
+                TieneError = false;
+                ModelState.Clear();
+            }
+            else
+            {
+                OnPostBtRefrescar();
+                Borrando = false;
+            }
         }
     }
 }

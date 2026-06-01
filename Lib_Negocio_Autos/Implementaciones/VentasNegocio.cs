@@ -50,6 +50,7 @@ namespace Lib_Negocio_Autos.Implementaciones
         {
 
             AbrirConexion();
+            ValidarDatos(entidad);
 
             iConexion!.Ventas!.Add(entidad!);
             iConexion.SaveChanges();
@@ -76,6 +77,7 @@ namespace Lib_Negocio_Autos.Implementaciones
         public Ventas Modificar(Ventas entidad)
         {
             AbrirConexion();
+            ValidarDatos(entidad);
 
             if (!ValidarId(entidad.Id))
             {
@@ -105,10 +107,10 @@ namespace Lib_Negocio_Autos.Implementaciones
                 .ToList();
 
             if (lista.Count == 0)
-                throw new Exception($"No se encontraron ventas para el cliente con id: {idCliente}");
+                throw new Exception("No se encontraron ventas para el cliente con id: " + idCliente);
 
             RegistrarAuditoria(
-                $"Se realizo una consulta en Ventas por el cliente con id: {idCliente}",
+                "Se realizo una consulta en Ventas por el cliente con id: " + idCliente,
                 "Consulta"
             );
             return lista;
