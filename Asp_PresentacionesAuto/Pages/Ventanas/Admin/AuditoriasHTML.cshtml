@@ -1,0 +1,53 @@
+﻿@page
+@model Asp_PresentacionesAuto.Pages.Ventanas.Admin.AuditoriasHTMLModel
+@{
+    ViewData["Title"] = "Auditorías";
+}
+
+<center>
+    <div>
+        <form method="POST" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+
+            <div align="left">
+                <h3>Auditorías</h3>
+            </div>
+
+            <div>
+                <a href="/Ventanas/Admin/IndexAdmin" class="btn btn-danger">&#8592; Regresar</a>
+                <input type="submit"
+                       value="Refrescar"
+                       class="btn btn-secondary"
+                       asp-page-handler="BtRefrescar" />
+            </div>
+
+            @if (ViewData.ContainsKey("Mensaje"))
+            {
+                @await Html.PartialAsync("/Pages/Emergentes/Mensajes.cshtml")
+            }
+
+            @if (Model.Lista != null && Model.Lista.Count > 0)
+            {
+                <table class="tb_data table table-striped table-bordered table-hover">
+                    <tr>
+                        <th>ID</th>
+                        <th>Descripción</th>
+                        <th>Fecha y Hora</th>
+                        <th>Usuario</th>
+                        <th>Acción</th>
+                    </tr>
+                    @foreach (var elemento in Model.Lista)
+                    {
+                        <tr>
+                            <td>@elemento.Id</td>
+                            <td>@elemento.Descripcion</td>
+                            <td>@elemento.FechaHora</td>
+                            <td>@elemento.Usuario</td>
+                            <td>@elemento.Accion</td>
+                        </tr>
+                    }
+                </table>
+            }
+        </form>
+    </div>
+</center>

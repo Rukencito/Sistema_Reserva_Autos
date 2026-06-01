@@ -591,34 +591,35 @@
                     <li><a asp-page="/Ventanas/Admin/ClientesHTML"><span class="nav-icon">🙋</span><span>Clientes</span></a></li>
                     <li><a asp-page="/Ventanas/Admin/ReservasHTML"><span class="nav-icon">📅</span><span>Reservas</span></a></li>
                     <li><a asp-page="/Ventanas/Admin/PagosHTML"><span class="nav-icon">💳</span><span>Pagos</span></a></li>
+                    <li><a asp-page="/Ventanas/Admin/AuditoriasHTML"><span class="nav-icon">📋</span><span>Auditorías</span></a></li>
                 }
                 else if (esCliente)
                 {
-                    <li><a asp-page="/Ventanas/Cliente/MisAlquileresHTML"><span class="nav-icon">🔄</span><span>Alquileres</span></a></li>
-                    <li><a asp-page="/Ventanas/Cliente/MisReservasHTML"><span class="nav-icon">📅</span><span>Reservas</span></a></li>
-                    <li><a asp-page="/Ventanas/Cliente/MisContratosHTML"><span class="nav-icon">📝</span><span>Contratos</span></a></li>
-                    <li><a asp-page="/Ventanas/Cliente/MisFacturasHTML"><span class="nav-icon">🧾</span><span>Facturas</span></a></li>
-                    <li><a asp-page="/Ventanas/Cliente/MisDetallesFacturaHTML"><span class="nav-icon">📑</span><span>Detalles Factura</span></a></li>
-                    <li><a asp-page="/Ventanas/Cliente/MisPagosHTML"><span class="nav-icon">💳</span><span>Pagos</span></a></li>
-                    <li><a asp-page="/Ventanas/Cliente/MisMantenimientosHTML"><span class="nav-icon">🔧</span><span>Mantenimientos</span></a></li>
-                    <li><a asp-page="/Ventanas/Cliente/MisResenasHTML"><span class="nav-icon">⭐</span><span>Reseñas</span></a></li>
+                    <li><a asp-page="/Ventanas/Admin/AlquileresHTML"><span class="nav-icon">🔄</span><span>Alquileres</span></a></li>
+                    <li><a asp-page="/Ventanas/Admin/ReservasHTML"><span class="nav-icon">📅</span><span>Reservas</span></a></li>
+                    <li><a asp-page="/Ventanas/Admin/ContratosHTML"><span class="nav-icon">📝</span><span>Contratos</span></a></li>
+                    <li><a asp-page="/Ventanas/Admin/FacturasHTML"><span class="nav-icon">🧾</span><span>Facturas</span></a></li>
+                    <li><a asp-page="/Ventanas/Admin/DetallesFacturaHTML"><span class="nav-icon">📑</span><span>Detalles Factura</span></a></li>
+                    <li><a asp-page="/Ventanas/Admin/PagosHTML"><span class="nav-icon">💳</span><span>Pagos</span></a></li>
+                    <li><a asp-page="/Ventanas/Admin/MantenimientosHTML"><span class="nav-icon">🔧</span><span>Mantenimientos</span></a></li>
+                    <li><a asp-page="/Ventanas/Admin/ResenasHTML"><span class="nav-icon">⭐</span><span>Reseñas</span></a></li>
                 }
                 else if (esEmpleado)
                 {
-                    <li><a asp-page="/Ventanas/Empleado/MisAlquileresHTML"><span class="nav-icon">🔄</span><span>Alquileres</span></a></li>
-                    <li><a asp-page="/Ventanas/Empleado/MisClientesHTML"><span class="nav-icon">🙋</span><span>Clientes</span></a></li>
-                    <li><a asp-page="/Ventanas/Empleado/MisReservasHTML"><span class="nav-icon">📅</span><span>Reservas</span></a></li>
-                    <li><a asp-page="/Ventanas/Empleado/MisContratosHTML"><span class="nav-icon">📝</span><span>Contratos</span></a></li>
-                    <li><a asp-page="/Ventanas/Empleado/MisDevolucionesHTML"><span class="nav-icon">↩️</span><span>Devoluciones</span></a></li>
-                    <li><a asp-page="/Ventanas/Empleado/MisMantenimientosHTML"><span class="nav-icon">🔧</span><span>Mantenimientos</span></a></li>
+                    <li><a asp-page="/Ventanas/Admin/AlquileresHTML"><span class="nav-icon">🔄</span><span>Alquileres</span></a></li>
+                    <li><a asp-page="/Ventanas/Admin/ClientesHTML"><span class="nav-icon">🙋</span><span>Clientes</span></a></li>
+                    <li><a asp-page="/Ventanas/Admin/ReservasHTML"><span class="nav-icon">📅</span><span>Reservas</span></a></li>
+                    <li><a asp-page="/Ventanas/Admin/ContratosHTML"><span class="nav-icon">📝</span><span>Contratos</span></a></li>
+                    <li><a asp-page="/Ventanas/Admin/DevolucionesHTML"><span class="nav-icon">↩️</span><span>Devoluciones</span></a></li>
+                    <li><a asp-page="/Ventanas/Admin/MantenimientosHTML"><span class="nav-icon">🔧</span><span>Mantenimientos</span></a></li>
                 }
                 else if (esDueno)
                 {
-                    <li><a asp-page="/Ventanas/Dueno/MisAutosHTML"><span class="nav-icon">🚗</span><span>Mis Autos</span></a></li>
-                    <li><a asp-page="/Ventanas/Dueno/MisReservasHTML"><span class="nav-icon">📅</span><span>Reservas</span></a></li>
-                    <li><a asp-page="/Ventanas/Dueno/MisPagosHTML"><span class="nav-icon">💳</span><span>Pagos</span></a></li>
-                    <li><a asp-page="/Ventanas/Dueno/MisMantenimientosHTML"><span class="nav-icon">🔧</span><span>Mantenimientos</span></a></li>
-                    <li><a asp-page="/Ventanas/Dueno/MisResenasHTML"><span class="nav-icon">⭐</span><span>Reseñas</span></a></li>
+                    <li><a asp-page="/Ventanas/Admin/AutosHTML"><span class="nav-icon">🚗</span><span>Mis Autos</span></a></li>
+                    <li><a asp-page="/Ventanas/Admin/ReservasHTML"><span class="nav-icon">📅</span><span>Reservas</span></a></li>
+                    <li><a asp-page="/Ventanas/Admin/PagosHTML"><span class="nav-icon">💳</span><span>Pagos</span></a></li>
+                    <li><a asp-page="/Ventanas/Admin/MantenimientosHTML"><span class="nav-icon">🔧</span><span>Mantenimientos</span></a></li>
+                    <li><a asp-page="/Ventanas/Admin/ResenasHTML"><span class="nav-icon">⭐</span><span>Reseñas</span></a></li>
                 }
 
             </ul>
