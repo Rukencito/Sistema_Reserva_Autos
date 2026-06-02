@@ -21,6 +21,21 @@
                        asp-page-handler="BtRefrescar" />
             </div>
 
+            <div class="mt-2 mb-2 d-flex gap-2 align-items-center">
+                <input type="text"
+                       id="txtBuscar"
+                       class="form-control"
+                       style="max-width: 400px;"
+                       placeholder="Buscar por descripción, usuario o acción..."
+                       oninput="filtrarTabla()" />
+                <button type="button"
+                        class="btn btn-outline-secondary"
+                        onclick="document.getElementById('txtBuscar').value=''; filtrarTabla();">
+                    &#x2715; Limpiar
+                </button>
+                <span id="contadorResultados" class="text-muted small"></span>
+            </div>
+
             @if (ViewData.ContainsKey("Mensaje"))
             {
                 @await Html.PartialAsync("/Pages/Emergentes/Mensajes.cshtml")
@@ -28,26 +43,60 @@
 
             @if (Model.Lista != null && Model.Lista.Count > 0)
             {
-                <table class="tb_data table table-striped table-bordered table-hover">
-                    <tr>
-                        <th>ID</th>
-                        <th>Descripción</th>
-                        <th>Fecha y Hora</th>
-                        <th>Usuario</th>
-                        <th>Acción</th>
-                    </tr>
-                    @foreach (var elemento in Model.Lista)
-                    {
+                <table id="tablaAuditorias" class="tb_data table table-striped table-bordered table-hover">
+                    <thead>
                         <tr>
-                            <td>@elemento.Id</td>
-                            <td>@elemento.Descripcion</td>
-                            <td>@elemento.FechaHora</td>
-                            <td>@elemento.Usuario</td>
-                            <td>@elemento.Accion</td>
+                            <th>ID</th>
+                            <th>Descripción</th>
+                            <th>Fecha y Hora</th>
+                            <th>Usuario</th>
+                            <th>Acción</th>
                         </tr>
-                    }
+                    </thead>
+                    <tbody>
+                        @foreach (var elemento in Model.Lista)
+                        {
+                            <tr>
+                                <td>@elemento.Id</td>
+                                <td>@elemento.Descripcion</td>
+                                <td>@elemento.FechaHora</td>
+                                <td>@elemento.Usuario</td>
+                                <td>@elemento.Accion</td>
+                            </tr>
+                        }
+                    </tbody>
                 </table>
             }
         </form>
     </div>
 </center>
+
+@section Scripts {
+    <script>
+        function filtrarTabla() {
+            var texto = document.getElementById("txtBuscar").value.toLowerCase().trim();
+            var filas = document.querySelectorAll("#tablaAuditorias tbody tr");
+            var visibles = 0;
+
+            filas.forEach(function (fila) {
+                var contenido = fila.textContent.toLowerCase();
+                var mostrar = texto === "" || contenido.includes(texto);
+                fila.style.display = mostrar ? "" : "none";
+                if (mostrar) visibles++;
+            });
+
+            var total = filas.length;
+            var contador = document.getElementById("contadorResultados");
+            if (texto === "") {
+                contador.textContent = total + " registros";
+            } else {
+                contador.textContent = visibles + " de " + total + " registros";
+            }
+        }
+
+        // Inicializar contador al cargar la página
+        window.addEventListener("DOMContentLoaded", function () {
+            filtrarTabla();
+        });
+    </script>
+}
