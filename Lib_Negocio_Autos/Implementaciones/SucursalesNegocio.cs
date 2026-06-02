@@ -55,6 +55,12 @@ namespace Lib_Negocio_Autos.Implementaciones
             {
                 throw new Exception("El registro no existe");
             }
+            if (iConexion!.Empleados!.Any(x => x.Sucursales == entidad.Id))
+                throw new Exception("No se puede eliminar la sucursal porque tiene empleados asignados");
+
+            if (iConexion!.Autos!.Any(x => x.Sucursales == entidad.Id))
+                throw new Exception("No se puede eliminar la sucursal porque tiene autos asignados");
+
             iConexion!.Sucursales!.Remove(entidad!);
             iConexion.SaveChanges();
 

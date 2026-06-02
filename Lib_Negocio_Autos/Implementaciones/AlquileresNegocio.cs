@@ -67,6 +67,12 @@ namespace Lib_Negocio_Autos.Implementaciones
                 throw new Exception("El alquiler con ID " + entidad.Id + " no existe en el sistema");
             }
 
+            if (iConexion!.Contratos!.Any(x => x.Alquileres == entidad.Id))
+                throw new Exception("No se puede eliminar el alquiler porque tiene contratos registrados");
+
+            if (iConexion.Devoluciones!.Any(x => x.Alquileres == entidad.Id))
+                throw new Exception("No se puede eliminar el alquiler porque tiene devoluciones registradas");
+
             iConexion!.Alquileres!.Remove(entidad);
             iConexion.SaveChanges();
 

@@ -67,6 +67,10 @@ namespace Lib_Negocio_Autos.Implementaciones
             {
                 throw new Exception("El registro no existe");
             }
+
+            if (iConexion!.Promociones!.Any(x => x.Ventas == entidad.Id))
+                throw new Exception("No se puede eliminar la venta porque tiene promociones asociadas");
+
             iConexion!.Ventas!.Remove(entidad!);
             iConexion.SaveChanges();
 

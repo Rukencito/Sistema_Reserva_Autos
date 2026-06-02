@@ -13,6 +13,8 @@ namespace Lib_Negocio_Autos.modelo
 
         [JsonIgnore]
         [NotMapped] public List<Autos>? Auto { get; set; }
+        [JsonIgnore]
+        [NotMapped] public List<Empleados>? Empleado { get; set; }
 
     }
 }

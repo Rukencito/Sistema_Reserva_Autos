@@ -67,6 +67,15 @@ namespace Lib_Negocio_Autos.Implementaciones
                 throw new Exception("El empleado con ID " + entidad.Id + " no existe en el sistema");
             }
 
+            if (iConexion!.Alquileres!.Any(x => x.Empleados == entidad.Id))
+                throw new Exception("No se puede eliminar el empleado porque tiene alquileres registrados");
+
+            if (iConexion.Ventas!.Any(x => x.Empleados == entidad.Id))
+                throw new Exception("No se puede eliminar el empleado porque tiene ventas registradas");
+
+            if (iConexion.Usuarios!.Any(x => x.Empleados == entidad.Id))
+                throw new Exception("No se puede eliminar el empleado porque tiene un usuario asociado");
+
             iConexion!.Empleados!.Remove(entidad);
             iConexion.SaveChanges();
 

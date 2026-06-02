@@ -61,6 +61,12 @@ namespace Lib_Negocio_Autos.Implementaciones
             {
                 throw new Exception("El dueño con ID " + entidad.Id + " no existe en el sistema");
             }
+            if (iConexion!.Autos!.Any(x => x.Duenos == entidad.Id))
+                throw new Exception("No se puede eliminar el dueño porque tiene autos registrados");
+
+            if (iConexion.Usuarios!.Any(x => x.Duenos == entidad.Id))
+                throw new Exception("No se puede eliminar el dueño porque tiene un usuario asociado");
+
 
             iConexion!.Duenos!.Remove(entidad);
             iConexion.SaveChanges();

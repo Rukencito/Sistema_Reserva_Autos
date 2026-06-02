@@ -70,6 +70,11 @@ namespace Lib_Negocio_Autos.Implementaciones
             {
                 throw new Exception("La factura con ID " + entidad.Id + "no existe en el sistema");
             }
+            if (iConexion!.DetallesFactura!.Any(x => x.Facturas == entidad.Id))
+                throw new Exception("No se puede eliminar la factura porque tiene detalles registrados");
+
+            if (iConexion.Pagos!.Any(x => x.Facturas == entidad.Id))
+                throw new Exception("No se puede eliminar la factura porque tiene pagos registrados");
 
             iConexion!.Facturas!.Remove(entidad);
             iConexion.SaveChanges();

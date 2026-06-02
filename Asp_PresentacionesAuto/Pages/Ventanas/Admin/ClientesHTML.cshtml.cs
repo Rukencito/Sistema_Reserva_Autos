@@ -170,7 +170,14 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
                 Borrando = false;
                 ModelState.Clear();
             }
-            catch (Exception ex) { ViewData["Mensaje"] = ex.Message; }
+            catch (Exception ex)
+            {
+                Exception errorReal = ex;
+                while (errorReal.InnerException != null)
+                    errorReal = errorReal.InnerException;
+                ViewData["Mensaje"] = errorReal.Message;
+                CargarListaFiltrada(); 
+            }
         }
 
         public void OnPostBtBorrarVal(int data)

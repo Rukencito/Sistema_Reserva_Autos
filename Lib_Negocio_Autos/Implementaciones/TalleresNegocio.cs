@@ -52,6 +52,10 @@ namespace Lib_Negocio_Autos.Implementaciones
 
             if (!ValidarId(entidad.Id))
                 throw new Exception("El Taller con ID " + entidad.Id + " no existe en el sistema");
+
+            if (iConexion!.Mantenimientos!.Any(x => x.Talleres == entidad.Id))
+                throw new Exception("No se puede eliminar el taller porque tiene mantenimientos registrados");
+
             iConexion!.Talleres!.Remove(entidad!);
             iConexion.SaveChanges();
 

@@ -62,6 +62,24 @@ namespace Lib_Negocio_Autos.Implementaciones
                 throw new Exception("El cliente con cédula " + entidad.Cedula + " no existe en el sistema");
             }
 
+            if (iConexion!.Alquileres!.Any(x => x.Clientes == entidad.Id))
+                throw new Exception("No se puede eliminar el cliente porque tiene alquileres registrados");
+
+            if (iConexion.Reservas!.Any(x => x.Clientes == entidad.Id))
+                throw new Exception("No se puede eliminar el cliente porque tiene reservas registradas");
+
+            if (iConexion.Facturas!.Any(x => x.Clientes == entidad.Id))
+                throw new Exception("No se puede eliminar el cliente porque tiene facturas registradas");
+
+            if (iConexion.Resenas!.Any(x => x.Clientes == entidad.Id))
+                throw new Exception("No se puede eliminar el cliente porque tiene reseñas registradas");
+
+            if (iConexion.Ventas!.Any(x => x.Clientes == entidad.Id))
+                throw new Exception("No se puede eliminar el cliente porque tiene ventas registradas");
+
+            if (iConexion.Usuarios!.Any(x => x.Clientes == entidad.Id))
+                throw new Exception("No se puede eliminar el cliente porque tiene un usuario asociado");
+
             iConexion!.Clientes!.Remove(entidad);
             iConexion.SaveChanges();
 

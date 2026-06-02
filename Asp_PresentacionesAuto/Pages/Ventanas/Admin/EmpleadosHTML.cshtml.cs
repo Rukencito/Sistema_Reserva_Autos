@@ -132,7 +132,11 @@ namespace Asp_PresentacionesAuto.Pages.Ventanas.Admin
             }
             catch (Exception ex)
             {
-                ViewData["Mensaje"] = ex.Message;
+                Exception errorReal = ex;
+                while (errorReal.InnerException != null)
+                    errorReal = errorReal.InnerException;
+                ViewData["Mensaje"] = errorReal.Message;
+                OnPostBtRefrescar();
             }
         }
 

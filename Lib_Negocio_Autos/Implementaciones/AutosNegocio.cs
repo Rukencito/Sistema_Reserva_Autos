@@ -58,14 +58,30 @@ namespace Lib_Negocio_Autos.Implementaciones
             AbrirConexion();
 
             if (!ValidarPlaca(entidad.Placa!))
-            {
                 throw new Exception("El auto con la placa " + entidad.Placa + " no existe en el sistema");
-            }
 
-            iConexion!.Autos!.Remove(entidad);
+            if (iConexion!.Alquileres!.Any(x => x.Autos == entidad.Id))
+                throw new Exception("No se puede eliminar el auto porque tiene alquileres registrados");
+
+            if (iConexion.Reservas!.Any(x => x.Autos == entidad.Id))
+                throw new Exception("No se puede eliminar el auto porque tiene reservas registradas");
+
+            if (iConexion.Garantias!.Any(x => x.Autos == entidad.Id))
+                throw new Exception("No se puede eliminar el auto porque tiene garantías registradas");
+
+            if (iConexion.Mantenimientos!.Any(x => x.Autos == entidad.Id))
+                throw new Exception("No se puede eliminar el auto porque tiene mantenimientos registrados");
+
+            if (iConexion.Seguros!.Any(x => x.Autos == entidad.Id))
+                throw new Exception("No se puede eliminar el auto porque tiene seguros registrados");
+
+            if (iConexion.Ventas!.Any(x => x.Autos == entidad.Id))
+                throw new Exception("No se puede eliminar el auto porque tiene ventas registradas");
+
+            iConexion.Autos!.Remove(entidad);
             iConexion.SaveChanges();
 
-            RegistrarAuditoria("Se eliminó el auto con placa " + entidad.Placa + "", "Eliminacion");
+            RegistrarAuditoria("Se eliminó el auto con placa " + entidad.Placa, "Eliminacion");
             return entidad;
         }
 

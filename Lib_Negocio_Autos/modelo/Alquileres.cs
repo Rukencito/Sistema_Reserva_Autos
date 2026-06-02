@@ -21,6 +21,8 @@ namespace Lib_Negocio_Autos.modelo
 
         [JsonIgnore]
         [NotMapped] public List<Contratos>? Contrato { get; set; }
+        [JsonIgnore]
+        [NotMapped] public List<Devoluciones>? Devolucion { get; set; }
 
     }
 }
